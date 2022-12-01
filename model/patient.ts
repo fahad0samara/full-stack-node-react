@@ -21,7 +21,12 @@ mongoose.connect(
 
 const patientSchema = new mongoose.Schema({
     healthID: {
-        type: String,
+        type: Number,
+        required: true,
+        min: 8,
+
+
+
     },
     name: {
         firstName: {
@@ -55,7 +60,7 @@ const patientSchema = new mongoose.Schema({
         type: Number,
         min:7, 
         max: 999999999999, 
-        unique: true,
+     
         required: true,
     },
     bloodGroup: {
