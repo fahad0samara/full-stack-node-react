@@ -12,19 +12,22 @@ router.post("/addPrescriptions/:healthID", async (req, res) => {
 
   // check if the user is already in the database
 
-  const healthIDExist = await Patient.findOne({
-    healthID: req.params.healthID,
-  });
-  if (!healthIDExist) return res.status(400).send("Health ID does not exist");
+
 
   try {
-    const patient = await Patient.findOne({healthID: req.params.healthID});
+    const patient = await Patient.findOne({
+      healthID: req.params.healthID,
+    });
     if (!patient) {
       return res.status(400).send("Patient not found");
     }
+    // check if the patientID already in database
+    const patientIDExist = await Prescription.findOne({
+      patientID: req.body.patientID,
+    });
+    if (patientIDExist) return res.status(401).send("Patient ID already exists");
 
     const prescription = new Prescription({
-      healthID: req.params.healthID,
       patientID: req.body.patientID,
       doctorID: req.body.doctorID,
       patient: patient._id,
@@ -39,6 +42,8 @@ router.post("/addPrescriptions/:healthID", async (req, res) => {
       nextVisit: req.body.nextVisit,
     });
     const savedPrescription = await prescription.save();
+    // don't allowed to post
+
     res.send({
       savedPrescription,
     });

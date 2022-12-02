@@ -4,7 +4,7 @@ const Joi = require("joi");
 // register validation
 const registerValidation = (data: any) => {
   const schema = Joi.object({
-    healthID: Joi.string().min(8).required().pattern(new RegExp("^[0-9]+$")),
+    healthID: Joi.string().min(8).required(),
 
     name: Joi.object({
       firstName: Joi.string().min(1).required(),

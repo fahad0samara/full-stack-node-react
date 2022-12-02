@@ -27,9 +27,8 @@ router.post("/registerDoctor", async (req, res) => {
   // create a new doctor
   const doctor = new Doctor({
     name: req.body.name,
-      email: req.body.email,
-        password: hashedPassword,
-  
+    email: req.body.email,
+    password: hashedPassword,
     Hospital: req.body.Hospital,
     HospitalAddress: req.body.HospitalAddress,
     date: req.body.date,
