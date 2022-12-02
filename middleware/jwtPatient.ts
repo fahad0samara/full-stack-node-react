@@ -20,4 +20,4 @@ const authPatient = async (req: any, res: any, next: any) => {
     }
 };
 module.exports = authPatient;
-// Compare this snippet from router\registerPatient.ts:
+
