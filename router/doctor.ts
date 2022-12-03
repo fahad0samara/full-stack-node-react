@@ -84,6 +84,6 @@ router.post("/loginDoctor", async (req, res) => {
   }
 });
 
-router.get("/");
+
 
 export default router;

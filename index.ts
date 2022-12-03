@@ -8,17 +8,22 @@ import cors from 'cors';
 import patientRouter from './router/registerPatient';
 import prescriptionRouter from './router/prescription';
 import doctorRouter from './router/doctor';
+import adminRouter from "./router/admin";
 
 
 app.use(express.json());
 app.use(cors());
+
 
 app.use('/auth', patientRouter);
 
 app.use('/Prescriptions', prescriptionRouter);
 
 // doctor
- app.use('/doctor', doctorRouter);
+app.use('/doctor', doctorRouter);
+ 
+// admin
+app.use('/admin', adminRouter);
 
 
 

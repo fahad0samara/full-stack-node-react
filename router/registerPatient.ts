@@ -94,17 +94,9 @@ router.post("/loginPatient", async (req, res) => {
       err,
     });
   }
- });
-
-router.get("/registerpatient", async (req, res) => {
-  try {
-    const patient = await Patient.find();
-    res.status(200).send(patient);
-  } catch (err) {
-    res.status(400).json({
-      message: (err as Error).message,
-    });
-  }
 });
+ 
+
+
 
 export default router;

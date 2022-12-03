@@ -137,6 +137,29 @@ const loginDoctorValidation = (data: any) => {
   return schema.validate(data);
 };
 
+// admin validation
+const adminValidation = (data: any) => {
+  const schema = Joi.object({
+    name: Joi.string().min(1).required(),
+    email: Joi.string().min(5).required().email(),
+    password: Joi.string().min(5).required(),
+    phoneNumber: Joi.number().min(6).required(),
+  });
+  return schema.validate(data);
+};
+
+// loginAdmin validation
+const loginAdminValidation = (data: any) => {
+  const schema = Joi.object({
+    password: Joi.string().min(5).required(),
+    email: Joi.string().min(5).required().email(),
+  });
+  return schema.validate(data);
+};
+
+
+
+
 
 
 module.exports.registerValidation = registerValidation;
@@ -144,3 +167,5 @@ module.exports.loginValidation = loginValidation;
 module.exports.addPrescriptionsValidation = addPrescriptionsValidation;
 module.exports.doctorValidation = doctorValidation;
 module.exports.loginDoctorValidation = loginDoctorValidation;
+module.exports.adminValidation = adminValidation;
+module.exports.loginAdminValidation = loginAdminValidation;
