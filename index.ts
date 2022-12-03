@@ -4,7 +4,7 @@ const app = express();
 import dotenv from 'dotenv';
 dotenv.config();
 
-const cors = require("cors");
+import cors from 'cors';
 import patientRouter from './router/registerPatient';
 import prescriptionRouter from './router/prescription';
 import doctorRouter from './router/doctor';
