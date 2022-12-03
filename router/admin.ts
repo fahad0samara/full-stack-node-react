@@ -7,6 +7,7 @@ import Patient from "../model/patient";
 
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import {authAdmin} from "../middleware/jwtPatient";
 const {
   adminValidation,
   loginAdminValidation,
@@ -74,7 +75,7 @@ router.post("/loginAdmin", async (req, res) => {
 });
 
 // getAllAdmin
-router.get("/getAllAdmin", async (req, res) => {
+router.get("/getAllAdmin", authAdmin, async (req, res) => {
   try {
     const admin = await Admin.find();
     res.json(admin);
@@ -87,7 +88,7 @@ router.get("/getAllAdmin", async (req, res) => {
 });
 
 // getAllDoctor
-router.get("/getAllDoctor", async (req, res) => {
+router.get("/getAllDoctor", authAdmin, async (req, res) => {
   try {
     const doctor = await Doctor.find();
     res.json(doctor);
@@ -100,7 +101,7 @@ router.get("/getAllDoctor", async (req, res) => {
 });
 
 // getAllPatient
-router.get("/getAllPatient", async (req, res) => {
+router.get("/getAllPatient", authAdmin, async (req, res) => {
   try {
     const patient = await Patient.find();
     res.json(patient);
@@ -113,27 +114,22 @@ router.get("/getAllPatient", async (req, res) => {
 });
 
 // delete doctor
-router.delete("/deleteDoctor/:id", async (req, res) => {
-// checking if the id is correct in the database or not
+router.delete("/deleteDoctor/:id", authAdmin, async (req, res) => {
+  // checking if the id is correct in the database or not
   const doctor = await Doctor.findById({
     _id: req.params.id,
   });
   if (!doctor) return res.status(400).send("Doctor s is not found");
 
   try {
+    /* Checking if the doctor is in the database or not. */
+    const doctor = await Doctor.findById(req.params.id);
+    if (!doctor) return res.status(400).send("Doctor is not found");
 
+    /* Deleting the doctor from the database. */
 
-
-  /* Checking if the doctor is in the database or not. */
-  const doctor = await Doctor.findById(req.params.id);
-  if (!doctor) return res.status(400).send("Doctor is not found");
-
-  /* Deleting the doctor from the database. */
-  
-    const removedDoctor = await Doctor.findByIdAndDelete({ _id: req.params.id });
-    res.json(
-      `Doctor with id ${req.params.id}has been deleted successfully.`
-    );
+    const removedDoctor = await Doctor.findByIdAndDelete({_id: req.params.id});
+    res.json(`Doctor with id ${req.params.id}has been deleted successfully.`);
   } catch (error) {
     res.status(400).json({
       message: (error as Error).message,
