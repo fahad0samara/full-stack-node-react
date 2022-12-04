@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from "react";
 import axios from "axios";
-
+import {AiFillMinusCircle, AiFillPlusCircle} from "react-icons/ai";
 import {useNavigate} from "react-router-dom";
 
 export default function Register(props: any) {
-
   const [Loading, setLoading] = useState(false);
   const [Toggle, setToggle] = useState("Patient");
   const [healthID, sethealthID] = useState("");
@@ -24,7 +23,7 @@ export default function Register(props: any) {
     taluk: "",
     district: "",
     state: "",
-    pincode: "",
+    pinched: "",
   });
   const [password, setpassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -36,19 +35,19 @@ export default function Register(props: any) {
   const [contactPerson, setcontactPerson] = useState({
     name: {
       firstName: "",
-      middleName: "",
+
       surName: "",
     },
     mobile: "",
     email: "",
-    relation: "",
+
     address: {
       building: "",
       city: "",
       taluk: "",
       district: "",
       state: "",
-      pincode: "",
+      pinched: "",
     },
   });
 
@@ -63,7 +62,7 @@ export default function Register(props: any) {
     setLoading(true);
     try {
       const {data} = await axios.post(
-        "http://localhost:5000/api/patient/register",
+        "https://nodeandreact.azurewebsites.net/auth/registerPatient",
         {
           healthID,
           name,
@@ -74,8 +73,7 @@ export default function Register(props: any) {
           bloodGroup,
           address,
           password,
-          confirmPassword,
-          diseaseList,
+
           contactPerson,
         }
       );
@@ -84,11 +82,16 @@ export default function Register(props: any) {
       setTimeout(() => {
         alert(
           "Registration Successful. Please Login to continue. Redirecting to Login Page"
-        )
-
-        
+        );
       }, 2000);
     } catch (error) {
+      console.log("====================================");
+      console.log(
+        // @ts-ignore
+        error.response.data
+      );
+
+      console.log("====================================");
       setLoading(false);
       setError(
         (error &&
@@ -104,15 +107,40 @@ export default function Register(props: any) {
   };
 
   return (
-    <div className="body overflow-hidden">
-      <div className="bg-secoundry w-full">
+    <div
+      className=" overflow-hidden 
+      bg-black
+    
+    "
+    >
+      <div className=" w-full">
         <div className="">
-          <div className=" flex justify-center mt-4">
-            <h1 className="  p-2 px-8 rounded font-bold text-5xl">Register</h1>
+          <div className=" flex justify-center ">
+            <h1
+              className="  p-2 px-8 rounded
+              bg-gradient
+              from-purple-400
+              to-purple-600
+
+              text-white font-bold text-5xl"
+            >
+              Register
+            </h1>
           </div>
 
           <form
-            className="font-poppins lg:ml-60  lg:px-8 lg:py-4 bg-white shadow-lg rounded max-w-screen-lg mt-8 mb-4 "
+            className="   
+          
+             bg-gradient-to-b
+              from-purple-400
+              to-purple-600
+          
+            
+            
+          rounded-lg shadow-xl p-8
+             max-w-screen-lg mx-10 
+          md:mx-auto md:items-center
+           p-10"
             onSubmit={handleRegisterPatient}
           >
             <div className="flex   mt-2 bg-bgsecondary w-fit  justify-between rounded mx-auto">
@@ -120,7 +148,7 @@ export default function Register(props: any) {
                 onClick={() => setToggle("Patient")}
                 className={
                   Toggle === "Patient"
-                    ? "py-2 px-8 text-lg font-poppins font-semibold cursor-pointer rounded bg-primary"
+                    ? "py-2 px-8 text-lg font-poppins font-semibold cursor-pointer rounded bg-red-400 text-white"
                     : "py-2 px-8 text-lg font-poppins font-semibold cursor-pointer rounded bg-bgsecondary"
                 }
               >
@@ -130,7 +158,7 @@ export default function Register(props: any) {
                 onClick={() => setToggle("Doctor")}
                 className={
                   Toggle === "Doctor"
-                    ? "py-2 px-8 text-lg font-poppins font-semibold cursor-pointer rounded bg-primary"
+                    ? "py-2 px-8 text-lg font-poppins font-semibold cursor-pointer rounded bg-black"
                     : "py-2 px-8 text-lg font-poppins font-semibold cursor-pointer rounded bg-bgsecondary"
                 }
               >
@@ -159,15 +187,57 @@ export default function Register(props: any) {
             </div>
 
             <div className={Toggle === "Patient" ? "" : "hidden"}>
-              <div className="lg:grid lg:grid-cols-4 lg:gap-2 mt-4 mr-4 grid grid-cols-4 gap-2">
-                <label className="font-bold lg:text-xl font-poppins px-4 my-4 ">
+              <div
+                className="
+
+              flex 
+              md:flex-row 
+                  flex-col justify-between lg:mt-4
+              mt-2
+                items-center
+              "
+              >
+                <label className="font-bold lg:text-xl font-poppins lg:px-4 lg:my-4 ">
                   Name
                 </label>
-                <div>
+                <div
+                  className="
+               flex
+              md:flex-row
+              flex-col
+              items-center
+
+
+                "
+                >
                   <input
-                    className="bg-blue-100 rounded lg:h-10 lg:pl-4 mt-4 lg:text-md text-sm h-8 px-2"
+                    className="
+                        lg:my-2
+                        lg:px-4
+                        lg:py-2
+                        mx-20
+                        my-1
+                          md:mx-1
+                      
+
+                
+                  w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+                  border-gray-300
+
+              
+                  
+                    "
                     required
-                    placeholder="first name"
+                    placeholder="
+                  First Name"
                     type="text"
                     value={name.firstName}
                     onChange={e =>
@@ -177,62 +247,154 @@ export default function Register(props: any) {
                       })
                     }
                   ></input>
+                  <input
+                    className="
+                  lg:my-2
+                        lg:px-4
+                        lg:py-2
+                        mx-20
+                        my-1
+                          md:mx-1
+                  w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+                  border-gray-300"
+                    placeholder="Middle Name"
+                    type="text"
+                    value={name.middleName}
+                    onChange={e =>
+                      setName({
+                        ...name,
+                        middleName: e.target.value,
+                      })
+                    }
+                  ></input>
+                  <input
+                    className="
+                  lg:my-2
+                        lg:px-4
+                        lg:py-2
+                        md:mx-1
+                        mx-20
+                        my-1
+                  w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+                  border-gray-300
+
+                    
+                    "
+                    required
+                    placeholder="
+                  Last Name"
+                    type="text"
+                    value={name.surName}
+                    onChange={e =>
+                      setName({
+                        ...name,
+                        surName: e.target.value,
+                      })
+                    }
+                  ></input>
                 </div>
-                <input
-                  className="bg-blue-100 rounded lg:h-10 lg:pl-4 mt-4 lg:text-md text-sm h-8 px-2"
-                  required
-                  placeholder="middle name"
-                  type="text"
-                  value={name.middleName}
-                  onChange={e =>
-                    setName({
-                      ...name,
-                      middleName: e.target.value,
-                    })
-                  }
-                ></input>
-                <input
-                  className="bg-blue-100 rounded lg:h-10 lg:pl-4 mt-4 lg:text-md text-sm h-8 px-2"
-                  required
-                  placeholder="last name"
-                  type="text"
-                  value={name.surName}
-                  onChange={e =>
-                    setName({
-                      ...name,
-                      surName: e.target.value,
-                    })
-                  }
-                ></input>
               </div>
-              <div className="lg:grid grid-cols-4 gap-2 mt-4 mr-4">
-                <label className="font-bold lg:text-xl px-4 ">Birthdate</label>
+              <div
+                className="
+              flex
+              md:flex-row
+              flex-col
+              items-center
+              
+              "
+              >
+                <label
+                  className="
+                font-bold
+                lg:text-xl
+                font-poppins
+                px-4
+                my-4
+
+                 "
+                >
+                  Date of Birth
+                </label>
                 <input
                   type="date"
-                  className=" bg-blue-100 lg:h-10 rounded pl-4 h-8"
+                  className=" 
+            
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
                   required
                   value={date}
                   onChange={e => setdate(e.target.value)}
                 ></input>
-              </div>
-              <div className="lg:grid grid-cols-4 gap-2 mt-4 mr-4">
-                <label className="font-bold lg:text-xl px-4 ">
-                  Mobile No.{" "}
-                </label>
+                <div
+                  className="
+                  flex
+              md:flex-row
+              md:items-center
+              flex-col
+              items-center
+                "
+                >
+                  <label className="font-bold lg:text-xl px-4 ">
+                    Mobile Number
+                  </label>
 
-                <input
-                  type="tel"
-                  placeholder="mobile no."
-                  required
-                  className="pl-4 bg-blue-100 lg:h-10  rounded h-8"
-                  value={mobile}
-                  onChange={e => setmobile(e.target.value)}
-                ></input>
+                  <input
+                    required
+                    className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
+                    placeholder="Mobile Number"
+                    type="number"
+                    value={mobile}
+                    onChange={e => setmobile(e.target.value)}
+                  ></input>
+                </div>
               </div>
 
-              <div className=" aadhar lg:grid grid-cols-4 gap-2 mt-4 mr-4">
+              {/* <div className=" aadhar lg:grid grid-cols-4 gap-2 mt-4 mr-4">
                 <label className="font-bold lg:text-xl px-4 ">
-                  Aadhar Card No.{" "}
+              
                 </label>
                 <div>
                   <input
@@ -247,54 +409,147 @@ export default function Register(props: any) {
                     {healthID.length > 0 && healthID.length < 12}
                   </span>
                 </div>
-              </div>
+              </div> */}
 
-              <div className="grid grid-cols-4 gap-2 mt-4 mr-4">
+              <div
+                className="   flex
+              md:flex-row
+              flex-col
+              items-center"
+              >
                 <label className="  lg:text-xl font-bold px-4 ">Email</label>
                 <input
+                  className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
+                  placeholder="Email"
                   type="email"
-                  id="email"
-                  placeholder="e.g : abcdefg@gmail.com"
-                  required
-                  className="bg-blue-100 lg:h-10 rounded pl-4 col-span-2 h-8"
                   value={email}
                   onChange={e => setemail(e.target.value)}
                 ></input>
-              </div>
+                <div
+                  className="            flex
+              md:flex-row
+              md:items-center
+              flex-col
+              items-center"
+                >
+                  <label className="  lg:text-xl font-bold px-4">
+                    Blood Group
+                  </label>
+                  <div
+                    className="
+                  col-span-3
+                  my-2
+                  mx-2
 
-              <div className="grid grid-cols-4 gap-2 mt-4 mr-4">
-                <label className="  lg:text-xl font-bold px-4">
-                  Blood Group
-                </label>
-                <div className="">
-                  <select
-                    className="pl-4 lg:w-1/2 bg-blue-100 lg:h-10  rounded  h-8"
-                    id="blood-group"
-                    required
-                    value={bloodGroup}
-                    onChange={e => setbloodGroup(e.target.value)}
+                  "
                   >
-                    <option id="select">select</option>
-                    <option id="A+">A+</option>
-                    <option id="A-">A-</option>
-                    <option id="B+">B+</option>
-                    <option id="B-">B-</option>
-                    <option id="AB+">AB+</option>
-                    <option id="AB-">AB-</option>
-                    <option id="O+">O+</option>
-                    <option id="O-">O-</option>
-                  </select>
+                    <select
+                      className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
+                      id="blood-group"
+                      required
+                      value={bloodGroup}
+                      onChange={e => setbloodGroup(e.target.value)}
+                    >
+                      <option id="select">select</option>
+                      <option id="A+">A+</option>
+                      <option id="A-">A-</option>
+                      <option id="B+">B+</option>
+                      <option id="B-">B-</option>
+                      <option id="AB+">AB+</option>
+                      <option id="AB-">AB-</option>
+                      <option id="O+">O+</option>
+                      <option id="O-">O-</option>
+                    </select>
+                  </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-4 gap-2 mt-4 mr-4 grid-flow-dense ">
-                <label className=" lg:text-xl font-bold px-4 mb-8 col-span-1">
+              <div
+                className="
+              flex
+              md:flex-row
+              flex-col
+              items-center
+
+
+       
+              
+
+            
+              "
+              >
+                <label
+                  className=" 
+                lg:text-xl
+                font-bold
+                px-4
+
+                "
+                >
                   Address
                 </label>
-                <div className="grid grid-cols-2 lg:gap-8 gap-2 col-span-3 ">
+                <div
+                  className="
+                  grid 
+                  lg:grid-cols-3
+                  md:grid-cols-2
+                  grid-cols-1
+                  gap-2
+                  my-2
+                
+
+              
+            
+                 "
+                >
                   <input
                     type="text"
-                    className="bg-blue-100 lg:h-10  rounded pl-4 h-8 "
+                    className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
                     required
                     placeholder="building/area"
                     value={address.building}
@@ -307,7 +562,22 @@ export default function Register(props: any) {
                   ></input>
                   <input
                     type="text"
-                    className="bg-blue-100 lg:h-10  rounded pl-4 h-8 "
+                    className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
                     required
                     placeholder="city"
                     value={address.city}
@@ -320,7 +590,22 @@ export default function Register(props: any) {
                   ></input>
                   <input
                     type="text"
-                    className="bg-blue-100 lg:h-10  rounded  pl-4 h-8"
+                    className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
                     required
                     placeholder="Taluka"
                     value={address.taluk}
@@ -333,7 +618,22 @@ export default function Register(props: any) {
                   ></input>
                   <input
                     type="text"
-                    className="bg-blue-100 lg:h-10  rounded  pl-4 h-8"
+                    className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
                     required
                     placeholder="District"
                     value={address.district}
@@ -346,20 +646,50 @@ export default function Register(props: any) {
                   ></input>
                   <input
                     type="number"
-                    className="bg-blue-100 lg:h-10  rounded  pl-4 h-8"
+                    className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
                     required
                     placeholder="Pin-code"
-                    value={address.pincode}
+                    value={address.pinched}
                     onChange={e =>
                       setaddress({
                         ...address,
-                        pincode: e.target.value,
+                        pinched: e.target.value,
                       })
                     }
                   ></input>
                   <input
                     type="text"
-                    className="bg-blue-100 lg:h-10  rounded  pl-4 h-8"
+                    className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
                     placeholder="State"
                     required
                     value={address.state}
@@ -373,44 +703,106 @@ export default function Register(props: any) {
                 </div>
               </div>
 
-              <div className="lg:grid grid-cols-4 gap-2 mt-4 mr-4">
-                <label className="lg:text-xl font-bold px-4">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  className="bg-blue-100 lg:h-10  rounded pl-4 h-8"
-                  required
-                  placeholder="password"
-                  value={password}
-                  onChange={e => setpassword(e.target.value)}
-                ></input>
+              <div
+                className="
+              grid
+              md:grid-cols-2
+               grid-cols-1
+              gap-1
+              my-2
+              text-center
+              lg:text-start
+              
+
+              
+              "
+              >
+                <div
+                  className="flex
+              md:flex-row
+              flex-col
+              items-center
+              "
+                >
+                  <label className="lg:text-xl font-bold mx-1 ">Password</label>
+                  <input
+                    type="password"
+                    id="password"
+                    className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
+                    required
+                    placeholder="password"
+                    value={password}
+                    onChange={e => setpassword(e.target.value)}
+                  ></input>
+                </div>
+                <div
+                  className="flex
+              md:flex-row
+              flex-col
+              items-center
+              "
+                >
+                  <label className=" lg:text-xl font-bold text-center  mx-1">
+                    Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
+                    placeholder="Confirm password"
+                    value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)}
+                  ></input>
+                  <span className="text-sm py-1 text-red-500">
+                    {password !== confirmPassword && "passwords do not match"}
+                  </span>
+                </div>
               </div>
 
-              <div className="lg:grid lg:grid-cols-4 gap-2 mt-4 mr-4 flex">
-                <label className=" lg:text-xl font-bold px-4">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  className="bg-blue-100 lg:h-10  rounded lg:pl-4 h-8 pl-2"
-                  required
-                  placeholder="Confirm password"
-                  value={confirmPassword}
-                  onChange={e => setConfirmPassword(e.target.value)}
-                ></input>
-                <span className="text-sm py-1 text-red-500">
-                  {password !== confirmPassword && "passwords do not match"}
-                </span>
-              </div>
-
-              <div className="lg:grid lg:grid-cols-10 gap-2 mt-8 mr-4">
-                <div className="col-span-5">
-                  <label className=" lg:text-xl font-bold px-4 grid col-start-1 col-span-3">
-                    Name of any permanant disease (if any)
+              <div
+                className="  grid lg:grid-cols-3
+              md:grid-cols-2
+      
+       
+            
+             "
+              >
+                <div className="col-span-5 ">
+                  <label className=" lg:text-xl  my-3 font-bold px-4 grid col-start-1 col-span-3">
+                    do you have any disease is permanent
                   </label>
                 </div>
-                <div className="col-span-4">
+                <div className="col-span-4  ">
                   {diseaseList.map((disease, index) => {
                     return (
                       <div
@@ -418,7 +810,22 @@ export default function Register(props: any) {
                         className="grid grid-cols-7 col-span-1 mb-3"
                       >
                         <input
-                          className="bg-blue-100 lg:h-10 col-span-3 rounded lg:pl-4 h-8 pl-2"
+                          className="lg:h-10
+                               lg:w-64
+                                lg:rounded-lg
+                                lg:px-4
+                                
+
+                             
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+                            col-span-3 rounded-lg lg:pl-4 h-8 pl-2"
                           type="text"
                           name="disease"
                           value={disease.disease}
@@ -430,7 +837,20 @@ export default function Register(props: any) {
                           }}
                         />
                         <input
-                          className="bg-blue-100 lg:h-10 col-span-3  rounded lg:pl-4 h-8 pl-2 ml-4"
+                          className="lg:h-10
+                                      lg:w-64
+                                lg:rounded-lg
+                                lg:px-4
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+                  mx-3
+
+                  border-gray-300 
+                            col-span-3 rounded-lg lg:pl-4 h-8 pl-2"
                           type="text"
                           name="yrs"
                           placeholder="years e.g 3"
@@ -453,7 +873,7 @@ export default function Register(props: any) {
                             }
                           }}
                         >
-                          {/* <img src={minus_logo} alt="" className="h-8 w-8" /> */}
+                          <AiFillMinusCircle className="text-2xl text-red-500" />
                         </div>
                       </div>
                     );
@@ -461,7 +881,7 @@ export default function Register(props: any) {
                 </div>
 
                 <div onClick={addDisease} className="col-span-1">
-                  {/* <img src={plus_logo} alt="" className="h-8 w-8" /> */}
+                  <AiFillPlusCircle className="text-2xl text-green-500" />
                 </div>
               </div>
             </div>
@@ -473,103 +893,302 @@ export default function Register(props: any) {
                 </h1>
               </div>
 
-              <div className="lg:grid grid-cols-4 gap-2 mt-8 mr-4 flex">
-                <label className="font-bold lg:text-xl px-4 ">Name</label>
-                <input
-                  className="bg-blue-100 rounded h-10 pl-4"
-                  placeholder="first name"
-                  required
-                  value={contactPerson.name.firstName}
-                  onChange={e =>
-                    setcontactPerson({
-                      ...contactPerson,
-                      name: {
-                        ...contactPerson.name,
-                        firstName: e.target.value,
-                      },
-                    })
-                  }
-                ></input>
-                <input
-                  className="bg-blue-100 rounded h-10 pl-4"
-                  placeholder="last name"
-                  required
-                  value={contactPerson.name.surName}
-                  onChange={e =>
-                    setcontactPerson({
-                      ...contactPerson,
-                      name: {
-                        ...contactPerson.name,
-                        surName: e.target.value,
-                      },
-                    })
-                  }
-                ></input>
-              </div>
-              <div className="lg:grid grid-cols-4 gap-2 mt-4 mr-4">
-                <label className="font-bold lg:text-xl px-4 ">
-                  Mobile No.{" "}
-                </label>
+              <div
+                className=" flex 
+              md:flex-row
 
-                <input
-                  type="tel"
-                  placeholder="mobile no."
-                  required
-                  className="pl-4 bg-blue-100 lg:h-10  rounded h-8"
-                  value={contactPerson.mobile}
-                  onChange={e =>
-                    setcontactPerson({
-                      ...contactPerson,
-                      mobile: e.target.value,
-                    })
-                  }
-                ></input>
+              flex-col
+              items-center
+
+
+
+             
+
+              "
+              >
+                <label className="font-bold lg:text-xl ">Name</label>
+                <div
+                  className="
+        
+
+                   "
+                >
+                  <input
+                    className="
+                  lg:mx-5
+                  mx-14
+              
+            
+                  my-2
+                
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
+                    placeholder="first name"
+                    required
+                    value={contactPerson.name.firstName}
+                    onChange={e =>
+                      setcontactPerson({
+                        ...contactPerson,
+                        name: {
+                          ...contactPerson.name,
+                          firstName: e.target.value,
+                        },
+                      })
+                    }
+                  ></input>
+                  <input
+                    className=" 
+              lg:mx-5
+                  mx-14
+                  my-2
+         
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
+                    placeholder="last name"
+                    required
+                    value={contactPerson.name.surName}
+                    onChange={e =>
+                      setcontactPerson({
+                        ...contactPerson,
+                        name: {
+                          ...contactPerson.name,
+                          surName: e.target.value,
+                        },
+                      })
+                    }
+                  ></input>
+                </div>
+              </div>
+              <div
+                className=" flex
+              md:flex-row
+
+              flex-col  
+              items-center"
+              >
+                <div
+                  className="
+
+              flex
+              md:flex-row
+              flex-col
+              items-center
+              text-center
+
+              "
+                >
+                  <label className="font-bold lg:text-xl px-4 ">
+                    Phone Number
+                  </label>
+
+                  <input
+                    type="tel"
+                    placeholder="mobile no."
+                    required
+                    className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
+                    value={contactPerson.mobile}
+                    onChange={e =>
+                      setcontactPerson({
+                        ...contactPerson,
+                        mobile: e.target.value,
+                      })
+                    }
+                  ></input>
+                </div>
+
+                <div
+                  className="  flex
+              md:flex-row
+              flex-col
+              items-center
+              text-center"
+                >
+                  <label className="  lg:text-xl font-bold px-4">Email</label>
+                  <input
+                    type="email"
+                    id="email"
+                    className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
+                    required
+                    placeholder="email"
+                    value={contactPerson.email}
+                    onChange={e =>
+                      setcontactPerson({
+                        ...contactPerson,
+                        email: e.target.value,
+                      })
+                    }
+                  ></input>
+                </div>
+              </div>
+              <div></div>
+              <div
+                className="
+
+              flex
+              md:flex-row
+              flex-col
+              items-center
+              text-center
+
+              "
+              >
+                <div
+                  className="  flex
+              md:flex-row
+              flex-col
+              items-center
+              text-center"
+                >
+                  <label className=" rounded p-2 lg:text-xl font-bold px-4">
+             age
+                  </label>
+                  <input
+                    type="date"
+                    className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
+                    placeholder="
+                  age"
+                    required
+
+                    value={NumberCard}
+                    onChange={e => setNumberCard(e.target.value)}
+                  ></input>
+                </div>
+                <div
+                  className="  flex
+              md:flex-row
+              flex-col
+              items-center
+              text-center"
+                >
+                  <label className=" rounded p-2 lg:text-xl font-bold px-4">
+                    Relation / connection
+
+                  </label>
+                  <input
+                    className=" 
+                  
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
+                    placeholder="
+                    ex.bother / 
+                    sister
+                    "
+                    value={NumberCard}
+                    onChange={e => setNumberCard(e.target.value)}
+                  ></input>
+                </div>
               </div>
 
-              <div className="lg:grid grid-cols-4 gap-2 mt-4 mr-4">
-                <label className="  lg:text-xl font-bold px-4">Email</label>
-                <input
-                  type="email"
-                  id="email"
-                  className="bg-blue-100 lg:h-10 rounded pl-4 h-8"
-                  required
-                  placeholder="email"
-                  value={contactPerson.email}
-                  onChange={e =>
-                    setcontactPerson({
-                      ...contactPerson,
-                      email: e.target.value,
-                    })
-                  }
-                ></input>
-              </div>
-
-              <div className="mt-4">
-                <label className=" rounded p-2 lg:text-xl font-bold px-4">
-                  Relation with patient
-                </label>
-                <input
-                  className="bg-blue-100 lg:h-10 ml-24 rounded pl-4 h-8 lg:mt-0 lg:ml-0 mt-2 "
-                  placeholder="eg. father"
-                  required
-                  value={contactPerson.relation}
-                  onChange={e =>
-                    setcontactPerson({
-                      ...contactPerson,
-                      relation: e.target.value,
-                    })
-                  }
-                ></input>
-              </div>
-
-              <div className="grid grid-cols-4 gap-2 mt-4 mr-4 grid-flow-dense ">
+              <div
+                className="
+              flex
+              md:flex-row
+              flex-col
+              items-center "
+              >
                 <label className=" lg:text-xl font-bold px-4 mb-8 col-span-1">
                   Address
                 </label>
-                <div className="grid grid-cols-2 gap-8 col-span-3 ">
+                <div
+                  className="   grid 
+                  lg:grid-cols-3
+                  md:grid-cols-2
+                  grid-cols-1
+                  gap-2
+                  my-2 "
+                >
                   <input
                     type="text"
-                    className="bg-blue-100 h-10  rounded pl-4 "
+                    className="     my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 "
                     required
                     placeholder="building/area"
                     value={contactPerson.address.building}
@@ -585,7 +1204,19 @@ export default function Register(props: any) {
                   ></input>
                   <input
                     type="text"
-                    className="bg-blue-100 h-10  rounded pl-4 "
+                    className="     my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300"
                     required
                     placeholder="city"
                     value={contactPerson.address.city}
@@ -601,7 +1232,19 @@ export default function Register(props: any) {
                   ></input>
                   <input
                     type="text"
-                    className="bg-blue-100 h-10  rounded  pl-4"
+                    className="     my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300"
                     required
                     placeholder="Taluka"
                     value={contactPerson.address.taluk}
@@ -617,7 +1260,19 @@ export default function Register(props: any) {
                   ></input>
                   <input
                     type="text"
-                    className="bg-blue-100 h-10  rounded  pl-4"
+                    className="     my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300"
                     required
                     placeholder="District"
                     value={contactPerson.address.district}
@@ -633,23 +1288,47 @@ export default function Register(props: any) {
                   ></input>
                   <input
                     type="number"
-                    className="bg-blue-100 h-10  rounded  pl-4"
+                    className="     my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300"
                     required
                     placeholder="Pin-code"
-                    value={contactPerson.address.pincode}
+                    value={contactPerson.address.pinched}
                     onChange={e =>
                       setcontactPerson({
                         ...contactPerson,
                         address: {
                           ...contactPerson.address,
-                          pincode: e.target.value,
+                          pinched: e.target.value,
                         },
                       })
                     }
                   ></input>
                   <input
                     type="text"
-                    className="bg-blue-100 h-10  rounded  pl-4"
+                    className="     my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300"
                     placeholder="State"
                     required
                     value={contactPerson.address.state}
@@ -695,8 +1374,22 @@ export default function Register(props: any) {
                     Loading...
                   </button>
                 ) : (
-                  <button className="bg-primary rounded p-2 px-8 font-bold text-xl hover:bg-bgsecondary mb-4 ">
-                    Submit
+                    <button className="
+                  bg-blue-500
+                  text-white
+                  font-bold 
+                  py-2
+                  px-4
+                  rounded
+                  hover:bg-blue-700
+
+                  focus:outline-none
+                  focus:shadow-outline
+                  " type="submit">
+                      
+                
+               
+                      register
                   </button>
                 )}
               </div>
