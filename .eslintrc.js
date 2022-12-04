@@ -11,12 +11,17 @@ export default {
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "ecmaVersion": "latest",
+        "ecmaVersion": 12,
         "sourceType": "module"
+
+
     },
     "plugins": [
         "@typescript-eslint"
+
     ],
     "rules": {
+
+        
     }
 }
