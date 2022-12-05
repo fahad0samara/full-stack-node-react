@@ -6,11 +6,11 @@ import {useNavigate} from "react-router-dom";
 export default function Register(props: any) {
   const [Loading, setLoading] = useState(false);
   const [Toggle, setToggle] = useState("Patient");
-  const [healthID, sethealthID] = useState("");
+
   const [name, setName] = useState({
     firstName: "",
     middleName: "",
-    surName: "",
+    LastName: "",
   });
   const [date, setdate] = useState("");
   const [mobile, setmobile] = useState("");
@@ -20,63 +20,119 @@ export default function Register(props: any) {
   const [address, setaddress] = useState({
     building: "",
     city: "",
-    taluk: "",
+    Street: "",
     district: "",
     state: "",
-    pinched: "",
+    ZipCode: "",
   });
   const [password, setpassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const [diseases, setdiseases] = useState("");
-  const [diseaseList, setDiseaseList] = useState([{disease: "", yrs: ""}]);
+  const [diseaseList, setDiseaseList] = useState([
+    {disease: "", YearRound: ""},
+  ]);
+
+  const [allergyList, setAllergyList] = useState([
+    {
+      allergy: "",
+      YearRound: "",
+    },
+  ]);
+
+  const [medicationList, setMedicationList] = useState([
+    {
+      medication: "",
+      YearRound: "",
+    },
+  ]);
+
   const [contactPerson, setcontactPerson] = useState({
     name: {
       firstName: "",
-
-      surName: "",
+      LastName: "",
     },
     mobile: "",
     email: "",
+    relation: "",
+    age:"",
 
     address: {
       building: "",
       city: "",
-      taluk: "",
+      Street: "",
       district: "",
       state: "",
-      pinched: "",
+      ZipCode: "",
     },
   });
 
   const addDisease = () => {
     const diseaseList1 = [...diseaseList];
-    diseaseList1.push({disease: "", yrs: ""});
+    diseaseList1.push({disease: "", YearRound: ""});
     setDiseaseList(diseaseList1);
+  };
+
+  const addAllergy = () => {
+    const allergyList1 = [...allergyList];
+    allergyList1.push({allergy: "", YearRound: ""});
+    setAllergyList(allergyList1);
+  };
+
+  const addMedication = () => {
+    const medicationList1 = [...medicationList];
+    medicationList1.push({
+      medication: "",
+      YearRound: "",
+    });
+    setMedicationList(medicationList1);
   };
 
   const handleRegisterPatient = async (e: {preventDefault: () => void}) => {
     e.preventDefault();
     setLoading(true);
+    console.log(
+      name,
+      date,
+      mobile,
+      email,
+      NumberCard,
+      bloodGroup,
+      address,
+      password,
+      confirmPassword,
+      diseaseList,
+      allergyList,
+      medicationList
+    );
+
     try {
       const {data} = await axios.post(
-        "https://nodeandreact.azurewebsites.net/auth/registerPatient",
+        "http://localhost:3000/auth/registerPatient",
         {
-          healthID,
           name,
           date,
           mobile,
           email,
-          NumberCard,
+
           bloodGroup,
           address,
           password,
 
+          diseaseList,
+          allergyList,
+          medicationList,
+
           contactPerson,
         }
       );
+      console.log("====================================");
+      console.log(
+        "🚀 ~ file: App.tsx ~ line 100 ~ handleRegisterPatient ~ data",
+        data
+      );
+      console.log("====================================");
       setLoading(false);
       setSuccess(data.message);
       setTimeout(() => {
@@ -94,14 +150,8 @@ export default function Register(props: any) {
       console.log("====================================");
       setLoading(false);
       setError(
-        (error &&
-          // @ts-ignore
-          error.response &&
-          // @ts-ignore
-          error.response.data &&
-          // @ts-ignore
-          error.response.data.message) ||
-          "Something went wrong"
+        // @ts-ignore
+        error.response.data
       );
     }
   };
@@ -130,17 +180,27 @@ export default function Register(props: any) {
 
           <form
             className="   
-          
-             bg-gradient-to-b
-              from-purple-400
-              to-purple-600
+            bg-gradient-to-l
           
             
-            
-          rounded-lg shadow-xl p-8
-             max-w-screen-lg mx-10 
-          md:mx-auto md:items-center
-           p-10"
+             from-cyan-300
+              to-cyan-300/90
+              rounded-2xl
+              
+              shadow-2xl
+              shadow-white
+              shadow-opacity-50
+              shadow-offset-4
+              shadow-radius-4
+
+             
+              
+              p-8
+              md:p-14
+              mx-4
+              md:mx-32
+              my-4
+              md:my-8"
             onSubmit={handleRegisterPatient}
           >
             <div className="flex   mt-2 bg-bgsecondary w-fit  justify-between rounded mx-auto">
@@ -300,11 +360,11 @@ export default function Register(props: any) {
                     placeholder="
                   Last Name"
                     type="text"
-                    value={name.surName}
+                    value={name.LastName}
                     onChange={e =>
                       setName({
                         ...name,
-                        surName: e.target.value,
+                        LastName: e.target.value,
                       })
                     }
                   ></input>
@@ -391,25 +451,6 @@ export default function Register(props: any) {
                   ></input>
                 </div>
               </div>
-
-              {/* <div className=" aadhar lg:grid grid-cols-4 gap-2 mt-4 mr-4">
-                <label className="font-bold lg:text-xl px-4 ">
-              
-                </label>
-                <div>
-                  <input
-                    type="text"
-                    placeholder="Aadhar card No."
-                    required
-                    className="pl-4 bg-blue-100 lg:h-10  rounded h-8"
-                    value={healthID}
-                    onChange={e => sethealthID(e.target.value)}
-                  ></input>
-                  <span className="text-xs text-red-500 py-1">
-                    {healthID.length > 0 && healthID.length < 12}
-                  </span>
-                </div>
-              </div> */}
 
               <div
                 className="   flex
@@ -607,12 +648,12 @@ export default function Register(props: any) {
                   border-gray-300 
 "
                     required
-                    placeholder="Taluka"
-                    value={address.taluk}
+                    placeholder="Street"
+                    value={address.Street}
                     onChange={e =>
                       setaddress({
                         ...address,
-                        taluk: e.target.value,
+                        Street: e.target.value,
                       })
                     }
                   ></input>
@@ -664,11 +705,11 @@ export default function Register(props: any) {
 "
                     required
                     placeholder="Pin-code"
-                    value={address.pinched}
+                    value={address.ZipCode}
                     onChange={e =>
                       setaddress({
                         ...address,
-                        pinched: e.target.value,
+                        ZipCode: e.target.value,
                       })
                     }
                   ></input>
@@ -798,9 +839,9 @@ export default function Register(props: any) {
              "
               >
                 <div className="col-span-5 ">
-                  <label className=" lg:text-xl  my-3 font-bold px-4 grid col-start-1 col-span-3">
-                    do you have any disease is permanent
-                  </label>
+                  <h1 className=" lg:text-xl  my-1 font-bold px-4 grid col-start-1 col-span-3">
+                    Do you have a permanent illness?
+                  </h1>
                 </div>
                 <div className="col-span-4  ">
                   {diseaseList.map((disease, index) => {
@@ -814,22 +855,23 @@ export default function Register(props: any) {
                                lg:w-64
                                 lg:rounded-lg
                                 lg:px-4
-                                
-
-                             
                   px-4
                   focus:outline-none
                   focus:ring-2
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
-
                   border-gray-300 
                             col-span-3 rounded-lg lg:pl-4 h-8 pl-2"
                           type="text"
-                          name="disease"
+                          name="
+
+                          Asthma
+                          "
                           value={disease.disease}
-                          placeholder="eg.dibetes"
+                          placeholder="
+                          ex.Asthma
+                          "
                           onChange={e => {
                             const values = [...diseaseList];
                             values[index].disease = e.target.value;
@@ -852,12 +894,15 @@ export default function Register(props: any) {
                   border-gray-300 
                             col-span-3 rounded-lg lg:pl-4 h-8 pl-2"
                           type="text"
-                          name="yrs"
-                          placeholder="years e.g 3"
-                          value={disease.yrs}
+                          name="YearRound"
+                          placeholder="
+                          Severe asthma.
+                       
+                          "
+                          value={disease.YearRound}
                           onChange={e => {
                             const values = [...diseaseList];
-                            values[index].yrs = e.target.value;
+                            values[index].YearRound = e.target.value;
 
                             setDiseaseList(values);
                           }}
@@ -885,6 +930,207 @@ export default function Register(props: any) {
                 </div>
               </div>
             </div>
+            {
+              //addAllergy
+            }
+            <div
+              className="grid lg:grid-cols-3
+              md:grid-cols-2
+              grid-cols-1
+              gap-1
+              my-2
+              text-center
+              lg:text-start
+              "
+            >
+              <div className="col-span-5 ">
+                <h1 className=" lg:text-xl  my-1 font-bold px-4 grid col-start-1 col-span-3">
+                  do you have any allergy
+                </h1>
+              </div>
+              <div className="col-span-4  ">
+                {allergyList.map((allergy, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="grid grid-cols-7 col-span-1 mb-3"
+                    >
+                      <input
+                        className="lg:h-10
+                                lg:w-64
+                                lg:rounded-lg
+                                lg:px-4
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300
+                            col-span-3 rounded-lg lg:pl-4 h-8 pl-2"
+                        type="text"
+                        name="allergy"
+                        value={allergy.allergy}
+                        placeholder=" ex. penicillin"
+                        onChange={e => {
+                          const values = [...allergyList];
+                          values[index].allergy = e.target.value;
+                          setAllergyList(values);
+                        }}
+                      />
+                      <input
+                        className="lg:h-10
+                                lg:w-64
+                                lg:rounded-lg
+                                lg:px-4
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+                  mx-3
+
+                  border-gray-300
+                            col-span-3 rounded-lg lg:pl-4 h-8 pl-2"
+                        type="text"
+                        name="
+                        allergy
+
+                        "
+                        placeholder="
+                        allergy
+
+                        "
+                        value={allergy.YearRound}
+                        onChange={e => {
+                          const values = [...allergyList];
+                          values[index].YearRound = e.target.value;
+
+                          setAllergyList(values);
+                        }}
+                      />
+
+                      <div
+                        className="col-span-1 pl-3"
+                        onClick={() => {
+                          if (allergyList.length > 1) {
+                            const values = [...allergyList];
+                            values.splice(index, 1);
+                            setAllergyList(values);
+                          }
+                        }}
+                      >
+                        <AiFillMinusCircle className="text-2xl text-red-500" />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div onClick={addAllergy} className="col-span-1">
+                <AiFillPlusCircle className="text-2xl text-green-500" />
+              </div>
+            </div>
+            {
+              //addMedication
+            }
+            <div
+              className="grid lg:grid-cols-3
+              md:grid-cols-2
+              grid-cols-1
+              gap-1
+              my-2
+              text-center
+              lg:text-start
+              "
+            >
+              <div className="col-span-5 ">
+                <h1 className=" lg:text-xl   font-bold px-4 grid col-start-1 col-span-3">
+                  do you have any medication
+                </h1>
+              </div>
+              <div className="col-span-4  ">
+                {medicationList.map((medication, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="grid grid-cols-7 col-span-1 mb-3"
+                    >
+                      <input
+                        className="lg:h-10
+                                lg:w-64
+                                lg:rounded-lg
+                                lg:px-4 px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300
+                            col-span-3 rounded-lg lg:pl-4 h-8 pl-2"
+                        type="text"
+                        name="Drops"
+                        value={medication.medication}
+                        placeholder=" ex.
+                        Drops
+                        "
+                        onChange={e => {
+                          const values = [...medicationList];
+                          values[index].medication = e.target.value;
+                          setMedicationList(values);
+                        }}
+                      />
+                      <input
+                        className="lg:h-10
+                                lg:w-64
+                                lg:rounded-lg
+                                lg:px-4
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+                  mx-3 border-gray col-span-3 rounded-lg lg:pl-4 h-8 pl-2"
+                        type="text"
+                        name="medication"
+                        placeholder="medication"
+                        value={medication.YearRound}
+                        onChange={e => {
+                          const values = [...medicationList];
+                          values[index].YearRound = e.target.value;
+
+                          setMedicationList(values);
+                        }}
+                      />
+
+                      <div
+                        className="col-span-1 pl-3"
+                        onClick={() => {
+                          if (medicationList.length > 1) {
+                            const values = [...medicationList];
+                            values.splice(index, 1);
+                            setMedicationList(values);
+                          }
+                        }}
+                      >
+                        <AiFillMinusCircle className="text-2xl text-red-500" />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div onClick={addMedication} className="col-span-1">
+                <AiFillPlusCircle className="text-2xl text-green-500" />
+              </div>
+            </div>
+            {
+              //addDisease
+            }
 
             <div className={Toggle === "Patient" ? "" : "hidden"}>
               <div className="flex justify-center">
@@ -893,19 +1139,7 @@ export default function Register(props: any) {
                 </h1>
               </div>
 
-              <div
-                className=" flex 
-              md:flex-row
-
-              flex-col
-              items-center
-
-
-
-             
-
-              "
-              >
+              <div className=" flex md:flex-row flex-col items-center">
                 <label className="font-bold lg:text-xl ">Name</label>
                 <div
                   className="
@@ -917,10 +1151,6 @@ export default function Register(props: any) {
                     className="
                   lg:mx-5
                   mx-14
-              
-            
-                  my-2
-                
                      w-64
                   h-10
                   rounded-lg
@@ -930,7 +1160,6 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
-
                   border-gray-300 
 "
                     placeholder="first name"
@@ -966,13 +1195,13 @@ export default function Register(props: any) {
 "
                     placeholder="last name"
                     required
-                    value={contactPerson.name.surName}
+                    value={contactPerson.name.LastName}
                     onChange={e =>
                       setcontactPerson({
                         ...contactPerson,
                         name: {
                           ...contactPerson.name,
-                          surName: e.target.value,
+                          LastName: e.target.value,
                         },
                       })
                     }
@@ -1000,13 +1229,11 @@ export default function Register(props: any) {
                   <label className="font-bold lg:text-xl px-4 ">
                     Phone Number
                   </label>
-
                   <input
                     type="tel"
                     placeholder="mobile no."
                     required
                     className=" 
-                  
                   my-2
                   mx-2
                      w-64
@@ -1043,7 +1270,6 @@ export default function Register(props: any) {
                     type="email"
                     id="email"
                     className=" 
-                  
                   my-2
                   mx-2
                      w-64
@@ -1090,7 +1316,7 @@ export default function Register(props: any) {
               text-center"
                 >
                   <label className=" rounded p-2 lg:text-xl font-bold px-4">
-             age
+                    age
                   </label>
                   <input
                     type="date"
@@ -1113,9 +1339,14 @@ export default function Register(props: any) {
                     placeholder="
                   age"
                     required
+                    value={contactPerson.age}
+                    onChange={e => 
+                      setcontactPerson({
+                        ...contactPerson,
+                        age: e.target.value,
+                      })
 
-                    value={NumberCard}
-                    onChange={e => setNumberCard(e.target.value)}
+                    }
                   ></input>
                 </div>
                 <div
@@ -1127,7 +1358,6 @@ export default function Register(props: any) {
                 >
                   <label className=" rounded p-2 lg:text-xl font-bold px-4">
                     Relation / connection
-
                   </label>
                   <input
                     className=" 
@@ -1150,8 +1380,13 @@ export default function Register(props: any) {
                     ex.bother / 
                     sister
                     "
-                    value={NumberCard}
-                    onChange={e => setNumberCard(e.target.value)}
+                    value={contactPerson.relation}
+                    onChange={e =>
+                      setcontactPerson({
+                        ...contactPerson,
+                        relation: e.target.value,
+                      })
+                    }
                   ></input>
                 </div>
               </div>
@@ -1246,14 +1481,14 @@ export default function Register(props: any) {
 
                   border-gray-300"
                     required
-                    placeholder="Taluka"
-                    value={contactPerson.address.taluk}
+                    placeholder="Street"
+                    value={contactPerson.address.Street}
                     onChange={e =>
                       setcontactPerson({
                         ...contactPerson,
                         address: {
                           ...contactPerson.address,
-                          taluk: e.target.value,
+                          Street: e.target.value,
                         },
                       })
                     }
@@ -1303,13 +1538,13 @@ export default function Register(props: any) {
                   border-gray-300"
                     required
                     placeholder="Pin-code"
-                    value={contactPerson.address.pinched}
+                    value={contactPerson.address.ZipCode}
                     onChange={e =>
                       setcontactPerson({
                         ...contactPerson,
                         address: {
                           ...contactPerson.address,
-                          pinched: e.target.value,
+                          ZipCode: e.target.value,
                         },
                       })
                     }
@@ -1374,22 +1609,26 @@ export default function Register(props: any) {
                     Loading...
                   </button>
                 ) : (
-                    <button className="
-                  bg-blue-500
+                  <button
+                    className="
+                  bg-black
+
+
                   text-white
                   font-bold 
-                  py-2
-                  px-4
+                  py-3
+                  px-9
                   rounded
-                  hover:bg-blue-700
+                  hover:bg-sky-50
+                  hover:text-black
+
 
                   focus:outline-none
                   focus:shadow-outline
-                  " type="submit">
-                      
-                
-               
-                      register
+                  "
+                    type="submit"
+                  >
+                    Register
                   </button>
                 )}
               </div>

@@ -4,35 +4,37 @@ const Joi = require("joi");
 // register validation
 const registerValidation = (data: any) => {
   const schema = Joi.object({
-    healthID: Joi.string().min(8).required(),
-
     name: Joi.object({
       firstName: Joi.string().min(1).required(),
       middleName: Joi.string().min(1).required(),
-      surName: Joi.string().min(1).required(),
+      LastName: Joi.string().min(1).required(),
     }),
 
     date: Joi.date().required(),
 
-    bloodGroup: Joi.string().min(3).required(),
+    bloodGroup: Joi.string().required(),
     email: Joi.string().min(5).required().email(),
     password: Joi.string().min(5).required(),
-    mobile: Joi.string().min(1).max(10).required(),
+    mobile: Joi.number().min(8).required(),
     contactPerson: Joi.object({
       name: Joi.object({
         firstName: Joi.string().min(1).required(),
-        surName: Joi.string().min(1).required(),
+        LastName: Joi.string().min(1).required(),
       }),
-      mobile: Joi.string().min(1).max(10).required(),
+      mobile: Joi.number().min(8).required(),
       email: Joi.string().min(5).required().email(),
+      relation:
+        Joi.string().min(1).max(10).required() &&
+        Joi.string().min(1).max(10).required(),
+      age: Joi.date().required(),
       address: [
         {
           building: Joi.string().min(1).required(),
           city: Joi.string().min(1).required(),
-          taluk: Joi.string().min(1).required(),
+          Street: Joi.string().min(1).required(),
           district: Joi.string().min(1).required(),
           state: Joi.string().min(1).required(),
-          pinched: Joi.number().min(10).max(999999).required(),
+          ZipCode: Joi.number().min(4).max(999999).required(),
         },
       ],
     }),
@@ -40,14 +42,15 @@ const registerValidation = (data: any) => {
       {
         building: Joi.string().min(3).required(),
         city: Joi.string().min(3).required(),
-        taluk: Joi.string().min(3).required(),
+        Street: Joi.string().min(3).required(),
         district: Joi.string().min(3).required(),
         state: Joi.string().min(3).required(),
-        pinched: Joi.number().min(1).max(999999).required(),
+        ZipCode: Joi.number().min(1).max(999999).required(),
       },
     ],
-    // not allowed the same numbered
-    NumberCard: Joi.number().min(7).max(999999999999).required(),
+    diseaseList: Joi.array().items(),
+    allergyList: Joi.array().items(),
+    medicationList: Joi.array().items(),
   });
   return schema.validate(data);
 };

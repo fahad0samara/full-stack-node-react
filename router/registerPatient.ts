@@ -20,10 +20,7 @@ router.post("/registerPatient", async (req, res) => {
     });
     if (emailExist) return res.status(400).send("Email already exists");
     // check if the healthID is already in
-    const healthIDExist = await Patient.findOne({
-      healthID: req.body.healthID,
-    });
-    if (healthIDExist) return res.status(401).send("Health ID already exists");
+    
 
     // hash passwords
     const salt = await bcrypt.genSalt(10);
@@ -32,14 +29,17 @@ router.post("/registerPatient", async (req, res) => {
     // create a new user
     const patient = new Patient({
       name: req.body.name,
-      healthID: req.body.healthID,
+    
       password: hashedPassword,
       mobile: req.body.mobile,
       email: req.body.email,
       relation: req.body.relation,
       address: req.body.address,
       date: req.body.date,
-      NumberCard: req.body.NumberCard,
+      medicationList: req.body.medicationList,
+      diseaseList: req.body.diseaseList,
+      allergyList: req.body.allergyList,
+      
       bloodGroup: req.body.bloodGroup,
       contactPerson: req.body.contactPerson,
     });

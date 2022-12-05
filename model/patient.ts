@@ -22,116 +22,45 @@ mongoose
   .catch((err: any) => console.log(err, "error mongodeb"));
 // const prescriptionSchema = require("./prescription");
 
-const patientSchema = new mongoose.Schema({
-  healthID: {
-    type: Number,
-    required: true,
-    min: 8,
-    unique: true,
-
-  },
-  name: {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    middleName: {
-      type: String,
-      required: true,
-    },
-    surName: {
-      type: String,
-      required: true,
-    },
-  },
-  date: {
-    type: Date,
-    required: true,
-  },
-  mobile: {
-    type: String,
-    required: true,
-    minlength: 1,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  NumberCard: {
-    type: Number,
-    min: 7,
-    max: 999999999999,
-
-    required: true,
-  },
-  bloodGroup: {
-    type: String,
-    required: true,
-  },
-  address: {
-    building: {
-      type: String,
-      required: true,
-    },
-    city: {
-      type: String,
-      required: true,
-    },
-    taluk: {
-      type: String,
-      required: true,
-    },
-    district: {
-      type: String,
-      required: true,
-    },
-    state: {
-      type: String,
-      required: true,
-    },
-    pinched: {
-      type: Number,
-
-      required: true,
-    },
-  },
-  password: {
-    type: String,
-    required: true,
-    minlength: 8,
-  },
-  diseases: [
-    {
-      disease: {
-        type: String,
-      },
-      yrs: {
-        type: Number,
-      },
-    },
-  ],
-  contactPerson: {
+const patientSchema = new mongoose.Schema(
+  {
+    // healthID: {
+    //   type: Number,
+    //   required: true,
+    //   min: 8,
+    //   unique: true,
+    // },
     name: {
       firstName: {
         type: String,
         required: true,
       },
-      surName: {
+      middleName: {
+        type: String,
+        required: true,
+      },
+      LastName: {
         type: String,
         required: true,
       },
     },
+    date: {
+      type: Date,
+      required: true,
+    },
     mobile: {
       type: String,
       required: true,
-      minlength: 10,
+      minlength: 1,
     },
     email: {
       type: String,
-      lowercase: true,
+      required: true,
     },
-    relation: {
+
+    bloodGroup: {
       type: String,
+      required: true,
     },
     address: {
       building: {
@@ -142,7 +71,7 @@ const patientSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
-      taluk: {
+      Street: {
         type: String,
         required: true,
       },
@@ -154,22 +83,113 @@ const patientSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
-      pinched: {
+      ZipCode: {
         type: Number,
 
         required: true,
       },
     },
+    password: {
+      type: String,
+      required: true,
+      minlength: 8,
+    },
+    diseaseList: [
+      {
+        disease: {
+          type: String,
+        },
+        YearRound: {
+          type: Number,
+        },
+      },
+    ],
+
+    allergyList: [
+      {
+        allergy: {
+          type: String,
+        },
+        YearRound: {
+          type: Number,
+        },
+      },
+    ],
+    medicationList: [
+      {
+        medication: {
+          type: String,
+        },
+        YearRound: {
+          type: Number,
+        },
+      },
+    ],
+    contactPerson: {
+      name: {
+        firstName: {
+          type: String,
+          required: true,
+        },
+        LastName: {
+          type: String,
+          required: true,
+        },
+      },
+      mobile: {
+        type: String,
+        required: true,
+      },
+      email: {
+        type: String,
+        lowercase: true,
+      },
+      relation: {
+        type: String,
+        required: true,
+      },
+      age: {
+        type: Date,
+        required: true,
+      },
+
+      address: {
+        building: {
+          type: String,
+          required: true,
+        },
+        city: {
+          type: String,
+          required: true,
+        },
+        Street: {
+          type: String,
+          required: true,
+        },
+        district: {
+          type: String,
+          required: true,
+        },
+        state: {
+          type: String,
+          required: true,
+        },
+        ZipCode: {
+          type: Number,
+          required: true,
+        },
+      },
+    },
+
+    prescriptions: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "prescription",
+    },
   },
-
-
-  prescriptions: 
   {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "prescription",
-  },
-    
-});
+    timestamps: true,
+  }
+);
 
 
 
