@@ -20,7 +20,7 @@ export default function Register(props: any) {
   const [address, setaddress] = useState({
     building: "",
     city: "",
-    taluk: "",
+    Street: "",
     district: "",
     state: "",
     ZipCode: "",
@@ -61,7 +61,7 @@ export default function Register(props: any) {
     address: {
       building: "",
       city: "",
-      taluk: "",
+      Street: "",
       district: "",
       state: "",
       ZipCode: "",
@@ -648,12 +648,12 @@ export default function Register(props: any) {
                   border-gray-300 
 "
                     required
-                    placeholder="Taluka"
-                    value={address.taluk}
+                    placeholder="Street"
+                    value={address.Street}
                     onChange={e =>
                       setaddress({
                         ...address,
-                        taluk: e.target.value,
+                        Street: e.target.value,
                       })
                     }
                   ></input>
@@ -1480,14 +1480,14 @@ export default function Register(props: any) {
 
                   border-gray-300"
                     required
-                    placeholder="Taluka"
-                    value={contactPerson.address.taluk}
+                    placeholder="Street"
+                    value={contactPerson.address.Street}
                     onChange={e =>
                       setcontactPerson({
                         ...contactPerson,
                         address: {
                           ...contactPerson.address,
-                          taluk: e.target.value,
+                          Street: e.target.value,
                         },
                       })
                     }

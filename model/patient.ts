@@ -24,12 +24,11 @@ mongoose
 
 const patientSchema = new mongoose.Schema(
   {
-    // healthID: {
-    //   type: Number,
-    //   required: true,
-    //   min: 8,
-    //   unique: true,
-    // },
+
+    healthIDNumber: {
+      type: String,
+    },
+
     name: {
       firstName: {
         type: String,

@@ -19,8 +19,20 @@ router.post("/registerPatient", async (req, res) => {
       email: req.body.email,
     });
     if (emailExist) return res.status(400).send("Email already exists");
-    // check if the healthID is already in
-    
+
+    // create  healthID id for user start from 10
+    const healthID = await Patient.find().countDocuments();
+    const healthIDNumber = healthID + 10;
+
+
+
+
+
+
+
+
+
+
 
     // hash passwords
     const salt = await bcrypt.genSalt(10);
@@ -28,8 +40,8 @@ router.post("/registerPatient", async (req, res) => {
 
     // create a new user
     const patient = new Patient({
+      healthIDNumber:healthIDNumber,
       name: req.body.name,
-    
       password: hashedPassword,
       mobile: req.body.mobile,
       email: req.body.email,
@@ -39,7 +51,7 @@ router.post("/registerPatient", async (req, res) => {
       medicationList: req.body.medicationList,
       diseaseList: req.body.diseaseList,
       allergyList: req.body.allergyList,
-      
+
       bloodGroup: req.body.bloodGroup,
       contactPerson: req.body.contactPerson,
     });
@@ -62,11 +74,18 @@ router.post("/loginPatient", async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
-    // check if the healthID exists
+    // check if the healthIDNumber exists
     const patient = await Patient.findOne({
-      healthID: req.body.healthID,
+      healthIDNumber: req.body.healthIDNumber,
     });
-    if (!patient) return res.status(400).send("Health ID is not found");
+    if (!patient) return res.status(400).send(" healthIDNumber is wrong"
+    );
+        // check if the email exists
+    const emailExist = await Patient.findOne({
+      email: req.body.email,
+    });
+    if (!emailExist) return res.status(400).send("Email is wrong");
+    
 
     // check if the password is correct
     const validPass = await bcrypt.compare(req.body.password, patient.password);
