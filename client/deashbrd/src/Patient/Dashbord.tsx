@@ -49,7 +49,7 @@ const Dashboard = (props: any) => {
                   placeholder="Search"
                   className="w-96 rounded ml-4 text-xl   pl-4 border focus:outline-none "
                 ></input>
-                <div className="bg-white pl-2 rounded ">serc</div>
+                <div className="bg-black pl-2 rounded ">serc</div>
               </div>
               <Link to="/patient/profile">
                 <button className="flex bg-white rounded shadow  px-4  ml-60 h-14 ">
@@ -210,6 +210,55 @@ const Dashboard = (props: any) => {
                             </div>
                             <div className="ml-2">
                               <h1>{mappedData.prescription}</h1>
+                            </div>
+                            {
+                              //hospital
+                            }
+                            <div className="flex 
+
+              
+                            ">
+                              <div>
+                                <h1>Hospital :</h1>
+                                <h1>
+                                  {mappedData
+                                    ? mappedData.hospital.name
+                                    : "N/A"}
+                                </h1>
+
+                                <h1>
+                                  {mappedData
+                                    ? mappedData.hospital.address
+                                    : "N/A"}
+                                </h1>
+
+                                <h1>
+                                  {mappedData
+                                    ? mappedData.hospital.phone
+                                    : "N/A"}
+                                </h1>
+
+                                <h1>
+                                  {mappedData
+                                    ? mappedData.hospital.email
+                                    : "N/A"}
+                                </h1>
+
+                                {
+                                  //nextVisit convertDate
+                                }
+                                <h1
+                                  className="font-bold font-poppins text-xl "
+                                >Next Visit :</h1>
+                                <h1>
+                                  {
+                                    mappedData
+                                      ? convertDate(mappedData.nextVisit)
+                                      : "N/A"
+                                  }
+                                 
+                                </h1>
+                              </div>
                             </div>
                           </div>
                         </div>
