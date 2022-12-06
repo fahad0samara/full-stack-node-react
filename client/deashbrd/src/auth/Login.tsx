@@ -1,8 +1,49 @@
-export const Header = () => {
+import axios from "axios";
+import React, {useState, useEffect} from "react";
+import {Link, Outlet, useNavigate} from "react-router-dom";
+import { useLogIN } from '../../ContextLog';
+const Login = () => {
+  const {setProfile, setLoading} = useLogIN();
+    const navigate = useNavigate();
+
+  const [error, setError] = useState(null);
+  const [healthIDNumber, sethealthIDNumber] = useState("");
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+
+  const HandelLogin = async (e: {preventDefault: () => void}) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/auth/loginPatient",
+        {
+          healthIDNumber,
+          email,
+          password,
+        }
+      );
+      setProfile(response.data.patient);
+      
+
+
+      setError(null);
+      setLoading(false);
+      console.log(response.data);
+
+      navigate("/Dashboard");
+
+    
+    } catch (error) {
+      setError(error.response.data);
+      console.log(error.response.data);
+    }
+  };
+
   return (
     <div className="relative">
       <img
-        src="https://images.pexels.com/photos/3747463/pexels-photo-3747463.jpeg?auto=compress&amp;cs=tinysrgb&amp;dpr=2&amp;h=750&amp;w=1260"
+        src="https://images.unsplash.com/photo-1609188076864-c35269136b09?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
         className="absolute inset-0 object-cover w-full h-full"
         alt=""
       />
@@ -11,19 +52,34 @@ export const Header = () => {
           <div className="flex flex-col items-center justify-between xl:flex-row">
             <div className="w-full max-w-xl mb-12 xl:mb-0 xl:pr-16 xl:w-7/12">
               <h2 className="max-w-lg mb-6 font-sans text-3xl font-bold tracking-tight text-white sm:text-4xl sm:leading-none">
-                The quick, brown fox <br className="hidden md:block" />
-                jumps over a{" "}
-                <span className="text-teal-accent-400">lazy dog</span>
+                Emergency Department <br className="hidden md:block" />
+                Ambulance Service{" "}
               </h2>
-              <p className="max-w-xl mb-4 text-base text-gray-400 md:text-lg">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque laudan, totam rem aperiam, eaque ipsa
-                quae.
+              <p
+                className="max-w-xl mb-4 text-base
+           text-sky-50
+               md:text-lg"
+              >
+                The Emergency Department of the Hippocrates Private Hospital is
+                currently not in operation due to its restructuring. From 8:00
+                until 20:00
               </p>
               <a
                 href="/"
                 aria-label=""
-                className="inline-flex items-center font-semibold tracking-wider transition-colors duration-200 text-teal-accent-400 hover:text-teal-accent-700"
+                className="inline-flex items-center
+                bg-cyan-400
+                rounded-full
+                h-9 px-4
+                tracking-wide
+                text-white
+                transition
+                duration-200
+                transform
+                hover:bg-cyan-500
+                focus:shadow-outline
+                focus:outline-none
+                "
               >
                 Learn more
                 <svg
@@ -35,23 +91,29 @@ export const Header = () => {
                 </svg>
               </a>
             </div>
-            <div className="w-full max-w-xl xl:px-8 xl:w-5/12">
-              <div className="bg-white rounded shadow-2xl p-7 sm:p-10">
-                <h3 className="mb-4 text-xl font-semibold sm:text-center sm:mb-6 sm:text-2xl">
-                  Sign up for updates
+            <div className="w-full max-w-xl xl:px-10 xl:w-5/12">
+              <div className=" rounded-2xl shadow-2xl drop-shadow-2xl shadow-sky-300 p-7 sm:p-12">
+                <h3 className="mb-4 text-xl text-white font-semibold sm:text-center sm:mb-6 sm:text-2xl">
+                  Log in
                 </h3>
                 <form>
                   <div className="mb-1 sm:mb-2">
                     <label
                       htmlFor="firstName"
-                      className="inline-block mb-1 font-medium"
+                      className="inline-block text-sky-300 mb-1 font-black"
                     >
-                      First name
+                      Health ID Number
                     </label>
                     <input
-                      placeholder="John"
+                      value={healthIDNumber}
+                      onChange={e => {
+                        sethealthIDNumber(e.target.value);
+                      }}
+                      placeholder="
+                    Enter your ID Number ex:12
+                      "
                       required
-                      type="text"
+                      type="number"
                       className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
                       id="firstName"
                       name="firstName"
@@ -59,45 +121,74 @@ export const Header = () => {
                   </div>
                   <div className="mb-1 sm:mb-2">
                     <label
-                      htmlFor="lastName"
-                      className="inline-block mb-1 font-medium"
+                      htmlFor="Email"
+                      className="inline-block text-sky-300 mb-1 font-black"
                     >
-                      Last name
+                      Email
                     </label>
                     <input
-                      placeholder="Doe"
+                      value={email}
+                      onChange={e => {
+                        setemail(e.target.value);
+                      }}
+                      placeholder="
+
+                      Enter your Email
+                      "
                       required
-                      type="text"
+                      type="email"
                       className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
-                      id="lastName"
-                      name="lastName"
+                      id="Email"
+                      name="
+                    Email
+                      "
                     />
                   </div>
                   <div className="mb-1 sm:mb-2">
                     <label
-                      htmlFor="email"
-                      className="inline-block mb-1 font-medium"
+                      htmlFor="Password"
+                      className="inline-block text-sky-300 mb-1 font-black"
                     >
-                      E-mail
+                      Password
                     </label>
                     <input
-                      placeholder="john.doe@example.org"
+                      value={password}
+                      onChange={e => {
+                        setpassword(e.target.value);
+                      }}
+                      placeholder="
+                      Enter your Password
+                      "
                       required
-                      type="text"
+                      type="Password"
                       className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
-                      id="email"
-                      name="email"
+                      id="Password"
+                      name="Password"
                     />
                   </div>
                   <div className="mt-4 mb-2 sm:mb-4">
                     <button
+                      //HandelLogin
+                      onClick={HandelLogin}
                       type="submit"
-                      className="inline-flex items-center justify-center w-full h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline focus:outline-none"
+                      className="inline-flex bg-cyan-400 items-center justify-center w-full h-12 px-6 font-medium tracking-wide text-white transition duration-200 rounded shadow-md bg-deep-purple-accent-400 hover:bg-deep-purple-accent-700 focus:shadow-outline 
+                      hover:bg-orange-400
+                      hover:text-black
+                      "
                     >
-                      Subscribe
+                      Log in
                     </button>
                   </div>
-                  <p className="text-xs text-gray-600 sm:text-sm">
+                  {
+                    // error
+                  }
+                  {error && (
+                    <div className="text-red-500 text-center">
+                      <p>{error}</p>
+                    </div>
+                  )}
+
+                  <p className="text-xs  text-white sm:text-sm">
                     We respect your privacy. Unsubscribe at any time.
                   </p>
                 </form>
@@ -109,3 +200,5 @@ export const Header = () => {
     </div>
   );
 };
+
+export default Login;
