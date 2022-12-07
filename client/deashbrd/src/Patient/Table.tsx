@@ -18,7 +18,10 @@ const Table = () => {
               Doctor
             </th>
             <th scope="col" className="py-3 px-6">
-              date
+              Appointment date
+            </th>
+            <th scope="col" className="py-3 text-center px-6 bg-black">
+              Hospital department
             </th>
             <th scope="col" className="py-3 text-center px-6 bg-black">
               medicines
@@ -57,7 +60,36 @@ const Table = () => {
                       <td className="py-4 px-6">
                         {mappedData ? convertDate(mappedData.date) : null}
                       </td>
+                      
+                                <td className="py-1 px-2 bg-black">
+                                    {mappedData?.department?.map(
+                                        (department: any) => {
+                                            return (
+                                                <div
+                                                    className="
+                                        text-center
 
+                                        text-gray-900 whitespace-nowrap "
+                                                >
+                                                    <div className="text-base font-semibold text-white">
+                                                        {department.name}
+                                                        
+                                                    </div>
+                                                    <div className="text-sm font-semibold text-white">
+                                                        {department.type}
+                                                    </div>
+                                                </div>
+                                            );
+
+                                        }
+                                    )}
+                                </td>
+                            
+                               
+                            
+
+
+                            
                       <td className="py-1 px-2 bg-black">
                         {mappedData?.medicines?.map((medicine: any) => {
                           return (

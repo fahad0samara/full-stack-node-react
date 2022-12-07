@@ -17,15 +17,15 @@ router.post("/addPrescriptions/:id", async (req, res) => {
     if (!patient) return res.status(400).send("Patient not found");
 
     const prescriptions = {
-       hospital: req.body.hospital,
-        doctorID: req.body.doctorID,
+      doctorID: req.body.doctorID,
       medicines: req.body.medicines,
+      department:req.body.department,
       date: req.body.date,
       doctor: req.body.doctor,
-    advice: req.body.advice,
-    dosage: req.body.dosage,
+      advice: req.body.advice,
+      dosage: req.body.dosage,
       nextVisit: req.body.nextVisit,
-      tests:req.body.tests
+      tests: req.body.tests,
     };
     patient.prescriptions.push(prescriptions);
     const savedPatient = await patient.save();

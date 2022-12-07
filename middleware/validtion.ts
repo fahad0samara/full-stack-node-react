@@ -77,9 +77,9 @@ const addPrescriptionsValidation = (data: any) => {
       frequency: Joi.string().min(1).required(),
     }),
 
-    hospital: Joi.object({
+    department: Joi.object({
       name: Joi.string().min(1).required(),
-      address: Joi.string().min(1).required(),
+      type: Joi.string().min(1).required(),
       phone: Joi.number().min(1).required(),
     }),
 
