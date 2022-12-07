@@ -9,6 +9,7 @@ import {
 } from "react";
 import axios from "axios";
 import {useLogIN} from "../../ContextLog";
+import Table from "./Table";
 const Dashboard = (props: any) => {
   const {log, setLog, Profile, setProfile, loading, setLoading} = useLogIN();
   const navigate = useNavigate();
@@ -17,12 +18,8 @@ const Dashboard = (props: any) => {
     "🚀 ~ file: Dashbord.tsx ~ line 10 ~ Dashboard ~ Profile",
     Profile.name
   );
-  
-
- 
 
   const [Toggle, setToggle] = useState("Dashboard");
-
 
   const convertDate = (date: any) => {
     const newDate = new Date(date);
@@ -33,7 +30,7 @@ const Dashboard = (props: any) => {
   };
 
   return (
-    <div className="full-body col-span-10 h-screen">
+    <div className="ml-20">
       <div className="body-without-footer max-h-min bg-bgprimary ">
         <div className=" main ">
           <div className="">
@@ -56,6 +53,53 @@ const Dashboard = (props: any) => {
                   patient_profile
                 </button>
               </Link>
+            </div>
+          </div>
+          <div
+            className="
+            grid grid-cols-2 gap"
+          >
+            <div className="rounded-2xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-1 shadow-xl">
+              <a className="block rounded-xl bg-white p-6 sm:p-8" href="">
+                <div className="mt-16 sm:pr-8">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    Science of Chemistry
+                  </h3>
+
+                  <p className="mt-2 text-sm text-gray-500">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad,
+                    adipisci.
+                  </p>
+                </div>
+              </a>
+            </div>
+            <div className="rounded-2xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-1 shadow-xl">
+              <a className="block rounded-xl bg-white p-6 sm:p-8" href="">
+                <div className="mt-16 sm:pr-8">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    Science of Chemistry
+                  </h3>
+
+                  <p className="mt-2 text-sm text-gray-500">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad,
+                    adipisci.
+                  </p>
+                </div>
+              </a>
+            </div>
+            <div className="rounded-2xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-1 shadow-xl">
+              <a className="block rounded-xl bg-white p-6 sm:p-8" href="">
+                <div className="mt-16 sm:pr-8">
+                  <h3 className="text-xl font-bold text-gray-900">
+                    Science of Chemistry
+                  </h3>
+
+                  <p className="mt-2 text-sm text-gray-500">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad,
+                    adipisci.
+                  </p>
+                </div>
+              </a>
             </div>
           </div>
 
@@ -169,150 +213,17 @@ const Dashboard = (props: any) => {
             </div> */}
               {/* recent health check up end */}
             </div>
-            <div className="grid grid-cols-2">
-              <div className="m-4 p-4">
-                <div>
-                  <h1 className="font-bold font-poppins text-xl ">
-                    Recent Prescription
-                  </h1>
-                </div>
-                {Profile
-                  ? Profile.prescriptions.map((mappedData: any) => {
-                      return (
-                        <div className="bg-white mt-4 font-poppins p-4 rounded-xl shadow px-8">
-                          <div className="flex ">
-                            <div>
-                              <h1>Consultant Doctor :</h1>
-                            </div>
-                            <div className="ml-2">
-                              <h1>{`Dr. ${mappedData.doctor}`}</h1>
-                            </div>
-                          </div>
-                          <div className="flex">
-                            <div>
-                              <h1>Date :</h1>
-                            </div>
-                            <div className="ml-2">
-                              <h1>{convertDate(mappedData.createdAt)}</h1>
-                            </div>
-                          </div>
-                          <div className="flex">
-                            <div>
-                              <h1>Diagnosis :</h1>
-                            </div>
-                            <div className="ml-2">
-                              <h1>{mappedData.diagnosis}</h1>
-                            </div>
-                          </div>
-                          <div className="flex">
-                            <div>
-                              <h1>Prescription :</h1>
-                            </div>
-                            <div className="ml-2">
-                              <h1>{mappedData.prescription}</h1>
-                            </div>
-                            {
-                              //hospital
-                            }
-                            <div className="flex 
-
-              
-                            ">
-                              <div>
-                                <h1>Hospital :</h1>
-                                <h1>
-                                  {mappedData
-                                    ? mappedData.hospital.name
-                                    : "N/A"}
-                                </h1>
-
-                                <h1>
-                                  {mappedData
-                                    ? mappedData.hospital.address
-                                    : "N/A"}
-                                </h1>
-
-                                <h1>
-                                  {mappedData
-                                    ? mappedData.hospital.phone
-                                    : "N/A"}
-                                </h1>
-
-                                <h1>
-                                  {mappedData
-                                    ? mappedData.hospital.email
-                                    : "N/A"}
-                                </h1>
-
-                                {
-                                  //nextVisit convertDate
-                                }
-                                <h1
-                                  className="font-bold font-poppins text-xl "
-                                >Next Visit :</h1>
-                                <h1>
-                                  {
-                                    mappedData
-                                      ? convertDate(mappedData.nextVisit)
-                                      : "N/A"
-                                  }
-                                 
-                                </h1>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })
-                  : ""}
-              </div>
-              <div className="m-4 p-4">
+            <div className="m-4 p-4">
+              <div>
                 <div>
                   <h1 className="font-bold font-poppins text-xl ">
                     Recent Lab Test
                   </h1>
                 </div>
-                {/* {Profile
-                ? Profile.labTestList.map((mappedData: any) => {
-                    return (
-                      <div className="bg-white mt-4 font-poppins p-4 rounded-xl shadow px-8">
-                        <div className="flex ">
-                          <div>
-                            <h1>Consultant Doctor :</h1>
-                          </div>
-                          <div className="ml-2">
-                            <h1>{`Dr. ${mappedData.doctor}`}</h1>
-                          </div>
-                        </div>
-                        <div className="flex">
-                          <div>
-                            <h1>Date :</h1>
-                          </div>
-                          <div className="ml-2">
-                            <h1>{convertDate(mappedData.createdAt)}</h1>
-                          </div>
-                        </div>
-                        <div className="flex">
-                          <div>
-                            <h1>Diagnosis :</h1>
-                          </div>
-                          <div className="ml-2">
-                            <h1>{mappedData.diagnosis}</h1>
-                          </div>
-                        </div>
-                        <div className="flex">
-                          <div>
-                            <h1>Prescription :</h1>
-                          </div>
-                          <div className="ml-2">
-                            <h1>{mappedData.prescription}</h1>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })
-                  : 
-                  ""} */}
+                <Table/>
+
+             
+              
               </div>
             </div>
           </div>
@@ -323,7 +234,3 @@ const Dashboard = (props: any) => {
 };
 
 export default Dashboard;
-
-                  
-
-             

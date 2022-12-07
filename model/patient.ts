@@ -1,5 +1,7 @@
+import { number } from "joi";
 import mongoose from "mongoose";
-import prescription from "./prescription";
+import prescriptionSchema from "./prescription";
+
 
 
 
@@ -24,9 +26,8 @@ mongoose
 
 const patientSchema = new mongoose.Schema(
   {
-
     healthIDNumber: {
-      type: String,
+      type: Number,
     },
 
     name: {
@@ -180,14 +181,10 @@ const patientSchema = new mongoose.Schema(
       },
     },
 
-    prescriptions: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "prescription",
-    },
+    prescriptions: [
+      prescriptionSchema
+    ],
   },
-  {
-    timestamps: true,
-  }
 );
 
 

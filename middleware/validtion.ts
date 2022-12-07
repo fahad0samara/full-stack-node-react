@@ -59,8 +59,7 @@ const loginValidation = (data: any) => {
   const schema = Joi.object({
     password: Joi.string().min(5).required(),
     healthIDNumber: Joi.string().required(),
-    email: Joi.string().min(5).required().email()
-    
+    email: Joi.string().min(5).required().email(),
   });
   return schema.validate(data);
 };
@@ -68,24 +67,20 @@ const loginValidation = (data: any) => {
 // addPrescriptions validation
 const addPrescriptionsValidation = (data: any) => {
   const schema = Joi.object({
-    patientID: Joi.number().min(8).required(),
     doctorID: Joi.number().min(5).required(),
     date: Joi.date().required(),
     medicines: Joi.object({
       name: Joi.string().min(1).required(),
-      quantity: Joi.number().min(1).required(),
-      dosage: Joi.string().min(1).required(),
+
       type: Joi.string().min(1).required(),
-      duration: Joi.string().min(1).required(),
+
       frequency: Joi.string().min(1).required(),
-      date: Joi.date().required(),
-      total: Joi.number().min(1).required(),
     }),
 
     hospital: Joi.object({
       name: Joi.string().min(1).required(),
       address: Joi.string().min(1).required(),
-      phone: Joi.string().min(1).required(),
+      phone: Joi.number().min(1).required(),
     }),
 
     doctor: Joi.string().min(1).required(),
@@ -133,7 +128,7 @@ const doctorValidation = (data: any) => {
   return schema.validate(data);
 };
 
- //  loginDoctor validation
+//  loginDoctor validation
 const loginDoctorValidation = (data: any) => {
   const schema = Joi.object({
     password: Joi.string().min(5).required(),
@@ -161,11 +156,6 @@ const loginAdminValidation = (data: any) => {
   });
   return schema.validate(data);
 };
-
-
-
-
-
 
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;

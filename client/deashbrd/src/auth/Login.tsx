@@ -3,7 +3,7 @@ import React, {useState, useEffect} from "react";
 import {Link, Outlet, useNavigate} from "react-router-dom";
 import { useLogIN } from '../../ContextLog';
 const Login = () => {
-  const {setProfile, setLoading} = useLogIN();
+  const {setProfile, setLoading, setLog} = useLogIN();
     const navigate = useNavigate();
 
   const [error, setError] = useState(null);
@@ -24,6 +24,12 @@ const Login = () => {
         }
       );
       setProfile(response.data.patient);
+      setLog(true);
+      navigate('/patient')
+   
+      
+
+
       
 
 
@@ -31,7 +37,7 @@ const Login = () => {
       setLoading(false);
       console.log(response.data);
 
-      navigate("/Dashboard");
+    
 
     
     } catch (error) {

@@ -1,22 +1,21 @@
-    import {Routes, Route} from "react-router-dom";
+import {Routes, Route} from "react-router-dom";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
 import Hero from "./Home/Hero";
-import Dashboard from "./Patient/Dashbord";
-import P_Dashboard from "./Patient/P_Dashboard";
+import RouterPatient from "./patient/RouterPatient";
+import {useLogIN} from "../ContextLog";
 
+const Router = () => {
+  const {log} = useLogIN();
 
-    
-    const Router = () => {
-        return (
-          <Routes>
-            <Route path="/" element={<Hero />} />
-            <Route path="/Register" element={<Register />} />
-            <Route path="/Login" element={<Login />} />
-            <Route path="/P_Dashboard" element={<P_Dashboard />} />
-            <Route path="/Dashboard" element={<Dashboard/>} />
-          </Routes>
-        );
-    }
-    
-    export default Router
+  return (
+    <Routes>
+      {log ? <Route path="/patient/*" element={<RouterPatient />} /> : null}
+      <Route path="/" element={<Hero />} />
+      <Route path="/Register" element={<Register />} />
+      <Route path="/Login" element={<Login />} />
+    </Routes>
+  );
+};
+
+export default Router;

@@ -40,6 +40,7 @@ router.post("/registerPatient", async (req, res) => {
 
     // create a new user
     const patient = new Patient({
+      prescriptions: req.body.prescriptions,
       healthIDNumber:healthIDNumber,
       name: req.body.name,
       password: hashedPassword,
@@ -111,5 +112,22 @@ router.post("/loginPatient", async (req, res) => {
     });
   }
 });
+
+// get the Patient 
+router.get("/getPatient:id", async (req, res) => {
+  try {
+    const patient = await Patient.findById(req.params.id);
+    res.send(patient
+    );
+  } catch (err) {
+    res.status(400).json({
+      message: (err as Error).message,
+      err,
+    });
+  }
+  
+
+});
+
 
 export default router;

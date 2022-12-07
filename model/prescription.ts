@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
 
 const prescriptionSchema = new mongoose.Schema({
-  patientID: {
-    type: Number,
-    required: true,
-    min: 8,
-  },
   doctorID: {
     type: Number,
     required: true,
@@ -24,7 +19,7 @@ const prescriptionSchema = new mongoose.Schema({
       required: true,
     },
     phone: {
-      type: String,
+      type: Number,
       required: true,
     },
   },
@@ -40,17 +35,7 @@ const prescriptionSchema = new mongoose.Schema({
         required: true,
       },
 
-      dose: {
-        morning: {
-          type: String,
-        },
-        afternoon: {
-          type: String,
-        },
-        medic: {
-          type: String,
-        },
-      },
+      
 
       type: {
         type: String,
@@ -60,10 +45,7 @@ const prescriptionSchema = new mongoose.Schema({
         type: String,
         required: true,
       },
-      total: {
-        type: Number,
-        required: true,
-      },
+      
     },
   ],
 
@@ -92,8 +74,11 @@ const prescriptionSchema = new mongoose.Schema({
       required: true,
     },
   },
-});
 
-const Prescription = mongoose.model("Prescription", prescriptionSchema);
+},
+  { timestamps: true }
+);
 
-export default Prescription;
+
+
+export default prescriptionSchema;
