@@ -3,7 +3,9 @@ import React, {useState, useEffect} from "react";
 import {Link, Outlet, useNavigate} from "react-router-dom";
 import { useLogIN } from '../../ContextLog';
 const Login = () => {
-  const {setProfile, setLoading, setLog} = useLogIN();
+  
+  const {setProfile, setLoading, setLog, dark, setdark} = useLogIN();
+
     const navigate = useNavigate();
 
   const [error, setError] = useState(null);
@@ -53,11 +55,19 @@ const Login = () => {
         className="absolute inset-0 object-cover w-full h-full"
         alt=""
       />
-      <div className="relative bg-gray-900 bg-opacity-75">
+      <div
+        
+        
+        className="relative bg-gray-900 bg-opacity-75">
         <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
           <div className="flex flex-col items-center justify-between xl:flex-row">
             <div className="w-full max-w-xl mb-12 xl:mb-0 xl:pr-16 xl:w-7/12">
-              <h2 className="max-w-lg mb-6 font-sans text-3xl font-bold tracking-tight text-white sm:text-4xl sm:leading-none">
+              <h2
+                // dark mode
+            
+                className="max-w-lg mb-6 font-sans
+                text-white
+                 text-3xl font-bold tracking-tight  sm:text-4xl sm:leading-none">
                 Emergency Department <br className="hidden md:block" />
                 Ambulance Service{" "}
               </h2>

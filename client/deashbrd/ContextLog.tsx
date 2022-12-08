@@ -10,12 +10,18 @@ const ContextLog = createContext(
     setProfile: React.Dispatch<React.SetStateAction<any>>;
     loading: boolean;
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    dark: boolean;
+    setdark: React.Dispatch<React.SetStateAction<boolean>>;
   }
 );
 const LogCheck = ({children}: any) => {
   const [log, setLog] = useState(false);
   const [Profile, setProfile] = useState({});
   const [loading, setLoading] = useState(false);
+  const [dark, setdark] =useState(/* Checking if the value of the key "dark" is true, if it is, it will
+  return true, if not, it will return false. */
+ false);
+ 
   const APPloader = () => {
     return (
       <div role="status">
@@ -85,9 +91,15 @@ const LogCheck = ({children}: any) => {
         setProfile,
         loading,
         setLoading,
+        dark,
+        setdark,
       }}
     >
-      {loading ? <APPloader /> : children}
+      {loading ?
+        
+        <APPloader /> : children
+
+      }
     </ContextLog.Provider>
   );
 };

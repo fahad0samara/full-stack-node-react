@@ -11,7 +11,9 @@ import axios from "axios";
 import {useLogIN} from "../../ContextLog";
 import Table from "./Table";
 const Dashboard = (props: any) => {
-  const {log, setLog, Profile, setProfile, loading, setLoading} = useLogIN();
+  const { log, setLog, Profile, setProfile, loading, setLoading,
+    dark, setdark
+  } = useLogIN();
   const navigate = useNavigate();
 
   console.log(
@@ -19,7 +21,7 @@ const Dashboard = (props: any) => {
     Profile.name
   );
 
-  const [Toggle, setToggle] = useState("Dashboard");
+
 
   const convertDate = (date: any) => {
     const newDate = new Date(date);
@@ -31,29 +33,17 @@ const Dashboard = (props: any) => {
 
   return (
     <div className="ml-20">
-      <div className="body-without-footer max-h-min bg-bgprimary ">
+      <div
+        style={{
+          backgroundColor: dark ? "#000" : "white",
+          color: dark ? "white" : "black",
+          
+        
+      }}
+        className=" bg-purple-400 ">
         <div className=" main ">
           <div className="">
-            <div className="flex  h-12 m-2 bg-bgprimary rounded mt-4  ">
-              <div>
-                <h1 className="text-2xl font-poppins font-bold p-2 ">
-                  DashBoard Today
-                </h1>
-              </div>
-
-              <div className="flex ml-20  h-10   ">
-                <input
-                  placeholder="Search"
-                  className="w-96 rounded ml-4 text-xl   pl-4 border focus:outline-none "
-                ></input>
-                <div className="bg-black pl-2 rounded ">serc</div>
-              </div>
-              <Link to="/patient/profile">
-                <button className="flex bg-white rounded shadow  px-4  ml-60 h-14 ">
-                  patient_profile
-                </button>
-              </Link>
-            </div>
+   
           </div>
           <div
             className="
@@ -103,7 +93,7 @@ const Dashboard = (props: any) => {
             </div>
           </div>
 
-          <div className="grid grid-cols-2">
+          <div className="grid">
             <div className="m-4 p-4">
               <div>
                 <h1 className="font-bold font-poppins text-xl ">
@@ -213,20 +203,8 @@ const Dashboard = (props: any) => {
             </div> */}
               {/* recent health check up end */}
             </div>
-            <div className="m-4 p-4">
-              <div>
-                <div>
-                  <h1 className="font-bold font-poppins text-xl ">
-                    Recent Lab Test
-                  </h1>
-                </div>
-                <Table/>
-
-             
-              
-              </div>
-            </div>
           </div>
+          <Table />
         </div>
       </div>
     </div>
