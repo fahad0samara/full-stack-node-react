@@ -32,64 +32,76 @@ const Dashboard = (props: any) => {
   };
 
   return (
-    <div className="ml-20">
+    <div className="ml-16">
       <div
         style={{
           backgroundColor: dark ? "#000" : "white",
           color: dark ? "white" : "black",
-          
-        
-      }}
-        className=" bg-purple-400 ">
-        <div className=" main ">
-          <div className="">
-   
-          </div>
+        }}
+        className=""
+      >
+        <div className="  ">
           <div
-            className="
-            grid grid-cols-2 gap"
+            style={{
+              backgroundColor: dark ? "#000" : "white",
+              color: dark ? "white" : "black",
+            }}
+            className="flex flex-wrap"
+            
           >
-            <div className="rounded-2xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-1 shadow-xl">
-              <a className="block rounded-xl bg-white p-6 sm:p-8" href="">
-                <div className="mt-16 sm:pr-8">
-                  <h3 className="text-xl font-bold text-gray-900">
-                    Science of Chemistry
-                  </h3>
-
-                  <p className="mt-2 text-sm text-gray-500">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad,
-                    adipisci.
-                  </p>
+            <div className="relative flex flex-col min-w-0 mb-6 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
+              <div className="flex-auto p-4">
+                <div className="flex flex-wrap -mx-3">
+                  <div className="flex-none w-2/3 max-w-full px-3">
+                    <div>
+                      <p className="mb-0 font-sans font-semibold leading-normal text-sm">
+                        Today's Money
+                      </p>
+                      <h5 className="mb-0 font-bold">
+                        $53,000
+                        <span className="leading-normal text-sm font-weight-bolder text-lime-500">
+                          +55%
+                        </span>
+                      </h5>
+                    </div>
+                  </div>
+                  <div className="w-4/12 max-w-full px-3 ml-auto text-right flex-0">
+                    <div className="inline-block w-12 h-12 text-center rounded-lg bg-gradient-to-tl from-purple-700 to-pink-500 shadow-soft-2xl">
+                      <i
+                        className="ni ni-money-coins text-lg relative top-3.5 text-white"
+                        aria-hidden="true"
+                      ></i>
+                    </div>
+                  </div>
                 </div>
-              </a>
+              </div>
             </div>
-            <div className="rounded-2xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-1 shadow-xl">
-              <a className="block rounded-xl bg-white p-6 sm:p-8" href="">
-                <div className="mt-16 sm:pr-8">
-                  <h3 className="text-xl font-bold text-gray-900">
-                    Science of Chemistry
-                  </h3>
-
-                  <p className="mt-2 text-sm text-gray-500">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad,
-                    adipisci.
-                  </p>
+            <div className="relative flex flex-col min-w-0 mb-6 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
+              <div className="flex-auto p-4">
+                <div className="flex flex-wrap -mx-3">
+                  <div className="flex-none w-2/3 max-w-full px-3">
+                    <div>
+                      <p className="mb-0 font-sans font-semibold leading-normal text-sm">
+                        Today's Money
+                      </p>
+                      <h5 className="mb-0 font-bold">
+                        $53,000
+                        <span className="leading-normal text-sm font-weight-bolder text-lime-500">
+                          +55%
+                        </span>
+                      </h5>
+                    </div>
+                  </div>
+                  <div className="w-4/12 max-w-full px-3 ml-auto text-right flex-0">
+                    <div className="inline-block w-12 h-12 text-center rounded-lg bg-gradient-to-tl from-purple-700 to-pink-500 shadow-soft-2xl">
+                      <i
+                        className="ni ni-money-coins text-lg relative top-3.5 text-white"
+                        aria-hidden="true"
+                      ></i>
+                    </div>
+                  </div>
                 </div>
-              </a>
-            </div>
-            <div className="rounded-2xl bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 p-1 shadow-xl">
-              <a className="block rounded-xl bg-white p-6 sm:p-8" href="">
-                <div className="mt-16 sm:pr-8">
-                  <h3 className="text-xl font-bold text-gray-900">
-                    Science of Chemistry
-                  </h3>
-
-                  <p className="mt-2 text-sm text-gray-500">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad,
-                    adipisci.
-                  </p>
-                </div>
-              </a>
+              </div>
             </div>
           </div>
 

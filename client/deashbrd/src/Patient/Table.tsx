@@ -1,7 +1,8 @@
 import {useLogIN} from "../../ContextLog";
 
 const Table = () => {
-  const {log, setLog, Profile, setProfile, loading, setLoading} = useLogIN();
+  const {log, setLog, Profile, setProfile, loading, setLoading, dark} =
+    useLogIN();
   const convertDate = (date: any) => {
     const newDate = new Date(date);
     const year = newDate.getFullYear();
@@ -10,141 +11,201 @@ const Table = () => {
     return `${day}/${month}/${year}`;
   };
   return (
-    <div className="
-            w-full
+    <div
+      className="
+            
             overflow-x-auto
+        
+           
+        mx-24
+            my-7
+
+
+  
        
-      
-            rounded-lg
-            shadow-xs
-            bg-white
-            dark:bg-gray-800
-            mt-6
-            mb-6
+          
 
-    ">
-      <table className="
-            w-full
+    "
+    >
+      <table
+        style={{
+          backgroundColor: dark ? "#fff" : "#000",
+
+          color: dark ? "#000" : "#fff",
+        }}
+        className="
+  shadow-2xl
+            shadow-cyan-300
             whitespace-nowrap
-            rounded-lg
-            bg-white
-            dark:bg-gray-800
+       
+       
+        
             divide-y
-            divide-gray-300
-            dark:divide-gray-700
-            overflow-hidden
+              divide-x
+     divide-dotted
+        
+        
+     
 
-       ">
-        <thead className="text-xs text-white uppercase bg-blue-600 dark:text-white">
+       "
+      >
+        <thead
+          className="text-xs
+           divide-x
+            divide-y
+         uppercase bg-cyan-300 "
+        >
           <tr>
-            <th scope="col" className="py-3 px-6">
+            <th
+              style={{
+                backgroundColor: dark ? "#fff" : "#000",
+
+                color: dark ? "#000" : "rgb(103 232 249)",
+              }}
+              scope="col"
+              className="py-3 px-6b "
+            >
               Doctor
             </th>
             <th scope="col" className="py-3 px-6">
               Appointment date
             </th>
-            <th scope="col" className="py-3 text-center px-6 bg-black">
+            <th
+              style={{
+                backgroundColor: dark ? "#fff" : "#000",
+
+                color: dark ? "#000" : "rgb(103 232 249)",
+              }}
+              scope="col"
+              className="py-3 text-center px-6 "
+            >
               Hospital department
             </th>
-            <th scope="col" className="py-3 text-center px-6 bg-black">
+            <th scope="col" className="py-3 text-center px-6 ">
               medicines
             </th>
-            <th scope="col" className="py-3 px-6">
-              advice
+
+            <th
+              style={{
+                backgroundColor: dark ? "#fff" : "#000",
+
+                color: dark ? "#000" : "rgb(103 232 249)",
+              }}
+              scope="col"
+              className="py-3 px-6 text-center"
+            >
+              Tests
             </th>
-            <th scope="col" className="py-3 px-6">
-              Prescription
-            </th>
-            <th scope="col" className="py-3 px-6">
+            <th scope="col" className="py-3 px-6 ">
               Prescription
             </th>
           </tr>
         </thead>
-        <tbody>
+        <tbody
+          className="text-sm
+            divide-y-2 
+            divide-x-2
+           
+        "
+        >
           {Profile
             ? Profile.prescriptions.map((mappedData: any) => {
                 return (
-                  <tr className="bg-blue-500 border-b border-blue-400">
-                    <>
-                      <th className="flex items-center py-1 px-2 text-gray-900 whitespace-nowrap ">
-                        <img
-                          className="w-5 h-5 rounded-full"
-                          src="/docs/images/people/profile-picture-1.jpg"
-                        />
-                        <div className="pl-3">
-                          <div className="text-base font-semibold text-white">
-                            {mappedData ? mappedData.doctor : null}
-                          </div>
-                          <div className="font-normal text-white">
-                            neil.sims@flowbite.com
-                          </div>
+                  <tr className="border-b  bg-cyan-300">
+                    <th
+                      style={{
+                        backgroundColor: dark ? "#fff" : "#000",
+
+                        color: dark ? "#000" : "rgb(103 232 249)",
+                      }}
+                      className=" items-center  px-1    "
+                    >
+                      <img
+                        className="w-5 h-5 rounded-full "
+                        src="https://cdn.pixabay.com/photo/2014/04/03/10/32/businessman-310819__340.png"
+                      />
+                      <div className="">
+                        <div className="text-base font-semibold">
+                          {mappedData ? mappedData.doctor : null}
                         </div>
-                      </th>
-                      <td className="py-4 px-6">
-                        {mappedData ? convertDate(mappedData.date) : null}
-                      </td>
+                        <div className="font-normal ">
+                          neil.sims@flowbite.com
+                        </div>
+                      </div>
+                    </th>
+                    <td className="py-4 px-6 text-center">
+                      {mappedData ? convertDate(mappedData.date) : null}
+                    </td>
 
-                      <td className="py-1 px-2 bg-black">
-                        {mappedData?.department?.map((department: any) => {
-                          return (
-                            <div
-                              className="
+                    <td
+                      style={{
+                        backgroundColor: dark ? "#fff" : "#000",
+
+                        color: dark ? "#000" : "rgb(103 232 249)",
+                      }}
+                      className="py-1 px-2 "
+                    >
+                      {mappedData?.department?.map((department: any) => {
+                        return (
+                          <div
+                            className="
                                         text-center
 
-                                        text-gray-900 whitespace-nowrap "
-                            >
-                              <div className="text-base font-semibold text-white">
-                                {department.name}
-                              </div>
-                              <div className="text-sm font-semibold text-white">
-                                {department.type}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </td>
-
-                      <td className="py-1 px-2 bg-black">
-                        {mappedData?.medicines?.map((medicine: any) => {
-                          return (
-                            <div
-                              className="
-                                        text-center
-
-                                        text-gray-900 whitespace-nowrap "
-                            >
-                              <div className="text-base font-semibold text-white">
-                                {medicine.name}
-                              </div>
-                              <div className="text-sm font-semibold text-white">
-                                {medicine.type}
-                              </div>
-
-                              <div className="text-sm font-semibold text-white">
-                                {medicine.frequency}
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </td>
-                      <td className=" items-center  px-1 whitespace-nowrap  ">
-                        {mappedData.advice.length > 100
-                          ? mappedData.advice.slice(0, 10) + "..."
-                          : mappedData.advice}
-                      </td>
-                      <td className="py-4 px-6">{mappedData.prescription}</td>
-                      <td className="py-4 px-6">
-                        {mappedData ? (
-                          <a
-                            href={mappedData.prescription}
-                            download
-                            className="text-white"
+                                       whitespace-nowrap "
                           >
-                            Download
-                          </a>
-                        ) : null}
-                      </td>
-                    </>
+                            <div className="text-base font-semibold ">
+                              {department.name}
+                            </div>
+                            <div className="text-sm font-semibold ">
+                              {department.type}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </td>
+
+                    <td className="py-1 px-2 text-center ">
+                      {mappedData?.medicines?.map((medicine: any) => {
+                        return (
+                          <div
+                            className="
+                                        text-center
+
+                                         whitespace-nowrap "
+                          >
+                            <div className="text-base font-semibold ">
+                              {medicine.name}
+                            </div>
+                            <div className="text-sm font-semibold ">
+                              {medicine.type}
+                            </div>
+
+                            <div className="text-sm font-semibold ">
+                              {medicine.frequency}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </td>
+
+                    <td
+                      style={{
+                        backgroundColor: dark ? "#fff" : "#000",
+
+                        color: dark ? "#000" : "rgb(103 232 249)",
+                      }}
+                      className="py-4 px-6 "
+                    >
+                      {mappedData ? mappedData.tests.name : null}
+                    </td>
+
+                    <td className="py-4 px-6 ">
+                      {mappedData ? (
+                        <a href={mappedData.prescription} download className="">
+                          Download
+                        </a>
+                      ) : null}
+                    </td>
                   </tr>
                 );
               })
