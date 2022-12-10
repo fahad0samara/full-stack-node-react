@@ -22,7 +22,7 @@ const App = () => {
           <FiSun
             size="2rem"
             style={{
-              color: dark ? "red" : "black",
+              color: dark ? "rgb(103 232 249)" : "black",
             }}
             onClick={() => setdark(false)}
           />
@@ -30,7 +30,7 @@ const App = () => {
           <CiDark
             size="2rem"
             style={{
-              color: dark ? "red" : "red",
+              color: dark ? "rgb(103 232 249)" : "rgb(103 232 249)",
             }}
             onClick={() => setdark(true)}
           />

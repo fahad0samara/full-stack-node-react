@@ -10,61 +10,62 @@ import SideNav, {
 
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 import {RiDashboardFill} from "react-icons/ri";
+import { useLogIN } from "../../ContextLog";
 
 const SideNavigate = (_props: any) => {
+    const {
+      log,
+      setLog,
+      Profile,
+      setProfile,
+      loading,
+      setLoading,
+      dark,
+      setdark,
+    } = useLogIN();
   const navigate = useNavigate();
 
   return (
     <SideNav
+  /*  . */
+      style={{
+        backgroundColor: dark ? "#000" : "rgb(103 232 249)",
+
+        boxShadow: dark
+          ? "0px 0px 10px 0px rgb(103 232 249)  "
+          : "0px 0px 10px 0px #000",
+      }}
       onSelect={selected => {
         navigate(
           selected === "dashboard" ? "/patient/dashboard" : "/patient/about"
         );
       }}
       className="
-      bg-cyan-300
-      h-screen
+  h-full
 
-
-
-   
-
-
-      
       fixed
+
+    
       top-0
       left-0
-      overflow-y-auto
-      overflow-x-hidden
-
-
       
-      z-50
-
-  
-
-
-
-
-      
-
-
-
-
-      
-     
-     
-
-      "
+  z-50
+  "
     >
-      <SideNav.Toggle />
+      <SideNav.Toggle
+        style={{
+          color: dark ? "red" : "black",
+          fontSize: "1.5rem",
+          fontWeight: "bold",
+        }}
+      />
       <SideNav.Nav
         defaultOpenKeys={["dashboard"]}
         className="
 
         "
         style={{
-          color: "red",
+          color: dark ? "white" : "black",
           fontSize: "1.5rem",
           fontWeight: "bold",
         }}
@@ -74,29 +75,49 @@ const SideNavigate = (_props: any) => {
           <NavIcon>
             <RiDashboardFill
               style={{
-                color: "red",
-                fontSize: "1.9rem",
+                color: dark ? "rgb(103 232 249)" : "black",
+                fontSize: "1.8rem",
                 fontWeight: "bold",
                 marginLeft: "1rem",
                 marginTop: "1rem",
               }}
             />
           </NavIcon>
-          <NavText>dashboard</NavText>
+          <NavText
+            style={{
+              color: dark ? "rgb(103 232 249)" : "black",
+              fontSize: "0.9rem",
+              fontWeight: "bold",
+              marginLeft: "1rem",
+              marginTop: "1rem",
+            }}
+          >
+            dashboard
+          </NavText>
         </NavItem>
         <NavItem eventKey="about">
           <NavIcon>
             <RiDashboardFill
               style={{
-                color: "red",
-                fontSize: "1.9rem",
+                color: dark ? "rgb(103 232 249)" : "black",
+                fontSize: "1.8rem",
                 fontWeight: "bold",
                 marginLeft: "1rem",
                 marginTop: "1rem",
               }}
             />
           </NavIcon>
-          <NavText>about</NavText>
+          <NavText
+            style={{
+              color: dark ? "rgb(103 232 249)" : "black",
+              fontSize: "0.9rem",
+              fontWeight: "bold",
+              marginLeft: "1rem",
+              marginTop: "1rem",
+            }}
+          >
+            about
+          </NavText>
         </NavItem>
       </SideNav.Nav>
     </SideNav>
