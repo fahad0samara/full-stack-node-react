@@ -323,121 +323,127 @@ const Dashboard = (props: any) => {
           </div>
         </div>
 
-        <section className="">
-          <div className="container grid grid-cols-1 gap-4 mt-8 xl:ml-20   xl:grid-cols-3 mx-8">
-            <div
-              style={{
-                boxShadow: dark
-                  ? "0px 0px 10px 0px #fff"
-                  : "0px 0px 10px 0px #000",
-              }}
-              className=" w-64 p-1 ml-2 mx-14 space-x-4 rounded-lg md:space-x-6 bg-cyan-300 "
-            >
-              <div className=" ">
-                <h1
-                  className="
+        <div className="grid grid-cols-1 gap-4 mt-8 xl:ml-20 md:grid-cols-2   xl:grid-cols-3 mx-8">
+          <div
+            style={{
+              boxShadow: dark
+                ? "0px 0px 10px 0px #fff"
+                : "0px 0px 10px 0px #000",
+            }}
+            className=" w-64 p-1 ml-2 mx-14 space-x-4 rounded-lg md:space-x-6 bg-cyan-300 "
+          >
+            <div className=" ">
+              <h1
+                className="
                     text-2xl font-bold italic ml-2 text-black
                   "
-                >
-                  permanent illness :
-                </h1>
-              </div>
-              {
-                //diseaseList
-              }
-              <div className="mt-3">
-                <p className="text-black text-xl">
-                  {Profile ? (
-                    Profile.diseaseList[0].disease
-                  ) : (
-                    <div>
-                      <h1>There are no diseases</h1>
-                    </div>
-                  )}
-                </p>
-                <p className="capitalize">
-                  {Profile ? Profile.diseaseList[0].description : ""}
-                </p>
-              </div>
+              >
+                permanent illness :
+              </h1>
             </div>
-            <div
-              style={{
-                boxShadow: dark
-                  ? "0px 0px 10px 0px #fff"
-                  : "0px 0px 10px 0px #000",
-              }}
-              className=" w-64 p-1 ml-2 mx-14 space-x-4 rounded-lg md:space-x-6 bg-cyan-300 "
-            >
-              <div className=" ">
-                <h1
-                  className="
-                    text-2xl font-bold italic ml-2 text-black
-                  "
-                >
-                  allergyList
-                </h1>
-              </div>
-              {
-                //diseaseList
-              }
-              <div className="mt-3">
-                <p className="text-black text-xl">
-                  {Profile ? (
-                    Profile.allergyList[0].allergy
-                  ) : (
-                    <div>
-                        <h1>
-                          There are no allergies
-                      </h1>
-                    </div>
-                  )}
-                </p>
-                <p className="capitalize">
-                  {Profile ? Profile.diseaseList[0].description : ""}
-                </p>
-              </div>
-            </div>
-            <div
-              style={{
-                boxShadow: dark
-                  ? "0px 0px 10px 0px #fff"
-                  : "0px 0px 10px 0px #000",
-              }}
-              className=" w-64 p-1 ml-2 mx-14 space-x-4 rounded-lg md:space-x-6 bg-cyan-300 "
-            >
-              <div className=" ">
-                <h1
-                  className="
-                    text-2xl font-bold italic ml-2 text-black
-                  "
-                >
-                  medicationList
-                </h1>
-              </div>
-              {
-                //diseaseList
-              }
-              <div className="mt-3">
-                <p className="text-black text-xl">
-                  {Profile ? (
-                    Profile.medicationList[0].medication
-                  ) : (
-                    <div>
-                        <h1>
-                          There are no medications
-                      </h1>
-                    </div>
-                  )}
-                </p>
-                <p className="capitalize">
-                  {Profile ? Profile.diseaseList[0].description : ""}
-                </p>
-              </div>
+            {
+              //diseaseList
+            }
+            <div className="mt-3">
+              <p className="text-black text-xl">
+                {Profile ? (
+                  Profile.diseaseList[0].disease
+                ) : (
+                  <div>
+                    <h1>There are no diseases</h1>
+                  </div>
+                )}
+              </p>
+              <p className="capitalize">
+                {Profile ? Profile.diseaseList[0].description : ""}
+              </p>
             </div>
           </div>
-        </section>
+          <div
+            style={{
+              boxShadow: dark
+                ? "0px 0px 10px 0px #fff"
+                : "0px 0px 10px 0px #000",
+            }}
+            className=" w-64 p-1 ml-2 mx-14 space-x-4 rounded-lg md:space-x-6 bg-cyan-300 "
+          >
+            <div className=" ">
+              <h1
+                className="
+                    text-2xl font-bold italic ml-2 text-black
+                  "
+              >
+                allergyList
+              </h1>
+            </div>
+            {
+              //diseaseList
+            }
+            <div className="mt-3">
+              <p className="text-black text-xl">
+                {Profile ? (
+                  Profile.allergyList[0].allergy
+                ) : (
+                  <div>
+                    <h1>There are no allergies</h1>
+                  </div>
+                )}
+              </p>
+              <p className="capitalize">
+                {Profile ? Profile.diseaseList[0].description : ""}
+              </p>
+            </div>
+          </div>
+          <div
+            style={{
+              boxShadow: dark
+                ? "0px 0px 10px 0px #fff"
+                : "0px 0px 10px 0px #000",
+            }}
+            className=" w-64 p-1 ml-2 mx-14 space-x-4 rounded-lg md:space-x-6 bg-cyan-300 "
+          >
+            <div className=" ">
+              <h1
+                className="
+                    text-2xl font-bold italic ml-2 text-black
+                  "
+              >
+                medicationList
+              </h1>
+            </div>
+            {
+              //diseaseList
+            }
+            <div className="mt-3">
+              <p className="text-black text-xl">
+                {Profile ? (
+                  Profile.medicationList[0].medication
+                ) : (
+                  <div>
+                    <h1>There are no medications</h1>
+                  </div>
+                )}
+              </p>
+              <p className="capitalize">
+                {Profile ? Profile.diseaseList[0].description : ""}
+              </p>
+            </div>
+          </div>
+        </div>
 
-        <Table />
+        <div
+          style={{
+            backgroundColor: dark ? "#000" : "white",
+            color: dark ? "white" : "black",
+          }}
+         
+        >
+          <h1 className="text-2xl  font-bold italic  ml-20 mt-7">
+            medical history
+          </h1>
+          <Table />
+        </div>
+        <div></div>
       </div>
     </div>
   );

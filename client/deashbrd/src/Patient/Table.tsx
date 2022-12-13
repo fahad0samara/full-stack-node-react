@@ -12,112 +12,49 @@ const Table = () => {
   };
   return (
     <table
+      className="xl:mx-10 mt-3 sm:ml-5 
+      "
       style={{
         backgroundColor: dark ? "#000" : "white",
         color: dark ? "white" : "black",
-        boxShadow: dark
-          ? "0px 0px 10px 0px rgb(103 232 249)"
-          : "0px 0px 10px 0px #ccc",
+        boxShadow: dark ? "0px 0px 10px 0px #fff" : "0px 0px 10px 0px #000",
       }}
-      className="
-      w-96
-      mx-auto
-      mt-10
-
-   
-      rounded-lg
-
- 
-      shadow-lg
-
-      
-   
-
-
-
-      
-
-        "
     >
       <thead
-        className="text-xs
-           
-         uppercase  "
-      >
-        <tr>
-          <th scope="col" className="py-3 px-6b ">
-            Doctor
-          </th>
-          <th scope="col" className="py-3 px-6">
-            Appointment date
-          </th>
-        
-          <th scope="col" className="py-3 text-center px-6 ">
-            medicines
-          </th>
-
-          <th scope="col" className="py-3 px-6 text-center">
-            Tests
-          </th>
-          <th scope="col" className="py-3 px-6 ">
-            Prescription
-          </th>
-        </tr>
-      </thead>
-      <tbody
-        className="text-sm
-         
-           
+        className="thead-dark
+    bg-cyan-300 
         "
       >
+        <tr>
+          <th></th>
+          <th> Doctor</th>
+          <th>Appointment date</th>
+          <th> medicines</th>
+          <th>Tests</th>
+          <th>Prescription</th>
+        </tr>
+      </thead>
+      <tbody>
         {Profile
           ? Profile.prescriptions.map((mappedData: any) => {
               return (
-                <tr className="">
-                  <th className=" items-center  px-1    ">
-             
-                    <div className="">
-                      <div className="text-base font-semibold">
-                        {mappedData ? mappedData.doctor : null}
-                      </div>
-                      <div className="font-normal ">neil.sims@flowbite.com</div>
-                    </div>
-                  </th>
-                  <td className="py-4 px-6 text-center">
-                    {mappedData ? convertDate(mappedData.date) : null}
-                  </td>
-
-             
-
-                  <td className="py-1 px-2 text-center ">
-                    {mappedData?.medicines?.map((medicine: any) => {
-                      return (
-                        <div
-                          className="
-                                        text-center
-
-                                         whitespace-nowrap "
-                        >
-                          <div className="text-base font-semibold ">
-                            {medicine.name}
-                          </div>
-                          <div className="text-sm font-semibold ">
-                            {medicine.type}
-                          </div>
-
-                          <div className="text-sm font-semibold ">
-                            {medicine.frequency}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </td>
-
-                  <td className="py-4 px-6 ">
-                    {mappedData ? mappedData.tests.name : null}
-                  </td>
-
-                  <td className="py-4 px-6 ">
+                <tr>
+                  <th>{mappedData ? mappedData._id : null}</th>
+                  <td>{mappedData ? mappedData.doctor : null}</td>
+                  <td>{mappedData ? convertDate(mappedData.date) : null}</td>
+                  {mappedData?.medicines?.map((medicine: any) => {
+                    return (
+                      <td>
+                        {medicine.name}
+                    
+                        {medicine.type}
+                       
+                        {medicine.frequency}
+                      </td>
+                    );
+                  })}
+                  <td>{mappedData ? mappedData.tests.name : null}</td>
+                  <td className="">
                     {mappedData ? (
                       <a href={mappedData.prescription} download className="">
                         Download
