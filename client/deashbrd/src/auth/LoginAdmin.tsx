@@ -1,15 +1,14 @@
 import axios from "axios";
 import React, {useState, useEffect} from "react";
 import {Link, Outlet, useNavigate} from "react-router-dom";
-import { useLogIN } from '../../ContextLog';
-const Login = () => {
-  
-  const {setProfile, setLoading, setlogPatient, dark, setdark} = useLogIN();
+import {useLogIN} from "../../ContextLog";
+const LoginAdmin = () => {
+  const {setProfile, setLoading,       setlogAdmin, dark, setdark} = useLogIN();
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [error, setError] = useState(null);
-  const [healthIDNumber, sethealthIDNumber] = useState("");
+
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
 
@@ -18,30 +17,20 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/auth/loginPatient",
+        "http://localhost:3000/admin/loginAdmin",
         {
-          healthIDNumber,
+       
           email,
           password,
         }
       );
       setProfile(response.data.patient);
-      setlogPatient(true);
-      navigate('/patient')
-   
-      
-
-
-      
-
+      setlogAdmin(true);  
+      navigate("/admin");
 
       setError(null);
       setLoading(false);
       console.log(response.data);
-
-    
-
-    
     } catch (error) {
       setError(error.response.data);
       console.log(error.response.data);
@@ -55,19 +44,17 @@ const Login = () => {
         className="absolute inset-0 object-cover w-full h-full"
         alt=""
       />
-      <div
-        
-        
-        className="relative bg-gray-900 bg-opacity-75">
+      <div className="relative bg-gray-900 bg-opacity-75">
         <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
           <div className="flex flex-col items-center justify-between xl:flex-row">
             <div className="w-full max-w-xl mb-12 xl:mb-0 xl:pr-16 xl:w-7/12">
               <h2
                 // dark mode
-            
+
                 className="max-w-lg mb-6 font-sans
                 text-white
-                 text-3xl font-bold tracking-tight  sm:text-4xl sm:leading-none">
+                 text-3xl font-bold tracking-tight  sm:text-4xl sm:leading-none"
+              >
                 Emergency Department <br className="hidden md:block" />
                 Ambulance Service{" "}
               </h2>
@@ -113,28 +100,7 @@ const Login = () => {
                   Log in
                 </h3>
                 <form>
-                  <div className="mb-1 sm:mb-2">
-                    <label
-                      htmlFor="firstName"
-                      className="inline-block text-sky-300 mb-1 font-black"
-                    >
-                      Health ID Number
-                    </label>
-                    <input
-                      value={healthIDNumber}
-                      onChange={e => {
-                        sethealthIDNumber(e.target.value);
-                      }}
-                      placeholder="
-                    Enter your ID Number ex:12
-                      "
-                      required
-                      type="number"
-                      className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
-                      id="firstName"
-                      name="firstName"
-                    />
-                  </div>
+                
                   <div className="mb-1 sm:mb-2">
                     <label
                       htmlFor="Email"
@@ -217,4 +183,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default LoginAdmin;

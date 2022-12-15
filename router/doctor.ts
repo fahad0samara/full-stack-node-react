@@ -3,16 +3,16 @@ const router = express.Router();
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Doctor from "../model/doctor";
-import { authAdmin } from "../middleware/jwtPatient";
+import {authAdmin} from "../middleware/jwtPatient";
+import Patient from "../model/patient";
 const {
   doctorValidation,
   loginDoctorValidation,
+  addPrescriptionsValidation,
 } = require("../middleware/validtion");
 
 // registerDoctor
-router.post("/registerDoctor",
-  authAdmin,
-  async (req, res) => {
+router.post("/registerDoctor", authAdmin, async (req, res) => {
   // validate the data before we make a doctor
   const {error} = doctorValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -87,6 +87,108 @@ router.post("/loginDoctor", async (req, res) => {
   }
 });
 
+router.post("/addPrescriptions/:id", async (req, res) => {
+  // validate the data before we make a user
+  const {error} = addPrescriptionsValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
+  try {
+    const patient = await Patient.findOne({
+      _id: req.params.id,
+    });
+    if (!patient) return res.status(400).send("Patient not found");
+
+    const prescriptions = {
+      doctorID: req.body.doctorID,
+      medicines: req.body.medicines,
+      department: req.body.department,
+      date: req.body.date,
+      doctor: req.body.doctor,
+      advice: req.body.advice,
+      dosage: req.body.dosage,
+      nextVisit: req.body.nextVisit,
+      tests: req.body.tests,
+    };
+    patient.prescriptions.push(prescriptions);
+    const savedPatient = await patient.save();
+    res.send({
+      savedPatient,
+    });
+  } catch (err) {
+    res.status(400).json({
+      err,
+    });
+  }
+});
+
+router.get("/getPrescriptions/:id", async (req, res) => {
+  try {
+    const patient = await Patient.findOne({
+      _id: req.params.id,
+    });
+    if (!patient) return res.status(400).send("Patient not found");
+
+    res.send({
+      patient,
+    });
+  } catch (err) {
+    res.status(400).json({
+      err,
+    });
+  }
+});
+
+router.get("/getPatients", async (req, res) => {
+  try {
+    const patients = await Patient.find();
+    res.send({
+      patients,
+    });
+  } catch (err) {
+    res.status(400).json({
+      err,
+    });
+  }
+});
+
+router.get("/getPatient/:id", async (req, res) => {
+  try {
+    const patient = await Patient.findOne({
+      id: req.params.id,
+    });
+    if (!patient) return res.status(400).send("Patient not found");
+
+    res.send({
+      patient,
+    });
+  } catch (err) {
+    res.status(400).json({
+      err,
+    });
+  }
+});
+
+router.get("/getPatientForDoctor/:id", async (req, res) => {
+  try {
+
+
+    const patient = await Patient.find({
+      prescriptions: {
+        $elemMatch: {
+          doctorID: req.params.id,
+        },
+      },
+    });
+    if (!patient) return res.status(400).send("Patient not found");
+
+    res.send({
+      patient,
+    });
+  } catch (err) {
+    res.status(400).json({
+      err,
+    });
+  }
+});
 
 export default router;

@@ -2,12 +2,11 @@ import express from "express";
 const router = express.Router();
 import Patient from "../model/patient";
 
-
 const {addPrescriptionsValidation} = require("../middleware/validtion");
 
 router.post("/addPrescriptions/:id", async (req, res) => {
   // validate the data before we make a user
-  const { error } = addPrescriptionsValidation(req.body);
+  const {error} = addPrescriptionsValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
@@ -19,7 +18,7 @@ router.post("/addPrescriptions/:id", async (req, res) => {
     const prescriptions = {
       doctorID: req.body.doctorID,
       medicines: req.body.medicines,
-      department:req.body.department,
+      department: req.body.department,
       date: req.body.date,
       doctor: req.body.doctor,
       advice: req.body.advice,
@@ -32,51 +31,11 @@ router.post("/addPrescriptions/:id", async (req, res) => {
     res.send({
       savedPatient,
     });
-
-
-
-
   } catch (err) {
-    res.status(400).json({ 
-      err
+    res.status(400).json({
+      err,
     });
   }
 });
-
-
-
-
-
-
-
-   
-
-
-  
-
-
-
- 
-
-
-
-
-
-
-
-  
-   
-
- 
-    
-
-    
-
-   
-
-    
-
-    
-
 
 export default router;

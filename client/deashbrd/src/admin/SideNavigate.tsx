@@ -10,23 +10,16 @@ import SideNav, {
 
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 import {RiDashboardFill} from "react-icons/ri";
-import { useLogIN } from "../../ContextLog";
+import {useLogIN} from "../../ContextLog";
 
 const SideNavigate = (_props: any) => {
-    const {
-  
-      Profile,
-      setProfile,
-      loading,
-      setLoading,
-      dark,
-      setdark,
-    } = useLogIN();
+  const { Profile, setProfile, loading, setLoading, dark, setdark} =
+    useLogIN();
   const navigate = useNavigate();
 
   return (
     <SideNav
-  /*  . */
+      /*  . */
       style={{
         backgroundColor: dark ? "#000" : "rgb(103 232 249)",
 
@@ -35,8 +28,10 @@ const SideNavigate = (_props: any) => {
           : "0px 0px 10px 0px #000",
       }}
       onSelect={selected => {
-        navigate(
-          selected === "dashboard" ? "/patient/dashboard" : "/patient/about"
+          navigate(
+            //admin
+            selected === "dashboard" ? "/admin/dashboard" : "/admin/about"
+            
         );
       }}
       className="

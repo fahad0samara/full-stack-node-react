@@ -1,47 +1,39 @@
 import axios from "axios";
 import React, {useState, useEffect} from "react";
 import {Link, Outlet, useNavigate} from "react-router-dom";
-import { useLogIN } from '../../ContextLog';
-const Login = () => {
-  
+import {useLogIN} from "../../ContextLog";
+const RegisterAdmin = () => {
   const {setProfile, setLoading, setlogPatient, dark, setdark} = useLogIN();
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [name, setname] = useState("");
 
   const [error, setError] = useState(null);
-  const [healthIDNumber, sethealthIDNumber] = useState("");
+
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
 
+  const [phoneNumber, setphoneNumber] = useState("");
   const HandelLogin = async (e: {preventDefault: () => void}) => {
     e.preventDefault();
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/auth/loginPatient",
+        "http://localhost:3000/admin/registerAdmin",
         {
-          healthIDNumber,
+          name,
           email,
           password,
+          phoneNumber,
         }
       );
       setProfile(response.data.patient);
       setlogPatient(true);
-      navigate('/patient')
-   
-      
-
-
-      
-
+     
 
       setError(null);
       setLoading(false);
       console.log(response.data);
-
-    
-
-    
     } catch (error) {
       setError(error.response.data);
       console.log(error.response.data);
@@ -55,19 +47,17 @@ const Login = () => {
         className="absolute inset-0 object-cover w-full h-full"
         alt=""
       />
-      <div
-        
-        
-        className="relative bg-gray-900 bg-opacity-75">
+      <div className="relative bg-gray-900 bg-opacity-75">
         <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
           <div className="flex flex-col items-center justify-between xl:flex-row">
             <div className="w-full max-w-xl mb-12 xl:mb-0 xl:pr-16 xl:w-7/12">
               <h2
                 // dark mode
-            
+
                 className="max-w-lg mb-6 font-sans
                 text-white
-                 text-3xl font-bold tracking-tight  sm:text-4xl sm:leading-none">
+                 text-3xl font-bold tracking-tight  sm:text-4xl sm:leading-none"
+              >
                 Emergency Department <br className="hidden md:block" />
                 Ambulance Service{" "}
               </h2>
@@ -115,24 +105,27 @@ const Login = () => {
                 <form>
                   <div className="mb-1 sm:mb-2">
                     <label
-                      htmlFor="firstName"
+                      htmlFor="Email"
                       className="inline-block text-sky-300 mb-1 font-black"
                     >
-                      Health ID Number
+                      name
                     </label>
                     <input
-                      value={healthIDNumber}
+                      value={name}
                       onChange={e => {
-                        sethealthIDNumber(e.target.value);
+                        setname(e.target.value);
                       }}
                       placeholder="
-                    Enter your ID Number ex:12
+
+                      Enter your name
                       "
                       required
-                      type="number"
+                      type="name"
                       className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
-                      id="firstName"
-                      name="firstName"
+                      id="name"
+                      name="
+                    name
+                      "
                     />
                   </div>
                   <div className="mb-1 sm:mb-2">
@@ -157,6 +150,31 @@ const Login = () => {
                       id="Email"
                       name="
                     Email
+                      "
+                    />
+                  </div>
+                  <div className="mb-1 sm:mb-2">
+                    <label
+                      htmlFor="Email"
+                      className="inline-block text-sky-300 mb-1 font-black"
+                    >
+                      phoneNumber
+                    </label>
+                    <input
+                      value={phoneNumber}
+                      onChange={e => {
+                        setphoneNumber(e.target.value);
+                      }}
+                      placeholder="
+
+                      Enter your phoneNumber
+                      "
+                      required
+                      type="number"
+                      className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
+                      id="phoneNumber"
+                      name="
+                    phoneNumber
                       "
                     />
                   </div>
@@ -217,4 +235,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default RegisterAdmin;

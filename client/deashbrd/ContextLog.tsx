@@ -4,8 +4,10 @@ import axios from "axios";
 
 const ContextLog = createContext(
   {} as {
-    log: boolean;
-    setLog: React.Dispatch<React.SetStateAction<boolean>>;
+    logPatient: boolean;
+    setlogPatient: React.Dispatch<React.SetStateAction<boolean>>;
+    logAdmin: boolean;
+    setlogAdmin: React.Dispatch<React.SetStateAction<boolean>>;
     Profile: any;
     setProfile: React.Dispatch<React.SetStateAction<any>>;
     loading: boolean;
@@ -15,7 +17,13 @@ const ContextLog = createContext(
   }
 );
 const LogCheck = ({children}: any) => {
-  const [log, setLog] = useState(false);
+  const [logPatient, setlogPatient] = useState(false);
+  const [logAdmin, setlogAdmin] = useState(false)
+
+    
+
+
+
   const [Profile, setProfile] = useState({});
   const [loading, setLoading] = useState(false);
   const [dark, setdark] =useState(/* Checking if the value of the key "dark" is true, if it is, it will
@@ -85,8 +93,10 @@ const LogCheck = ({children}: any) => {
   return (
     <ContextLog.Provider
       value={{
-        log,
-        setLog,
+        logPatient,
+        setlogPatient,
+        logAdmin,
+        setlogAdmin,
         Profile,
         setProfile,
         loading,
@@ -95,11 +105,7 @@ const LogCheck = ({children}: any) => {
         setdark,
       }}
     >
-      {loading ?
-        
-        <APPloader /> : children
-
-      }
+      {loading ? <APPloader /> : children}
     </ContextLog.Provider>
   );
 };
