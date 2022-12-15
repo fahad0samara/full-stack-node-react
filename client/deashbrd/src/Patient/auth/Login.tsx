@@ -1,14 +1,14 @@
 import axios from "axios";
 import React, {useState, useEffect} from "react";
 import {Link, Outlet, useNavigate} from "react-router-dom";
-import {useLogIN} from "../../ContextLog";
-const LoginAdmin = () => {
-  const {setProfile, setLoading,       setlogAdmin, dark, setdark} = useLogIN();
+import {useLogIN} from "../../../ContextLog";
+const Login = () => {
+  const {setProfile, setLoading, setlogPatient, dark, setdark} = useLogIN();
 
   const navigate = useNavigate();
 
   const [error, setError] = useState(null);
-
+  const [healthIDNumber, sethealthIDNumber] = useState("");
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
 
@@ -17,16 +17,16 @@ const LoginAdmin = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/admin/loginAdmin",
+        "http://localhost:3000/auth/loginPatient",
         {
-       
+          healthIDNumber,
           email,
           password,
         }
       );
       setProfile(response.data.patient);
-      setlogAdmin(true);  
-      navigate("/admin");
+      setlogPatient(true);
+      navigate("/patient");
 
       setError(null);
       setLoading(false);
@@ -100,7 +100,28 @@ const LoginAdmin = () => {
                   Log in
                 </h3>
                 <form>
-                
+                  <div className="mb-1 sm:mb-2">
+                    <label
+                      htmlFor="firstName"
+                      className="inline-block text-sky-300 mb-1 font-black"
+                    >
+                      Health ID Number
+                    </label>
+                    <input
+                      value={healthIDNumber}
+                      onChange={e => {
+                        sethealthIDNumber(e.target.value);
+                      }}
+                      placeholder="
+                    Enter your ID Number ex:12
+                      "
+                      required
+                      type="number"
+                      className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
+                      id="firstName"
+                      name="firstName"
+                    />
+                  </div>
                   <div className="mb-1 sm:mb-2">
                     <label
                       htmlFor="Email"
@@ -183,4 +204,4 @@ const LoginAdmin = () => {
   );
 };
 
-export default LoginAdmin;
+export default Login;

@@ -1,12 +1,12 @@
 import {Routes, Route} from "react-router-dom";
-import Login from "./auth/Login";
-import Register from "./auth/Register";
+import Login from "./patient/auth/Login";
+import Register from "./patient/auth/Register";
 import Hero from "./Home/Hero";
 import RouterPatient from "./patient/RouterPatient";
-import { useLogIN } from "../ContextLog";
+import {useLogIN} from "../ContextLog";
 import RouterAdmin from "./admin/RouterAdmin";
-import RegisterAdmin from "./auth/RegisterAdmin"
-import LoginAdmin from "./auth/LoginAdmin";
+import RegisterAdmin from "./admin/RegisterAdmin";
+import LoginAdmin from "./admin/LoginAdmin";
 
 const Router = () => {
   const {logPatient, logAdmin} = useLogIN();
