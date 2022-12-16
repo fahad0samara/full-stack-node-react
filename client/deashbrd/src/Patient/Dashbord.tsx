@@ -14,7 +14,10 @@ import {BiTime} from "react-icons/bi";
 import {FcCalendar} from "react-icons/fc";
 
 const Dashboard = (props: any) => {
-  const {log, setLog, Profile, setProfile, loading, setLoading, dark, setdark} =
+  const {
+    logPatient,
+    
+    Profile, setProfile, loading, setLoading, dark, setdark } =
     useLogIN();
   const navigate = useNavigate();
   const [data, setData] = useState<any>([]);

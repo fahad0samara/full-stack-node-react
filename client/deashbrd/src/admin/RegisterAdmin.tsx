@@ -3,6 +3,7 @@ import React, {useState, useEffect} from "react";
 import {Link, Outlet, useNavigate} from "react-router-dom";
 import {useLogIN} from "../../ContextLog";
 const RegisterAdmin = () => {
+  
   const {setProfile, setLoading, setlogPatient, dark, setdark} = useLogIN();
 
   const navigate = useNavigate();
@@ -39,6 +40,8 @@ const RegisterAdmin = () => {
       console.log(error.response.data);
     }
   };
+
+  
 
   return (
     <div className="relative">

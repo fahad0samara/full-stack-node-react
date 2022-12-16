@@ -3,7 +3,13 @@ import { useLogIN } from '../../ContextLog';
 import NavBar from './NavBar'
 
 const Hero = () => {
-  const { dark, setdark } = useLogIN();
+  const {dark, logPatient, logAdmin} = useLogIN();
+
+
+
+
+
+
   
 
 
@@ -12,13 +18,12 @@ const Hero = () => {
 
   return (
     <div
-      style={
-        {
-          backgroundColor: dark ? "#1a1a1a" : "",
-          color: dark ? "white" : "black",
-        }
-      }
-      className="isolate bg-white">
+      style={{
+        backgroundColor: dark ? "#1a1a1a" : "",
+        color: dark ? "white" : "black",
+      }}
+      className="isolate bg-white"
+    >
       <div className="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]">
         <svg
           className="relative left-[calc(50%-11rem)] -z-10 h-[21.1875rem] max-w-none -translate-x-1/2 rotate-[30deg] sm:left-[calc(50%-30rem)] sm:h-[42.375rem]"
@@ -40,9 +45,6 @@ const Hero = () => {
               y2="47.645"
               gradientUnits="userSpaceOnUse"
             >
-           
-               
-
               <stop stop-color="#66e5f6"></stop>
             </linearGradient>
           </defs>
@@ -118,20 +120,31 @@ const Hero = () => {
                 Company
               </a>
             </div>
-            <div className="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-end">
-              <Link
-                to="/login"
-                className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
-              >
-                Log in
-              </Link>
-              <Link
-                to="/Register"
-                className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
-              >
-                Register
-              </Link>
-            </div>
+
+            
+            {
+              logPatient ? <NavBar /> : logAdmin ? <NavBar /> : 
+                <div className="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-end">
+                  <Link
+                    to="/login"
+                    className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+                  >
+                    Log in
+                  </Link>
+                  <Link
+                    to="/Register"
+                    className="inline-block rounded-lg px-3 py-1.5 ml-3 text-sm font-semibold leading-6 text-white bg-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+                  >
+                    Register
+                  </Link>
+
+
+              </div>
+            }
+
+         
+
+          
           </nav>
 
           <div role="dialog" aria-modal="true">

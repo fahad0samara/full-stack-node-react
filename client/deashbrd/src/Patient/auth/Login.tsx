@@ -26,7 +26,7 @@ const Login = () => {
       );
       setProfile(response.data.patient);
       setlogPatient(true);
-      navigate("/patient");
+      navigate("/patient/dashboard");
 
       setError(null);
       setLoading(false);

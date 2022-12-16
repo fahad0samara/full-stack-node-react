@@ -9,20 +9,37 @@ import RegisterAdmin from "./admin/RegisterAdmin";
 import LoginAdmin from "./admin/LoginAdmin";
 
 const Router = () => {
-  const {logPatient, logAdmin} = useLogIN();
+  const {logPatient, logAdmin, setlogAdmin, setlogPatient} = useLogIN();
 
   return (
     <Routes>
-      {logPatient ? (
-        <Route path="/patient/*" element={<RouterPatient />} />
-      ) : null}
-      {logAdmin ? <Route path="/admin/*" element={<RouterAdmin />} /> : null}
+      {
+        logPatient && (
+          <Route path="/patient/*" element={<RouterPatient />} />
+        )
+
+      }
+      {
+        logAdmin && (
+          <Route path="/admin/*" element={<RouterAdmin />} />
+        )
+      }
+
+      
+
+      
+
 
       <Route path="/" element={<Hero />} />
-      <Route path="/Register" element={<Register />} />
-      <Route path="/Login" element={<Login />} />
-      <Route path="/RegisterAdmin" element={<RegisterAdmin />} />
-      <Route path="/LoginAdmin" element={<LoginAdmin />} />
+      <Route path="/patient/*" element={<RouterPatient />} />
+      <Route path="/admin/*" element={<RouterAdmin />} />
+
+      <Route path="/register" element={<Register />} />
+      <Route path="/login" element={<Login />} />
+
+      <Route path="/registerAdmin" element={<RegisterAdmin />} />
+      <Route path="/loginAdmin" element={<LoginAdmin />} />
+      
     </Routes>
   );
 };
