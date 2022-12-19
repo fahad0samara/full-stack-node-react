@@ -1,4 +1,4 @@
-import { number } from "joi";
+
 import mongoose from "mongoose";
 import prescriptionSchema from "./prescription";
 

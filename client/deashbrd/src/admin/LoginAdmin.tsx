@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, {useState, useEffect} from "react";
-import {Link, Outlet, useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useLogIN} from "../../ContextLog";
+
 const LoginAdmin = () => {
-  const {setProfile, setLoading, setlogAdmin, dark, setdark} = useLogIN();
+  const {setProfile, setLoading, setlogAdmin, setlogPatient, dark, setdark} =
+    useLogIN();
 
   const navigate = useNavigate();
 
@@ -17,19 +19,32 @@ const LoginAdmin = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/admin/loginAdmin",
+        "http://localhost:3000/user/loginUser",
         {
           email,
           password,
         }
       );
-      setProfile(response.data.patient);
-      setlogAdmin(true);
-      navigate("/admin");
+      // check if the user is admin or patient or doctor and redirect to the right page
+      if (response.data.user.roles.includes("admin")) {
+        setProfile(response.data.user);
+        setlogAdmin(true);
+        navigate("/admin");
+      } else if (response.data.user.roles.includes("patient")) {
+        setProfile(response.data.user);
+        setlogPatient(true);
+        navigate("/patient");
+      } else if (response.data.user.roles.includes("doctor")) {
+        setProfile(response.data.user);
+        setlogPatient(true);
+        navigate("/doctor");
+      }
+      
+      
 
-      setError(null);
-      setLoading(false);
-      console.log(response.data);
+   ;
+
+   
     } catch (error) {
       setError(error.response.data);
       console.log(error.response.data);

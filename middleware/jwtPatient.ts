@@ -2,6 +2,7 @@ import jwt  from "jsonwebtoken";
 import Patient from "../model/patient";
 import Doctor from "../model/doctor";
 import Admin from "../model/admin";
+import User from "../model/User"
 
 
 
@@ -47,22 +48,94 @@ export const authAdmin = async (req: any, res: any, next: any) => {
         process.env.JWT_SECRET as unknown as JwtPayload
       );
         
-      const mango = await Admin.findOne({_id: decoded._id});
-
-      if (!mango) {
-        return res.status(400).send("User not found");
+      const user = await User.findOne({_id: decoded._id});
+      if (!user) {
+        return res.status(400).send("you1 don't have premise to access this page");
       }
-      req.mango = mango;
+      req.user = user;
       next();
     } catch (err) {
       return res.status(400).send("Invalid token");
     }
   } else {
-    return res.status(400).send("you don't have premise to access this page");
+    return res.status(400).send("you 2don't have premise to access this page");
     
   }
 };
-// auth the admin
+
+//admin middleware
+export const isAdmin = async (req: any, res: any, next: any) => {
+  if (!req.user.roles || !req.user.roles.admin) {
+    return res.status(400).send("you not admin");
+  }
+  next();
+};
+
+
+
+
+
+  
+
+
+
+   
+
+
+
+
+
+
+
+  
+
+
+
+    
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+ 
+      
+    
+
+  
+
+
+
+    
+
+
+
+
+
+
+
+
 
 
 

@@ -121,30 +121,26 @@ const Hero = () => {
               </a>
             </div>
 
-            
-            {
-              logPatient ? <NavBar /> : logAdmin ? <NavBar /> : 
-                <div className="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-end">
-                  <Link
-                    to="/login"
-                    className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
-                  >
-                    Log in
-                  </Link>
-                  <Link
-                    to="/Register"
-                    className="inline-block rounded-lg px-3 py-1.5 ml-3 text-sm font-semibold leading-6 text-white bg-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
-                  >
-                    Register
-                  </Link>
-
-
+            {logPatient ? (
+              <NavBar />
+            ) : logAdmin ? (
+              <NavBar />
+            ) : (
+              <div className="hidden lg:flex lg:min-w-0 lg:flex-1 lg:justify-end">
+                <Link
+                  to="/LoginAdmin"
+                  className="inline-block rounded-lg px-3 py-1.5 text-sm font-semibold leading-6 text-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+                >
+                  Log in
+                </Link>
+                <Link
+                  to="/RegisterAdmin"
+                  className="inline-block rounded-lg px-3 py-1.5 ml-3 text-sm font-semibold leading-6 text-white bg-gray-900 shadow-sm ring-1 ring-gray-900/10 hover:ring-gray-900/20"
+                >
+                  Register
+                </Link>
               </div>
-            }
-
-         
-
-          
+            )}
           </nav>
 
           <div role="dialog" aria-modal="true">

@@ -9,6 +9,7 @@ import patientRouter from './router/registerPatient';
 import prescriptionRouter from './router/prescription';
 import doctorRouter from './router/doctor';
 import adminRouter from "./router/admin";
+import user from "./router/user";
 
 
 app.use(express.json());
@@ -24,6 +25,9 @@ app.use('/doctor', doctorRouter);
  
 // admin
 app.use('/admin', adminRouter);
+
+// user
+app.use('/user', user);
 
 
 

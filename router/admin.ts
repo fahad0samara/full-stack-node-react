@@ -50,7 +50,9 @@ router.post("/registerAdmin", async (req, res) => {
 });
 
 // loginAdmin
-router.post("/loginAdmin", async (req, res) => {
+router.post("/loginAdmin",
+
+  async (req, res) => {
   // validate the data before we make a admin
   const {error} = loginAdminValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
