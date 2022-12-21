@@ -17,22 +17,13 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
-    roles: {
-      patient: {
-        type: Number,
-        default: 0
-
-      },
-      doctor: {
-        type: Number,
-        default: 5
-      },
-      admin: {
-        type: Number,
-        default: 6
-      },
+    role: {
+      type: String,
+      default: "Basic",
+      required: true,
     },
   },
+
   {
     timestamps: true,
   }

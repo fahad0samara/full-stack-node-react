@@ -31,7 +31,8 @@ router.post("/registerUser", async (req, res) => {
     name: req.body.name,
     email: req.body.email,
     password: hashedPassword,
-    phoneNumber: req.body.phoneNumber,
+
+    role: req.body.role,
   });
   try {
     const savedUser = await user.save();
@@ -47,7 +48,9 @@ router.post("/registerUser", async (req, res) => {
 });
 
 // loginUser
-router.post("/loginUser", async (req, res) => {
+router.post("/loginUser",
+  
+  async (req, res) => {
   // validate the data before we make a user
   const {error} = loginUserValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -67,19 +70,32 @@ router.post("/loginUser", async (req, res) => {
     const token = jwt.sign(
       {
         _id: user._id,
-        roles: user.roles,
+        role: user.role,
       },
+
 
       // @ts-ignore
 
-      process.env.JWT_SECRET as string
+      process.env.JWT_SECRET as string,
+      
+        {
+              // 3hrs in sec
+              expiresIn: 10800,
+      }
+        
+      
     );
+     res.cookie("token", token, {
+       httpOnly: true,
+       maxAge: 10800 * 1000,
+     });
 
-    res.header("auth-token", token);
+
     res.status(200).json({
       success: true,
       token,
-      user,
+      user
+ 
     });
     console.log("token", token);
   } catch (error) {
@@ -89,8 +105,6 @@ router.post("/loginUser", async (req, res) => {
     });
   }
 });
-  
-
 
 // delete user
 router.delete(
@@ -108,5 +122,112 @@ router.delete(
     }
   }
 );
+
+// chang the role admin and user and
+router.put("/changeRole/:id", authAdmin, isAdmin, async (req, res) => {
+  try {
+    const updatedUser = await User.updateOne(
+      {_id: req.params.id},
+      {
+        $set: {
+          role: req.body.role,
+        },
+      }
+    );
+    res.json(updatedUser);
+  } catch (error) {
+    res.json({message: (error as Error).message});
+  }
+});
+
+//update the role
+router.put(
+  "/updateRole",
+
+  async (req, res) => {
+    const {role, id} = req.body;
+    // First - Verifying if role and id is presnt
+    if (role && id) {
+      // Second - Verifying if the value of role is admin
+      if (role === "admin") {
+        // Finds the user with the id
+        await User.findById(id)
+          .then(
+            (
+              user // If the user is found
+            ) => {
+              if (user) {
+                // If the user is an admin
+                if (user.role === "admin") {
+                  // Return a message
+                  res.status(400).json({
+                    message: "User is already an admin",
+                  });
+                } else {
+                  // If the user is not an admin
+                  // Update the role to admin
+                  User.findByIdAndUpdate(id, {
+                    role: "admin",
+                  })
+                    .then(() => {
+                      // Return a message
+                      res.status(200).json({
+                        message: "User role updated to admin",
+                      });
+                    })
+                    .catch(error => {
+                      // If there is an error
+                      // Return a message
+                      res.status(400).json({
+                        message: (error as Error).message,
+                      });
+                    });
+                }
+              } else {
+                // If the user is not found
+                // Return a message
+                res.status(400).json({
+                  message: "User not found",
+                });
+              }
+            }
+          )
+          .catch(error => {
+            // If there is an error
+            // Return a message
+            res.status(400).json({
+              message: (error as Error).message,
+            });
+          });
+      } else {
+        // If the value of role is not admin
+        // Return a message
+        res.status(400).json({
+          message: "Role must be admin",
+        });
+      }
+    } else {
+      // If role and id is not present
+      // Return a message
+      res.status(400).json({
+        message: "Role and id must be present",
+      });
+    }
+  }
+);
+
+// get all users
+router.get("/getAllUsers", async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (error) {
+    res.json({ message: (error as Error).message });
+  }
+});
+
+
+
+
 
 export default router;

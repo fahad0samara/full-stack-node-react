@@ -25,26 +25,28 @@ const LoginAdmin = () => {
           password,
         }
       );
-      // check if the user is admin or patient or doctor and redirect to the right page
-      if (response.data.user.roles.includes("admin")) {
-        setProfile(response.data.user);
+
+
+
+
+       
+      if (response.data.user.role === "admin") {
         setlogAdmin(true);
-        navigate("/admin");
-      } else if (response.data.user.roles.includes("patient")) {
-        setProfile(response.data.user);
+        setlogPatient(false);
+        setLoading(false);
+        setProfile(
+          response.data.user
+        );
+        navigate("/admin/dashboard");
+      } else if (response.data.user.role === "Basic") {
         setlogPatient(true);
-        navigate("/patient");
-      } else if (response.data.user.roles.includes("doctor")) {
-        setProfile(response.data.user);
-        setlogPatient(true);
-        navigate("/doctor");
+        setlogAdmin(false);
+        setLoading(false);
+        setProfile(
+          response.data.user
+        );
+    navigate("/patient/about");
       }
-      
-      
-
-   ;
-
-   
     } catch (error) {
       setError(error.response.data);
       console.log(error.response.data);

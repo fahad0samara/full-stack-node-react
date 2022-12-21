@@ -18,20 +18,16 @@ const ContextLog = createContext(
 );
 const LogCheck = ({children}: any) => {
   const [logPatient, setlogPatient] = useState(false);
-  const [logAdmin, setlogAdmin] = useState(false)
-
-  
-
-    
-
-
+  const [logAdmin, setlogAdmin] = useState(false);
 
   const [Profile, setProfile] = useState({});
   const [loading, setLoading] = useState(false);
-  const [dark, setdark] =useState(/* Checking if the value of the key "dark" is true, if it is, it will
+  const [dark, setdark] = useState(
+    /* Checking if the value of the key "dark" is true, if it is, it will
   return true, if not, it will return false. */
- false);
- 
+    false
+  );
+
   const APPloader = () => {
     return (
       <div role="status">
@@ -55,6 +51,78 @@ const LogCheck = ({children}: any) => {
       </div>
     );
   };
+
+
+  const checkLog = async () => {
+    setLoading(true);
+    const token = localStorage.getItem("token");
+    if (token !== null) {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/user/getAllUsers",
+          {
+            headers: {
+              Authorization: `JWT ${token}`,
+            },
+          }
+        );
+        if (response.data.success) {
+          setLoading(false);
+          setlogPatient(true);
+          setProfile(response.data.user);
+        } else {
+          setProfile({});
+          setLoading(false);
+        }
+
+        const response2 = await axios.get(
+          "http://localhost:3000/user/getAllUsers",
+          {
+            headers: {
+              Authorization: `JWT ${token}`,
+            },
+          }
+        );
+        if (response2.data.success) {
+          setLoading(false);
+          setlogAdmin(true);
+          setProfile(response2.data.user);
+        } else {
+          setProfile({});
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      setLoading(false);
+    }
+  };
+
+
+
+      React.useEffect(() => {
+        checkLog();
+      }, [])
+    
+      
+      
+     
+
+        
+
+    
+      
+          
+   
+        
+   
+
+  
+
+    
+  
+
 
   //   const checkLog = async () => {
   //     setLoading(true);
