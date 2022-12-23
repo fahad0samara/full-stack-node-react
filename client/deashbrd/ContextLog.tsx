@@ -29,13 +29,15 @@ const LogCheck = ({children}: any) => {
 
   const APPloader = () => {
     return (
-      <div role="status" className=" absolute 
-      top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50
+      <div
       
+        role="status" className=" absolute 
+      top-0 left-0 w-full h-full flex items-center justify-center  bg-opacity-50 z-50
+
       ">
         <svg
           aria-hidden="true"
-          className="mr-2 w-8 h-8 text-gray-200 animate-spin  fill-blue-600"
+          className="mr-2 w-8 h-8 text-gray-400 animate-spin  fill-blue-600"
           viewBox="0 0 100 101"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +51,9 @@ const LogCheck = ({children}: any) => {
             fill="currentFill"
           />
         </svg>
-        <span className="sr-only">Loading...</span>
+        <span className="
+        text-gray-200 text-xl font-semibold
+        ">Loading...</span>
       </div>
     );
   };

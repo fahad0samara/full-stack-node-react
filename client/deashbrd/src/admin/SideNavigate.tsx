@@ -27,7 +27,7 @@ const SideNavigate = (_props: any) => {
           ? "0px 0px 10px 0px rgb(103 232 249)  "
           : "0px 0px 10px 0px #000",
       }}
-      onSelect={selected => {
+      onSelect={(selected: string) => {
           navigate(
             //admin
             selected === "dashboard" ? "/admin/dashboard" : "/admin/about"

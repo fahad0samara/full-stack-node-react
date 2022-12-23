@@ -14,20 +14,23 @@ const RegisterAdmin = () => {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
 
-  const [phoneNumber, setphoneNumber] = useState("");
+
   const HandelLogin = async (e: {preventDefault: () => void}) => {
     e.preventDefault();
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/admin/registerAdmin",
+        "http://localhost:3000/user/registerUser",
         {
           name,
           email,
           password,
-          phoneNumber,
         }
       );
+
+      localStorage.setItem("token", response.data.token);
+
+      
       setProfile(response.data.patient);
       setlogPatient(true);
      
@@ -35,9 +38,9 @@ const RegisterAdmin = () => {
       setError(null);
       setLoading(false);
       console.log(response.data);
-    } catch (error) {
-      setError(error.response.data);
-      console.log(error.response.data);
+    } catch (err) {
+      setError(err.response.data);
+      console.log(err.response.data);
     }
   };
 
@@ -156,31 +159,7 @@ const RegisterAdmin = () => {
                       "
                     />
                   </div>
-                  <div className="mb-1 sm:mb-2">
-                    <label
-                      htmlFor="Email"
-                      className="inline-block text-sky-300 mb-1 font-black"
-                    >
-                      phoneNumber
-                    </label>
-                    <input
-                      value={phoneNumber}
-                      onChange={e => {
-                        setphoneNumber(e.target.value);
-                      }}
-                      placeholder="
-
-                      Enter your phoneNumber
-                      "
-                      required
-                      type="number"
-                      className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
-                      id="phoneNumber"
-                      name="
-                    phoneNumber
-                      "
-                    />
-                  </div>
+          
                   <div className="mb-1 sm:mb-2">
                     <label
                       htmlFor="Password"
