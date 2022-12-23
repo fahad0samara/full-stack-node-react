@@ -7,7 +7,7 @@ import Patient from "../model/patient";
 
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import {authAdmin} from "../middleware/jwtPatient";
+
 const {
   adminValidation,
   loginAdminValidation,
@@ -77,7 +77,7 @@ router.post("/loginAdmin",
 });
 
 // getAllAdmin
-router.get("/getAllAdmin", authAdmin, async (req, res) => {
+router.get("/getAllAdmin", async (req, res) => {
   try {
     const admin = await Admin.find();
     res.json(admin);
@@ -90,7 +90,7 @@ router.get("/getAllAdmin", authAdmin, async (req, res) => {
 });
 
 // getAllDoctor
-router.get("/getAllDoctor", authAdmin, async (req, res) => {
+router.get("/getAllDoctor", async (req, res) => {
   try {
     const doctor = await Doctor.find();
     res.json(doctor);
@@ -103,7 +103,7 @@ router.get("/getAllDoctor", authAdmin, async (req, res) => {
 });
 
 // getAllPatient
-router.get("/getAllPatient", authAdmin, async (req, res) => {
+router.get("/getAllPatient", async (req, res) => {
   try {
     const patient = await Patient.find();
     res.json(patient);
@@ -116,7 +116,7 @@ router.get("/getAllPatient", authAdmin, async (req, res) => {
 });
 
 // delete doctor
-router.delete("/deleteDoctor/:id", authAdmin, async (req, res) => {
+router.delete("/deleteDoctor/:id", async (req, res) => {
   // checking if the id is correct in the database or not
   const doctor = await Doctor.findById({
     _id: req.params.id,

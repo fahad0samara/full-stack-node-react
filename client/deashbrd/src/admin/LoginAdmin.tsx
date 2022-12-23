@@ -27,6 +27,8 @@ const LoginAdmin = () => {
       );
 
 
+      localStorage.setItem("token", response.data.token);
+
 
 
        

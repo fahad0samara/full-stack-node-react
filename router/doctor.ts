@@ -3,7 +3,7 @@ const router = express.Router();
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Doctor from "../model/doctor";
-import {authAdmin} from "../middleware/jwtPatient";
+
 import Patient from "../model/patient";
 const {
   doctorValidation,
@@ -12,7 +12,7 @@ const {
 } = require("../middleware/validtion");
 
 // registerDoctor
-router.post("/registerDoctor", authAdmin, async (req, res) => {
+router.post("/registerDoctor",  async (req, res) => {
   // validate the data before we make a doctor
   const {error} = doctorValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);

@@ -23,17 +23,19 @@ const LogCheck = ({children}: any) => {
   const [Profile, setProfile] = useState({});
   const [loading, setLoading] = useState(false);
   const [dark, setdark] = useState(
-    /* Checking if the value of the key "dark" is true, if it is, it will
-  return true, if not, it will return false. */
-    false
+    localStorage.getItem("dark") === "true" ? true : false
   );
+  
 
   const APPloader = () => {
     return (
-      <div role="status">
+      <div role="status" className=" absolute 
+      top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50
+      
+      ">
         <svg
           aria-hidden="true"
-          className="mr-2 w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+          className="mr-2 w-8 h-8 text-gray-200 animate-spin  fill-blue-600"
           viewBox="0 0 100 101"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
@@ -58,35 +60,23 @@ const LogCheck = ({children}: any) => {
     const token = localStorage.getItem("token");
     if (token !== null) {
       try {
-        const response = await axios.get(
-          "http://localhost:3000/user/getAllUsers",
-          {
-            headers: {
-              Authorization: `JWT ${token}`,
-            },
-          }
-        );
-        if (response.data.success) {
+        const response = await axios.get("http://localhost:3000/user/profile", {
+          headers: {
+            Authorization: `JWT ${token}`,
+          },
+        });
+      // check for admin 
+        if (
+          response.data.success && response.data.user.role === "admin"
+        )
+        {
+          setLoading(false);
+          setlogAdmin(true);
+          setProfile(response.data.user);
+        } else if (response.data.success && response.data.user.role === "Basic") {
           setLoading(false);
           setlogPatient(true);
           setProfile(response.data.user);
-        } else {
-          setProfile({});
-          setLoading(false);
-        }
-
-        const response2 = await axios.get(
-          "http://localhost:3000/user/getAllUsers",
-          {
-            headers: {
-              Authorization: `JWT ${token}`,
-            },
-          }
-        );
-        if (response2.data.success) {
-          setLoading(false);
-          setlogAdmin(true);
-          setProfile(response2.data.user);
         } else {
           setProfile({});
           setLoading(false);
@@ -98,6 +88,20 @@ const LogCheck = ({children}: any) => {
       setLoading(false);
     }
   };
+
+
+       
+     
+
+
+    
+
+
+
+
+
+
+   
 
 
 
