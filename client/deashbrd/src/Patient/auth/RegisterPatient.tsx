@@ -2,8 +2,12 @@ import React, {useEffect, useState} from "react";
 import axios from "axios";
 import {AiFillMinusCircle, AiFillPlusCircle} from "react-icons/ai";
 import {useNavigate} from "react-router-dom";
+import {useLogIN} from "../../../ContextLog";
 
-export default function Register(props: any) {
+export default function RegisterPatient(props: any) {
+  const { setlogPatient, dark, setProfile} =
+    useLogIN();
+  const navigate = useNavigate();
   const [Loading, setLoading] = useState(false);
   const [Toggle, setToggle] = useState("Patient");
 
@@ -106,6 +110,7 @@ export default function Register(props: any) {
       allergyList,
       medicationList
     );
+    
 
     try {
       const {data} = await axios.post(
@@ -127,19 +132,21 @@ export default function Register(props: any) {
           contactPerson,
         }
       );
-      console.log("====================================");
-      console.log(
-        "🚀 ~ file: App.tsx ~ line 100 ~ handleRegisterPatient ~ data",
-        data
-      );
-      console.log("====================================");
+
+
+      setlogPatient(true);
+        setProfile(data.user);
+      console.log(data.user);
+
+
       setLoading(false);
-      setSuccess(data.message);
+      setSuccess(data);
       setTimeout(() => {
-        alert(
-          "Registration Successful. Please Login to continue. Redirecting to Login Page"
-        );
-      }, 2000);
+        navigate("/patient/dashboard");
+      }
+        , 2000);
+      
+    
     } catch (error) {
       console.log("====================================");
       console.log(
@@ -158,8 +165,12 @@ export default function Register(props: any) {
 
   return (
     <div
+      style={{
+        backgroundColor: dark ? "#000" : "white",
+        color: dark ? "white" : "black",
+      }}
       className=" overflow-hidden 
-      bg-black
+    
     
     "
     >
@@ -168,17 +179,22 @@ export default function Register(props: any) {
           <div className=" flex justify-center ">
             <h1
               className="  p-2 px-8 rounded
-              bg-gradient
-              from-purple-400
-              to-purple-600
+           
 
-              text-white font-bold text-5xl"
+          font-bold text-5xl"
             >
-              Register
+              Register Patient
             </h1>
           </div>
 
           <form
+            style={{
+              backgroundColor: dark ? "#000" : "white",
+              color: dark ? "white" : "black",
+              boxShadow: dark
+                ? "0px 0px 10px 0px #fff"
+                : "0px 0px 10px 0px #000",
+            }}
             className="   
             bg-gradient-to-l
           
@@ -187,11 +203,7 @@ export default function Register(props: any) {
               to-cyan-300/90
               rounded-2xl
               
-              shadow-2xl
-              shadow-white
-              shadow-opacity-50
-              shadow-offset-4
-              shadow-radius-4
+       
 
              
               
@@ -203,53 +215,9 @@ export default function Register(props: any) {
               md:my-8"
             onSubmit={handleRegisterPatient}
           >
-            <div className="flex   mt-2 bg-bgsecondary w-fit  justify-between rounded mx-auto">
-              <button
-                onClick={() => setToggle("Patient")}
-                className={
-                  Toggle === "Patient"
-                    ? "py-2 px-8 text-lg font-poppins font-semibold cursor-pointer rounded bg-red-400 text-white"
-                    : "py-2 px-8 text-lg font-poppins font-semibold cursor-pointer rounded bg-bgsecondary"
-                }
-              >
-                Patient
-              </button>
-              <button
-                onClick={() => setToggle("Doctor")}
-                className={
-                  Toggle === "Doctor"
-                    ? "py-2 px-8 text-lg font-poppins font-semibold cursor-pointer rounded bg-black"
-                    : "py-2 px-8 text-lg font-poppins font-semibold cursor-pointer rounded bg-bgsecondary"
-                }
-              >
-                Doctor
-              </button>
-            </div>
-            <div
-              className={
-                Toggle === "Doctor"
-                  ? "h-96 p-2 flex flex-col justify-center "
-                  : "hidden"
-              }
-            >
-              <h1 className="font-bold flex justify-center mt-6">
-                For register as doctor contact to admin with you all information
-              </h1>
-              <div className="border-4 p-4 mx-auto w-1/2 rounded-xl mt-8  ">
-                <h1>send your all information</h1>
-                <div>
-                  <div className=" rounded-xl p-4 mt-4 ">
-                    <h1 className="font-bold">Email :</h1>
-                    <p>admin@gmail.com</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className={Toggle === "Patient" ? "" : "hidden"}>
+            <div>
               <div
                 className="
-
               flex 
               md:flex-row 
                   flex-col justify-between lg:mt-4
@@ -279,6 +247,7 @@ export default function Register(props: any) {
                         my-1
                           md:mx-1
                       
+                          text-black
 
                 
                   w-64
@@ -309,6 +278,7 @@ export default function Register(props: any) {
                   ></input>
                   <input
                     className="
+                     text-black
                   lg:my-2
                         lg:px-4
                         lg:py-2
@@ -353,6 +323,7 @@ export default function Register(props: any) {
                   focus:border-transparent
                   border-2
                   border-gray-300
+                   text-black
 
                     
                     "
@@ -394,7 +365,7 @@ export default function Register(props: any) {
                 <input
                   type="date"
                   className=" 
-            
+             text-black
                   my-2
                   mx-2
                      w-64
@@ -429,7 +400,7 @@ export default function Register(props: any) {
                   <input
                     required
                     className=" 
-                  
+                   text-black
                   my-2
                   mx-2
                      w-64
@@ -473,7 +444,7 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
-
+ text-black
                   border-gray-300 
 "
                   placeholder="Email"
@@ -496,12 +467,12 @@ export default function Register(props: any) {
                   col-span-3
                   my-2
                   mx-2
-
+ text-black
                   "
                   >
                     <select
                       className=" 
-                  
+                   text-black
                   my-2
                   mx-2
                      w-64
@@ -541,12 +512,6 @@ export default function Register(props: any) {
               md:flex-row
               flex-col
               items-center
-
-
-       
-              
-
-            
               "
               >
                 <label
@@ -588,7 +553,7 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
-
+ text-black
                   border-gray-300 
 "
                     required
@@ -604,7 +569,7 @@ export default function Register(props: any) {
                   <input
                     type="text"
                     className=" 
-                  
+                   text-black
                   my-2
                   mx-2
                      w-64
@@ -632,7 +597,7 @@ export default function Register(props: any) {
                   <input
                     type="text"
                     className=" 
-                  
+                   text-black
                   my-2
                   mx-2
                      w-64
@@ -660,7 +625,7 @@ export default function Register(props: any) {
                   <input
                     type="text"
                     className=" 
-                  
+                   text-black
                   my-2
                   mx-2
                      w-64
@@ -688,7 +653,7 @@ export default function Register(props: any) {
                   <input
                     type="number"
                     className=" 
-                  
+                   text-black
                   my-2
                   mx-2
                      w-64
@@ -716,7 +681,7 @@ export default function Register(props: any) {
                   <input
                     type="text"
                     className=" 
-                  
+                   text-black
                   my-2
                   mx-2
                      w-64
@@ -782,7 +747,7 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
-
+ text-black
                   border-gray-300 
 "
                     required
@@ -805,7 +770,7 @@ export default function Register(props: any) {
                     type="password"
                     id="password"
                     className=" 
-                  
+                   text-black
                   my-2
                   mx-2
                      w-64
@@ -853,6 +818,7 @@ export default function Register(props: any) {
                         <input
                           className="lg:h-10
                                lg:w-64
+                                text-black
                                 lg:rounded-lg
                                 lg:px-4
                   px-4
@@ -890,6 +856,7 @@ export default function Register(props: any) {
                   focus:border-transparent
                   border-2
                   mx-3
+                          text-black
 
                   border-gray-300 
                             col-span-3 rounded-lg lg:pl-4 h-8 pl-2"
@@ -960,6 +927,8 @@ export default function Register(props: any) {
                                 lg:w-64
                                 lg:rounded-lg
                                 lg:px-4
+                          text-black
+
                   px-4
                   focus:outline-none
                   focus:ring-2
@@ -983,6 +952,8 @@ export default function Register(props: any) {
                         className="lg:h-10
                                 lg:w-64
                                 lg:rounded-lg
+                          text-black
+
                                 lg:px-4
                   px-4
                   focus:outline-none
@@ -1068,6 +1039,8 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
+                          text-black
+
 
                   border-gray-300
                             col-span-3 rounded-lg lg:pl-4 h-8 pl-2"
@@ -1088,6 +1061,8 @@ export default function Register(props: any) {
                                 lg:w-64
                                 lg:rounded-lg
                                 lg:px-4
+                          text-black
+
                   px-4
                   focus:outline-none
                   focus:ring-2
@@ -1161,6 +1136,8 @@ export default function Register(props: any) {
                   focus:border-transparent
                   border-2
                   border-gray-300 
+                          text-black
+
 "
                     placeholder="first name"
                     required
@@ -1180,6 +1157,7 @@ export default function Register(props: any) {
               lg:mx-5
                   mx-14
                   my-2
+                          text-black
          
                      w-64
                   h-10
@@ -1245,6 +1223,7 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
+                          text-black
 
                   border-gray-300 
 "
@@ -1281,6 +1260,7 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
+                          text-black
 
                   border-gray-300 
 "
@@ -1333,6 +1313,7 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
+                          text-black
 
                   border-gray-300 
 "
@@ -1372,6 +1353,7 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
+                          text-black
 
                   border-gray-300 
 "
@@ -1421,6 +1403,7 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
+                          text-black
 
                   border-gray-300 "
                     required
@@ -1449,6 +1432,7 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
+                          text-black
 
                   border-gray-300"
                     required
@@ -1477,6 +1461,7 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
+                          text-black
 
                   border-gray-300"
                     required
@@ -1505,6 +1490,7 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
+                          text-black
 
                   border-gray-300"
                     required
@@ -1533,6 +1519,7 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
+                          text-black
 
                   border-gray-300"
                     required
@@ -1561,6 +1548,7 @@ export default function Register(props: any) {
                   focus:ring-purple-600
                   focus:border-transparent
                   border-2
+                          text-black
 
                   border-gray-300"
                     placeholder="State"

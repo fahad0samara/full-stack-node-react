@@ -1,50 +1,75 @@
 import axios from "axios";
 import React, {useState, useEffect} from "react";
-import {Link, Outlet, useNavigate} from "react-router-dom";
-import {useLogIN} from "../../ContextLog";
-const RegisterAdmin = () => {
-  
-  const {setProfile, setLoading, setlogPatient, dark, setdark} = useLogIN();
+import {Link, useNavigate} from "react-router-dom";
+import {useLogIN} from "../../../ContextLog";
+
+const Login = () => {
+  const {setProfile, setLoading, setlogAdmin, setlogPatient, dark, setdark} =
+    useLogIN();
 
   const navigate = useNavigate();
-  const [name, setname] = useState("");
 
   const [error, setError] = useState(null);
 
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
 
-
   const HandelLogin = async (e: {preventDefault: () => void}) => {
     e.preventDefault();
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/user/registerUser",
+        "http://localhost:3000/user/loginUser",
         {
-          name,
           email,
           password,
         }
       );
 
+
       localStorage.setItem("token", response.data.token);
 
+
+
+       
+      if (response.data.user.role === "admin") {
+        setlogAdmin(true);
+        setlogPatient(false);
+        setLoading(false);
+        setProfile(
+          response.data.user
+        );
+        navigate("/admin/dashboard");
+      } else if (response.data.user.role === "Basic") {
+        setlogPatient(true);
+        setlogAdmin(false);
+        setLoading(false);
+        setProfile(
+          response.data.user
+        );
+    navigate("/patient/about");
+      }
+    } catch (error) {
+     /* Checking if the error is an axios error. If it is, it is getting the response from the error
+     and setting the error to the response data message. If it is not an axios error, it is logging
+     the error. */
+      if (axios.isAxiosError(error)){
+        const showError = error.response
+        if (showError) {
+          setError(showError.data.message);
+        }
+      } else {
+        // Handle the unknown
+        console.log(
+          "🚀 ~ file: RegisterAdmin.tsx ~ line 64 ~ HandelLogin ~ error",
+          error
+        );
+        
+
       
-      setProfile(response.data.patient);
-      setlogPatient(true);
-     
-
-      setError(null);
-      setLoading(false);
-      console.log(response.data);
-    } catch (err) {
-      setError(err.response.data);
-      console.log(err.response.data);
     }
+    };
   };
-
-  
 
   return (
     <div className="relative">
@@ -114,31 +139,6 @@ const RegisterAdmin = () => {
                       htmlFor="Email"
                       className="inline-block text-sky-300 mb-1 font-black"
                     >
-                      name
-                    </label>
-                    <input
-                      value={name}
-                      onChange={e => {
-                        setname(e.target.value);
-                      }}
-                      placeholder="
-
-                      Enter your name
-                      "
-                      required
-                      type="name"
-                      className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
-                      id="name"
-                      name="
-                    name
-                      "
-                    />
-                  </div>
-                  <div className="mb-1 sm:mb-2">
-                    <label
-                      htmlFor="Email"
-                      className="inline-block text-sky-300 mb-1 font-black"
-                    >
                       Email
                     </label>
                     <input
@@ -159,7 +159,6 @@ const RegisterAdmin = () => {
                       "
                     />
                   </div>
-          
                   <div className="mb-1 sm:mb-2">
                     <label
                       htmlFor="Password"
@@ -217,4 +216,4 @@ const RegisterAdmin = () => {
   );
 };
 
-export default RegisterAdmin;
+export default Login

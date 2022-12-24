@@ -7,8 +7,9 @@ const {
 } = require("../middleware/validtion");
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { isAuth } from "../middleware/jwtPatient";
 
-router.post("/registerPatient", async (req, res) => {
+router.post("/registerPatient",  async (req, res) => {
   // validate the data before we make a user
   const {error} = registerValidation(req.body);
 
@@ -25,23 +26,17 @@ router.post("/registerPatient", async (req, res) => {
     const healthIDNumber = healthID + 10;
 
 
-
-
-
-
-
-
-
-
-
     // hash passwords
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
     // create a new user
     const patient = new Patient({
+      patientId:req.body.patientId,
+ 
+
       prescriptions: req.body.prescriptions,
-      healthIDNumber:healthIDNumber,
+      healthIDNumber: healthIDNumber,
       name: req.body.name,
       password: hashedPassword,
       mobile: req.body.mobile,
@@ -57,9 +52,18 @@ router.post("/registerPatient", async (req, res) => {
       contactPerson: req.body.contactPerson,
     });
     const savedPatient = await patient.save();
-    res.send({
-      savedPatient,
-    });
+    res.json({
+      success: true,
+      message: "Patient registered successfully",
+      user:savedPatient,
+      
+  
+
+    })
+
+    
+
+
   } catch (err) {
     res.status(400).json({
       message: (err as Error).message,

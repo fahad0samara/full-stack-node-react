@@ -1,13 +1,12 @@
 import axios from "axios";
 import React, {useState, useEffect} from "react";
-import {Link, useNavigate} from "react-router-dom";
-import {useLogIN} from "../../ContextLog";
-
-const LoginAdmin = () => {
-  const {setProfile, setLoading, setlogAdmin, setlogPatient, dark, setdark} =
-    useLogIN();
+import {Link, Outlet, useNavigate} from "react-router-dom";
+import {useLogIN} from "../../../ContextLog";
+const Register = () => {
+  const {setProfile, setLoading, setlogPatient, dark, setdark} = useLogIN();
 
   const navigate = useNavigate();
+  const [name, setname] = useState("");
 
   const [error, setError] = useState(null);
 
@@ -16,42 +15,48 @@ const LoginAdmin = () => {
 
   const HandelLogin = async (e: {preventDefault: () => void}) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/user/loginUser",
+        "http://localhost:3000/user/registerUser",
         {
+          name,
           email,
           password,
         }
       );
-
-
-      localStorage.setItem("token", response.data.token);
-
-
-
-       
-      if (response.data.user.role === "admin") {
-        setlogAdmin(true);
-        setlogPatient(false);
+      setLoading(true);
+      if (response.data.success) {
+        const logIN = await axios.post("http://localhost:3000/user/loginUser", {
+          email,
+          password,
+        });
+        localStorage.setItem("token", logIN.data.token);
+        setProfile(logIN.data.user);
         setLoading(false);
-        setProfile(
-          response.data.user
-        );
-        navigate("/admin/dashboard");
-      } else if (response.data.user.role === "Basic") {
         setlogPatient(true);
-        setlogAdmin(false);
-        setLoading(false);
-        setProfile(
-          response.data.user
+        navigate("/RegisterPatient");
+        console.log(
+          "🚀 ~ file: RegisterAdmin.tsx ~ line 48 ~ HandelLogin ~ logIN",
+          logIN
         );
-    navigate("/patient/about");
       }
     } catch (error) {
-      setError(error.response.data);
-      console.log(error.response.data);
+      if (axios.isAxiosError(error)) {
+        const errResp = error.response;
+        if (errResp) {
+          setError(errResp.data.message);
+        }
+      } else {
+        // Handle the unknown
+        console.log(
+          "🚀 ~ file: RegisterAdmin.tsx ~ line 64 ~ HandelLogin ~ error",
+          error
+        );
+      }
+
+      setLoading(false);
     }
   };
 
@@ -123,6 +128,31 @@ const LoginAdmin = () => {
                       htmlFor="Email"
                       className="inline-block text-sky-300 mb-1 font-black"
                     >
+                      name
+                    </label>
+                    <input
+                      value={name}
+                      onChange={e => {
+                        setname(e.target.value);
+                      }}
+                      placeholder="
+
+                      Enter your name
+                      "
+                      required
+                      type="name"
+                      className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
+                      id="name"
+                      name="
+                    name
+                      "
+                    />
+                  </div>
+                  <div className="mb-1 sm:mb-2">
+                    <label
+                      htmlFor="Email"
+                      className="inline-block text-sky-300 mb-1 font-black"
+                    >
                       Email
                     </label>
                     <input
@@ -143,6 +173,7 @@ const LoginAdmin = () => {
                       "
                     />
                   </div>
+
                   <div className="mb-1 sm:mb-2">
                     <label
                       htmlFor="Password"
@@ -200,4 +231,4 @@ const LoginAdmin = () => {
   );
 };
 
-export default LoginAdmin;
+export default Register;

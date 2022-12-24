@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema(
       default: "Basic",
       required: true,
     },
+
   },
 
   {

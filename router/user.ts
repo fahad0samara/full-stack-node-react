@@ -35,13 +35,20 @@ router.post(
       email: req.body.email,
       password: hashedPassword,
 
+    
+
       role: req.body.role,
     });
     try {
       const savedUser = await user.save();
-      res.send({
-        savedUser,
-      });
+      res.json({
+        success: true,
+        message: "User created successfully",
+        user: savedUser,
+        
+
+      })
+   
     } catch (error) {
       res.status(400).json({
         message: (error as Error).message,

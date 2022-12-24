@@ -11,6 +11,7 @@ const registerValidation = (data: any) => {
     }),
 
     date: Joi.date().required(),
+    patientId:Joi.required(),
 
     bloodGroup: Joi.string().required(),
     email: Joi.string().min(5).required().email(),
