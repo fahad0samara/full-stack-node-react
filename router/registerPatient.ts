@@ -32,7 +32,7 @@ router.post("/registerPatient",  async (req, res) => {
 
     // create a new user
     const patient = new Patient({
-      patientId:req.body.patientId,
+   
  
 
       prescriptions: req.body.prescriptions,

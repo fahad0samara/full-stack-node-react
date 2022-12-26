@@ -6,9 +6,12 @@ import User from "../model/User";
 const {
   registerUserValidation,
   loginUserValidation,
+  registerValidation,
+  loginValidation,
 } = require("../middleware/validtion");
 
-import {authAdmin, isAdmin, isAuth} from "../middleware/jwtPatient";
+import { authAdmin, isAdmin, isAuth } from "../middleware/jwtPatient";
+import Patient from "../model/patient";
 
 // registerUser
 router.post(
@@ -217,20 +220,19 @@ router.put(
   }
 );
 
-// get all users
-router.get(
-  "/getAllUsers",
-isAuth,
 
-  async (req, res) => {
-    try {
-      const users = await User.find();
-      res.json(users);
-    } catch (error) {
-      res.json({message: (error as Error).message});
-    }
+
+// get the user
+
+router.get("/getUser/:id", async (req, res) => {
+  try {
+    const user = await Patient.findById(req.params.id).populate("patientId");
+    res.json(user);
+  } catch (error) {
+    res.json({ message: (error as Error).message });
   }
-);
+});
+
 
 router.get(
   "/profile",
@@ -252,5 +254,144 @@ router.get(
     });
   }
 );
+
+router.post("/Patient", async (req, res) => {
+  // validate the data before we make a user
+  const {error} = registerValidation(req.body);
+
+  if (error) return res.status(400).send(error.details[0].message);
+
+  try {
+    const emailExist = await Patient.findOne({
+      email: req.body.email,
+    });
+    if (emailExist) return res.status(400).send("Email already exists");
+
+    // create  healthID id for user start from 10
+    const healthID = await Patient.find().countDocuments();
+    const healthIDNumber = healthID + 10;
+
+    // hash passwords
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+    //  update the user 
+    const patient = new Patient({
+      patientId:req.body.patientId,
+      prescriptions: req.body.prescriptions,
+      healthIDNumber: healthIDNumber,
+      name: req.body.name,
+      password: hashedPassword,
+      mobile: req.body.mobile,
+      email: req.body.email,
+      relation: req.body.relation,
+      address: req.body.address,
+      date: req.body.date,
+      medicationList: req.body.medicationList,
+      diseaseList: req.body.diseaseList,
+      allergyList: req.body.allergyList,
+
+      bloodGroup: req.body.bloodGroup,
+      contactPerson: req.body.contactPerson,
+    });
+    const savedPatient = await patient.save();
+    res.json({
+      success: true,
+      message: "Patient registered successfully",
+      user: savedPatient,
+    });
+  } catch (err) {
+    res.status(400).json({
+      message: (err as Error).message,
+      err,
+    });
+  }
+});
+
+// update the user patientId
+router.post("/updatePatient/:id", async (req, res) => {
+  // validate the data before we make a user
+  const {error} = registerValidation(req.body);
+
+  if (error) return res.status(400).send(error.details[0].message);
+  try {
+    const emailExist = await User.findOne({
+      email: req.body.email,
+    });
+
+    if (emailExist) return res.status(400).send("Email already exists");
+
+
+       const patientt = new User({
+   
+      prescriptions: req.body.prescriptions,
+  
+      name: req.body.name,
+
+      mobile: req.body.mobile,
+      email: req.body.email,
+      relation: req.body.relation,
+      address: req.body.address,
+      date: req.body.date,
+      medicationList: req.body.medicationList,
+      diseaseList: req.body.diseaseList,
+      allergyList: req.body.allergyList,
+
+      bloodGroup: req.body.bloodGroup,
+      contactPerson: req.body.contactPerson,
+       });
+    const updatedUser = await Patient.findByIdAndUpdate(
+      req.params.id,
+      patientt,
+      {
+        new: true,
+      }
+    );
+    res.json({
+      success: true,
+      message: "Patient updated successfully",
+      user: updatedUser,
+    });
+  } catch (err) {
+    res.status(400).json({
+      message: (err as Error).message,
+
+      err,
+    });
+
+  }
+});
+
+ 
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
 
 export default router;

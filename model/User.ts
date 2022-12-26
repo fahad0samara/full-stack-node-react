@@ -22,7 +22,15 @@ const userSchema = new mongoose.Schema(
       default: "Basic",
       required: true,
     },
+    /* Creating a relationship between the user and the patient. */
+    patient: 
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "patient",
+        require:true
+      },
 
+    
   },
 
   {

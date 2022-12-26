@@ -28,12 +28,8 @@ const patientSchema = new mongoose.Schema({
   healthIDNumber: {
     type: Number,
   },
-  patientId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    require: "patient is required",
-    
-  },
+
+  /* A reference to the User model. */
 
   name: {
     firstName: {
@@ -184,6 +180,11 @@ const patientSchema = new mongoose.Schema({
         required: true,
       },
     },
+  },
+  patientId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    require: true,
   },
 
   prescriptions: [prescriptionSchema],
