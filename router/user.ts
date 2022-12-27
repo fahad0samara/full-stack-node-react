@@ -255,7 +255,7 @@ router.get(
   }
 );
 
-router.post("/Patient", async (req, res) => {
+router.post("/patient", async (req, res) => {
   // validate the data before we make a user
   const {error} = registerValidation(req.body);
 
@@ -277,7 +277,7 @@ router.post("/Patient", async (req, res) => {
 
     //  update the user 
     const patient = new Patient({
-      patientId:req.body.patientId,
+      user: req.body.user,
       prescriptions: req.body.prescriptions,
       healthIDNumber: healthIDNumber,
       name: req.body.name,
@@ -293,8 +293,11 @@ router.post("/Patient", async (req, res) => {
 
       bloodGroup: req.body.bloodGroup,
       contactPerson: req.body.contactPerson,
-    });
-    const savedPatient = await patient.save();
+    }).populate("user");
+
+    const savedPatient = await (await patient).save()
+
+  
     res.json({
       success: true,
       message: "Patient registered successfully",
@@ -308,60 +311,26 @@ router.post("/Patient", async (req, res) => {
   }
 });
 
-// update the user patientId
-router.post("/updatePatient/:id", async (req, res) => {
-  // validate the data before we make a user
-  const {error} = registerValidation(req.body);
 
-  if (error) return res.status(400).send(error.details[0].message);
+router.get("/patient", async (req, res) => {
   try {
-    const emailExist = await User.findOne({
-      email: req.body.email,
-    });
-
-    if (emailExist) return res.status(400).send("Email already exists");
-
-
-       const patientt = new User({
-   
-      prescriptions: req.body.prescriptions,
-  
-      name: req.body.name,
-
-      mobile: req.body.mobile,
-      email: req.body.email,
-      relation: req.body.relation,
-      address: req.body.address,
-      date: req.body.date,
-      medicationList: req.body.medicationList,
-      diseaseList: req.body.diseaseList,
-      allergyList: req.body.allergyList,
-
-      bloodGroup: req.body.bloodGroup,
-      contactPerson: req.body.contactPerson,
-       });
-    const updatedUser = await Patient.findByIdAndUpdate(
-      req.params.id,
-      patientt,
-      {
-        new: true,
-      }
-    );
-    res.json({
-      success: true,
-      message: "Patient updated successfully",
-      user: updatedUser,
-    });
-  } catch (err) {
-    res.status(400).json({
-      message: (err as Error).message,
-
-      err,
-    });
-
+    const patient = await Patient.find().populate("user");
+    res.json(patient);
+  } catch (error) {
+    res.json({ message: (error as Error).message });
   }
 });
 
+
+
+
+      
+
+
+
+    
+
+  
  
 
 

@@ -30,6 +30,11 @@ const patientSchema = new mongoose.Schema({
   },
 
   /* A reference to the User model. */
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
 
   name: {
     firstName: {
@@ -180,11 +185,6 @@ const patientSchema = new mongoose.Schema({
         required: true,
       },
     },
-  },
-  patientId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    require: true,
   },
 
   prescriptions: [prescriptionSchema],
