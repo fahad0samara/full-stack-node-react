@@ -20,7 +20,7 @@ const LogCheck = ({children}: any) => {
   const [logPatient, setlogPatient] = useState(false);
   const [logAdmin, setlogAdmin] = useState(false);
 
-  const [Profile, setProfile] = useState({});
+  const [Profile, setProfile] = useState();
   const [loading, setLoading] = useState(false);
   const [dark, setdark] = useState(
     localStorage.getItem("dark") === "true" ? true : false
@@ -61,36 +61,43 @@ const LogCheck = ({children}: any) => {
 
   const checkLog = async () => {
     setLoading(true);
-    const token = localStorage.getItem("token");
-    if (token !== null) {
-      try {
-        const response = await axios.get("http://localhost:3000/user/profile", {
-          headers: {
-            Authorization: `JWT ${token}`,
-          },
-        });
-      // check for admin 
-        if (
-          response.data.success && response.data.user.role === "admin"
-        )
-        {
-          setLoading(false);
-          setlogAdmin(true);
-          setProfile(response.data.user);
-        } else if (response.data.success && response.data.user.role === "Basic") {
-          setLoading(false);
-          setlogPatient(true);
-          setProfile(response.data.user);
-        } else {
-          setProfile({});
-          setLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      setLoading(false);
-    }
+     const tokenPatient = localStorage.getItem("tokenPatient");
+     if (tokenPatient !== null) {
+       try {
+         const response = await axios.get(
+           "http://localhost:3000/user/userpatients",
+           {
+             headers: {
+               Authorization: `JWT ${tokenPatient}`,
+             },
+           }
+         );
+         console.log(response.data.user);
+         
+         // check for admin
+         if (response.data.success && response.data.user.user.role === "admin") {
+           setLoading(false);
+           setlogAdmin(true);
+           setProfile(response.data.user);
+         } else if (
+           response.data.success &&
+           response.data.user.user.role === "Basic"
+         ) {
+           setLoading(false);
+           setlogPatient(true);
+           setProfile(response.data.user);
+         } else {
+           setProfile(
+             null
+           );
+           setLoading(false);
+         }
+       } catch (error) {
+         console.log(error);
+       }
+     } else {
+       setLoading(false);
+     }
   };
 
 

@@ -33,7 +33,7 @@ const patientSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
+
   },
 
   name: {
@@ -59,10 +59,7 @@ const patientSchema = new mongoose.Schema({
     required: true,
     minlength: 1,
   },
-  email: {
-    type: String,
-    required: true,
-  },
+
 
   bloodGroup: {
     type: String,
@@ -95,11 +92,7 @@ const patientSchema = new mongoose.Schema({
       required: true,
     },
   },
-  password: {
-    type: String,
-    required: true,
-    minlength: 8,
-  },
+
   diseaseList: [
     {
       disease: {

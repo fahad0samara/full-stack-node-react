@@ -15,10 +15,15 @@ import {FcCalendar} from "react-icons/fc";
 
 const Dashboard = (props: any) => {
   const {
-    logPatient,
     
-    Profile, setProfile, loading, setLoading, dark, setdark } =
-    useLogIN();
+
+    Profile,
+    
+
+   
+    dark,
+    setdark,
+  } = useLogIN();
   const navigate = useNavigate();
   const [data, setData] = useState<any>([]);
 
@@ -232,7 +237,7 @@ const Dashboard = (props: any) => {
                    font-extrabold  italic  ml-1
                  "
                 >
-                  {Profile ? Profile.email : ""}
+                  {Profile ? Profile.user.email : ""}
                 </h1>
               </div>
 
@@ -439,7 +444,6 @@ const Dashboard = (props: any) => {
             backgroundColor: dark ? "#000" : "white",
             color: dark ? "white" : "black",
           }}
-         
         >
           <h1 className="text-2xl  font-bold italic  ml-20 mt-7">
             medical history

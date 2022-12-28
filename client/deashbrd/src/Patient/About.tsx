@@ -65,10 +65,20 @@ const About = () => {
       }}
     >
       <h1>Dashboard</h1>
-      <h1>{Profile?.name}</h1>
-      <h1>{Profile?.email}</h1>
-      <h1>{Profile?.role}</h1>
+      <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center">
+          <h1 className="text-2xl">Email: {Profile?._id}</h1>
+          {/* name : LastName : "Samara" firstName : "Fahad" middleName : "gggg" */}
+          <h1 className="text-2xl">
+            Name: {Profile?.firstName} {Profile?.middleName}{" "}
 
+          
+          </h1>
+          <h1 className="text-2xl">Phone: {Profile?.mobile}</h1>
+          <h1 className="text-2xl">Age: {Profile?.date}</h1>
+          <h1 className="text-2xl"></h1>
+        </div>
+      </div>
     </div>
   );
 };

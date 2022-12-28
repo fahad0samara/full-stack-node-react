@@ -92,9 +92,6 @@ router.post("/loginPatient", async (req, res) => {
     if (!emailExist) return res.status(400).send("Email is wrong");
     
 
-    // check if the password is correct
-    const validPass = await bcrypt.compare(req.body.password, patient.password);
-    if (!validPass) return res.status(400).send("Invalid password");
 
     // create and assign a token
     const token = jwt.sign(

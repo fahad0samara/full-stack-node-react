@@ -6,7 +6,7 @@ const Register = () => {
   const {setProfile, setLoading, setlogPatient, dark, setdark} = useLogIN();
 
   const navigate = useNavigate();
-  const [name, setname] = useState("");
+
 
   const [error, setError] = useState(null);
 
@@ -21,7 +21,7 @@ const Register = () => {
       const response = await axios.post(
         "http://localhost:3000/user/registerUser",
         {
-          name,
+      
           email,
           password,
         }
@@ -32,6 +32,17 @@ const Register = () => {
           email,
           password,
         });
+        // save the user id for the next register
+        localStorage.setItem("id", logIN.data.user._id);
+        console.log(
+          "🚀 ~ file: RegisterAdmin.tsx ~ line 48 ~ HandelLogin ~ logIN",
+          logIN.data.user._id
+        );
+        
+        
+
+        
+
         localStorage.setItem("token", logIN.data.token);
         setProfile(logIN.data.user);
         setLoading(false);
@@ -123,31 +134,7 @@ const Register = () => {
                   Log in
                 </h3>
                 <form>
-                  <div className="mb-1 sm:mb-2">
-                    <label
-                      htmlFor="Email"
-                      className="inline-block text-sky-300 mb-1 font-black"
-                    >
-                      name
-                    </label>
-                    <input
-                      value={name}
-                      onChange={e => {
-                        setname(e.target.value);
-                      }}
-                      placeholder="
-
-                      Enter your name
-                      "
-                      required
-                      type="name"
-                      className="flex-grow w-full h-12 px-4 mb-2 transition duration-200 bg-white border border-gray-300 rounded shadow-sm appearance-none focus:border-deep-purple-accent-400 focus:outline-none focus:shadow-outline"
-                      id="name"
-                      name="
-                    name
-                      "
-                    />
-                  </div>
+               
                   <div className="mb-1 sm:mb-2">
                     <label
                       htmlFor="Email"

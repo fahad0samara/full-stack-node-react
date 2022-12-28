@@ -10,7 +10,7 @@ const {
   loginValidation,
 } = require("../middleware/validtion");
 
-import { authAdmin, isAdmin, isAuth } from "../middleware/jwtPatient";
+import {authAdmin, authPatient, isAdmin, isAuth} from "../middleware/jwtPatient";
 import Patient from "../model/patient";
 
 // registerUser
@@ -34,11 +34,10 @@ router.post(
 
     // create a new user
     const user = new User({
-      name: req.body.name,
+     
       email: req.body.email,
       password: hashedPassword,
-
-    
+   
 
       role: req.body.role,
     });
@@ -48,10 +47,9 @@ router.post(
         success: true,
         message: "User created successfully",
         user: savedUser,
-        
-
-      })
-   
+        // id for the user
+        id: savedUser._id,
+      });
     } catch (error) {
       res.status(400).json({
         message: (error as Error).message,
@@ -64,7 +62,6 @@ router.post(
 // loginUser
 router.post(
   "/loginUser",
-
 
   async (req, res) => {
     // validate the data before we make a user
@@ -91,17 +88,15 @@ router.post(
 
         // @ts-ignore
 
-        process.env.JWT_SECRET as string,
-
+        process.env.JWT_SECRET as string
       );
-      res.header("auth-token", token)
-      
+      res
+        .header("auth-token", token)
+
         .json({
           token,
           user,
-        })
-      
-
+        });
     } catch (error) {
       res.status(400).json({
         message: (error as Error).message,
@@ -220,8 +215,6 @@ router.put(
   }
 );
 
-
-
 // get the user
 
 router.get("/getUser/:id", async (req, res) => {
@@ -229,7 +222,7 @@ router.get("/getUser/:id", async (req, res) => {
     const user = await Patient.findById(req.params.id).populate("patientId");
     res.json(user);
   } catch (error) {
-    res.json({ message: (error as Error).message });
+    res.json({message: (error as Error).message});
   }
 });
 
@@ -237,8 +230,6 @@ router.get("/getUser/:id", async (req, res) => {
 router.get(
   "/profile",
   isAuth,
-
-
 
   async (req: any, res: any) => {
     if (!req.user) {
@@ -262,46 +253,50 @@ router.post("/patient", async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
-    const emailExist = await Patient.findOne({
-      email: req.body.email,
+    // check if the user by id is already in the database
+    const user = await User.findById(req.body.user);
+    if (!user) return res.status(400).send("User is not found");
+    // dont allond to user to post 2 time
+    const patient2 = await Patient.findOne({
+      user: req.body.user,
     });
-    if (emailExist) return res.status(400).send("Email already exists");
+    if (patient2) return res.status(400).send("Patient is already exist");
 
     // create  healthID id for user start from 10
     const healthID = await Patient.find().countDocuments();
     const healthIDNumber = healthID + 10;
+    // take the id from the user
+   
 
-    // hash passwords
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-    //  update the user 
+    //  update the user
     const patient = new Patient({
       user: req.body.user,
-      prescriptions: req.body.prescriptions,
+      mobile: req.body.mobile,
       healthIDNumber: healthIDNumber,
       name: req.body.name,
-      password: hashedPassword,
-      mobile: req.body.mobile,
-      email: req.body.email,
       relation: req.body.relation,
       address: req.body.address,
       date: req.body.date,
       medicationList: req.body.medicationList,
       diseaseList: req.body.diseaseList,
       allergyList: req.body.allergyList,
-
       bloodGroup: req.body.bloodGroup,
       contactPerson: req.body.contactPerson,
-    }).populate("user");
+    })
 
-    const savedPatient = await (await patient).save()
+    const savedPatient = await (await patient.save()).populate("user");
+    // Create and assign a token 
+    const token = jwt.sign({ _id: patient._id }, process.env.JWT_SECRET as string);
+    res.header('auth-token', token)
 
-  
+
+
     res.json({
       success: true,
       message: "Patient registered successfully",
       user: savedPatient,
+      token,
     });
   } catch (err) {
     res.status(400).json({
@@ -311,53 +306,44 @@ router.post("/patient", async (req, res) => {
   }
 });
 
-
 router.get("/patient", async (req, res) => {
   try {
     const patient = await Patient.find().populate("user");
     res.json(patient);
   } catch (error) {
-    res.json({ message: (error as Error).message });
+    res.json({message: (error as Error).message});
   }
 });
 
 
 
+router.get(
+  "/userpatients",
+  authPatient,
 
-      
+  async (req: any, res: any) => {
+    if (!req.user) {
+      return res.json({
+        success: false,
+        message: "User not found",
+      });
+    }
+    res.json({
+      success: true,
+      message: "User found",
+      user: req.user,
+    });
+  }
+);
 
-
-
-    
-
-  
- 
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
+router.get("/patient/:id", async (req, res) => {
+  try {
+    const patient = await Patient.findById(req.params.id).populate("user");
+    res.json(patient);
+  } catch (error) {
+    res.json({ message: (error as Error).message });
+  }
+});
 
 
 

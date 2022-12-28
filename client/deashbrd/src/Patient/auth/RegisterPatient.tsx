@@ -5,8 +5,7 @@ import {useNavigate} from "react-router-dom";
 import {useLogIN} from "../../../ContextLog";
 
 export default function RegisterPatient(props: any) {
-  const { setlogPatient, dark, setProfile} =
-    useLogIN();
+  const {setlogPatient, dark, setProfile} = useLogIN();
   const navigate = useNavigate();
   const [Loading, setLoading] = useState(false);
   const [Toggle, setToggle] = useState("Patient");
@@ -18,7 +17,7 @@ export default function RegisterPatient(props: any) {
   });
   const [date, setdate] = useState("");
   const [mobile, setmobile] = useState("");
-  const [email, setemail] = useState("");
+
   const [NumberCard, setNumberCard] = useState("");
   const [bloodGroup, setbloodGroup] = useState("");
   const [address, setaddress] = useState({
@@ -29,8 +28,7 @@ export default function RegisterPatient(props: any) {
     state: "",
     ZipCode: "",
   });
-  const [password, setpassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -100,53 +98,60 @@ export default function RegisterPatient(props: any) {
       name,
       date,
       mobile,
-      email,
+
       NumberCard,
       bloodGroup,
       address,
-      password,
-      confirmPassword,
+
       diseaseList,
       allergyList,
       medicationList
     );
-    
+
+    // take the id for the user
+    const user = localStorage.getItem("id");
+    console.log(user);
 
     try {
-      const {data} = await axios.post(
-        "http://localhost:3000/auth/registerPatient",
-        {
-          name,
-          date,
-          mobile,
-          email,
+      const {data} = await axios.post("http://localhost:3000/user/patient", {
+        name,
+        date,
+        mobile,
+        user,
 
-          bloodGroup,
-          address,
-          password,
+        bloodGroup,
+        address,
 
-          diseaseList,
-          allergyList,
-          medicationList,
+        diseaseList,
+        allergyList,
+        medicationList,
 
-          contactPerson,
-        }
+        contactPerson,
+      });
+      console.log(data);
+
+      localStorage.setItem("tokenPatient",
+      data.token
       );
 
 
-      setlogPatient(true);
-        setProfile(data.user);
-      console.log(data.user);
 
+
+
+   
+
+      
+
+
+      setlogPatient(true);
+
+      setProfile(data.user);
 
       setLoading(false);
-      setSuccess(data);
+      setSuccess("Patient Register Successfully");
       setTimeout(() => {
         navigate("/patient/dashboard");
-      }
-        , 2000);
-      
-    
+      }, 2000);
     } catch (error) {
       console.log("====================================");
       console.log(
@@ -424,54 +429,25 @@ export default function RegisterPatient(props: any) {
               </div>
 
               <div
-                className="   flex
-              md:flex-row
-              flex-col
-              items-center"
-              >
-                <label className="  lg:text-xl font-bold px-4 ">Email</label>
-                <input
-                  className=" 
-                  
-                  my-2
-                  mx-2
-                     w-64
-                  h-10
-                  rounded-lg
-                  px-4
-                  focus:outline-none
-                  focus:ring-2
-                  focus:ring-purple-600
-                  focus:border-transparent
-                  border-2
- text-black
-                  border-gray-300 
-"
-                  placeholder="Email"
-                  type="email"
-                  value={email}
-                  onChange={e => setemail(e.target.value)}
-                ></input>
-                <div
-                  className="            flex
+                className="            flex
               md:flex-row
               md:items-center
               flex-col
               items-center"
-                >
-                  <label className="  lg:text-xl font-bold px-4">
-                    Blood Group
-                  </label>
-                  <div
-                    className="
+              >
+                <label className="  lg:text-xl font-bold px-4">
+                  Blood Group
+                </label>
+                <div
+                  className="
                   col-span-3
                   my-2
                   mx-2
  text-black
                   "
-                  >
-                    <select
-                      className=" 
+                >
+                  <select
+                    className=" 
                    text-black
                   my-2
                   mx-2
@@ -487,22 +463,21 @@ export default function RegisterPatient(props: any) {
 
                   border-gray-300 
 "
-                      id="blood-group"
-                      required
-                      value={bloodGroup}
-                      onChange={e => setbloodGroup(e.target.value)}
-                    >
-                      <option id="select">select</option>
-                      <option id="A+">A+</option>
-                      <option id="A-">A-</option>
-                      <option id="B+">B+</option>
-                      <option id="B-">B-</option>
-                      <option id="AB+">AB+</option>
-                      <option id="AB-">AB-</option>
-                      <option id="O+">O+</option>
-                      <option id="O-">O-</option>
-                    </select>
-                  </div>
+                    id="blood-group"
+                    required
+                    value={bloodGroup}
+                    onChange={e => setbloodGroup(e.target.value)}
+                  >
+                    <option id="select">select</option>
+                    <option id="A+">A+</option>
+                    <option id="A-">A-</option>
+                    <option id="B+">B+</option>
+                    <option id="B-">B-</option>
+                    <option id="AB+">AB+</option>
+                    <option id="AB-">AB-</option>
+                    <option id="O+">O+</option>
+                    <option id="O-">O-</option>
+                  </select>
                 </div>
               </div>
 
@@ -706,92 +681,6 @@ export default function RegisterPatient(props: any) {
                       })
                     }
                   ></input>
-                </div>
-              </div>
-
-              <div
-                className="
-              grid
-              md:grid-cols-2
-               grid-cols-1
-              gap-1
-              my-2
-              text-center
-              lg:text-start
-              
-
-              
-              "
-              >
-                <div
-                  className="flex
-              md:flex-row
-              flex-col
-              items-center
-              "
-                >
-                  <label className="lg:text-xl font-bold mx-1 ">Password</label>
-                  <input
-                    type="password"
-                    id="password"
-                    className=" 
-                  
-                  my-2
-                  mx-2
-                     w-64
-                  h-10
-                  rounded-lg
-                  px-4
-                  focus:outline-none
-                  focus:ring-2
-                  focus:ring-purple-600
-                  focus:border-transparent
-                  border-2
- text-black
-                  border-gray-300 
-"
-                    required
-                    placeholder="password"
-                    value={password}
-                    onChange={e => setpassword(e.target.value)}
-                  ></input>
-                </div>
-                <div
-                  className="flex
-              md:flex-row
-              flex-col
-              items-center
-              "
-                >
-                  <label className=" lg:text-xl font-bold text-center  mx-1">
-                    Confirm Password
-                  </label>
-                  <input
-                    type="password"
-                    id="password"
-                    className=" 
-                   text-black
-                  my-2
-                  mx-2
-                     w-64
-                  h-10
-                  rounded-lg
-                  px-4
-                  focus:outline-none
-                  focus:ring-2
-                  focus:ring-purple-600
-                  focus:border-transparent
-                  border-2
-
-                  border-gray-300 
-"
-                    placeholder="Confirm password"
-                    value={confirmPassword}
-                    onChange={e => setConfirmPassword(e.target.value)}
-                  ></input>
-                  <span className="text-sm py-1 text-red-500">
-                    {password !== confirmPassword && "passwords do not match"}
-                  </span>
                 </div>
               </div>
 

@@ -14,8 +14,7 @@ const registerValidation = (data: any) => {
     user: Joi.required(),
 
     bloodGroup: Joi.string().required(),
-    email: Joi.string().min(5).required().email(),
-    password: Joi.string().min(5).required(),
+
     mobile: Joi.number().min(8).required(),
     contactPerson: Joi.object({
       name: Joi.object({
@@ -163,7 +162,7 @@ const registerUserValidation = (data: any) => {
   const schema = Joi.object({
     email: Joi.string().min(5).required().email(),
     password: Joi.string().min(5).required(),
-    name: Joi.string().min(1).required(),
+
 
   });
   return schema.validate(data);
