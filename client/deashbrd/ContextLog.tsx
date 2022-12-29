@@ -61,6 +61,13 @@ const LogCheck = ({children}: any) => {
 
   const checkLog = async () => {
     setLoading(true);
+
+      if (!navigator.onLine) {
+        window.alert("No internet connection");
+        setLoading(false);
+        return;
+
+    }
      const tokenPatient = localStorage.getItem("tokenPatient");
      if (tokenPatient !== null) {
        try {
@@ -87,9 +94,7 @@ const LogCheck = ({children}: any) => {
            setlogPatient(true);
            setProfile(response.data.user);
          } else {
-           setProfile(
-             null
-           );
+           setProfile(null);
            setLoading(false);
          }
        } catch (error) {

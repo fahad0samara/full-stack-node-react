@@ -1,86 +1,75 @@
-import {useLogIN} from "../../ContextLog";
-import "./Table.css";
+import React, { useState } from "react";
+import axios from "axios";
 
-const About = () => {
-  const { Profile, setProfile, loading, setLoading, dark} =
-    useLogIN();
-  const convertDate = (date: any) => {
-    const newDate = new Date(date);
-    const year = newDate.getFullYear();
-    const month = newDate.getMonth() + 1;
-    const day = newDate.getDate();
-    return `${day}/${month}/${year}`;
+const UpdatePatientAppointment = () => {
+  const [appointment, setAppointment] = useState({
+    date: "",
+    time: "",
+    doctor: "",
+  });
+  const [patientId, setPatientId] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAppointment({ ...appointment, [e.target.name]: e.target.value });
   };
-  return (
-    // <table>
-    //   <thead>
-    //     <tr>
-    //       <th></th>
-    //       <th> Doctor</th>
-    //       <th>Appointment date</th>
-    //       <th> medicines</th>
-    //       <th>Tests</th>
-    //       <th>Prescription</th>
-    //     </tr>
-    //   </thead>
-    //   <tbody>
-    //     {Profile
-    //       ? Profile.prescriptions.map((mappedData: any) => {
-    //           return (
-    //             <tr>
-    //               <th>{mappedData ? mappedData._id : null}</th>
-    //               <td>{mappedData ? mappedData.doctor : null}</td>
-    //               <td>{mappedData ? convertDate(mappedData.date) : null}</td>
-    //               {mappedData?.medicines?.map((medicine: any) => {
-    //                 return (
-    //                   <td>
-    //                     {medicine.name}
-    //                     <br />
-    //                     {medicine.type}
-    //                     <br />
-    //                     {medicine.frequency}
-    //                   </td>
-    //                 );
-    //               })}
-    //               <td>{mappedData ? mappedData.tests.name : null}</td>
-    //               <td className="">
-    //                 {mappedData ? (
-    //                   <a href={mappedData.prescription} download className="">
-    //                     Download
-    //                   </a>
-    //                 ) : null}
-    //               </td>
-    //             </tr>
-    //           );
-    //         })
-    //       : null}
-    //   </tbody>
-    // </table>
-    <div
-      className="
-      flex flex-col items-center justify-center"
-      style={{
-        backgroundColor: dark ? "#1e1e1e" : "#fff",
-        color: dark ? "#fff" : "#000",
-      }}
-    >
-      <h1>Dashboard</h1>
-      <div className="flex flex-col items-center justify-center">
-        <div className="flex flex-col items-center justify-center">
-          <h1 className="text-2xl">Email: {Profile?._id}</h1>
-          {/* name : LastName : "Samara" firstName : "Fahad" middleName : "gggg" */}
-          <h1 className="text-2xl">
-            Name: {Profile?.firstName} {Profile?.middleName}{" "}
 
-          
-          </h1>
-          <h1 className="text-2xl">Phone: {Profile?.mobile}</h1>
-          <h1 className="text-2xl">Age: {Profile?.date}</h1>
-          <h1 className="text-2xl"></h1>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const res = await axios.put(`/patient/${patientId}/appointment`, appointment);
+      console.log(res.data);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="w-full max-w-lg">
+      <div className="md:flex md:items-center mb-6">
+        <div className="md:w-1/3">
+          <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" htmlFor="patientId">
+            Patient ID
+          </label>
+        </div>
+        <div className="md:w-2/3">
+          <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" name="patientId" type="text" value={patientId} onChange={(e) => setPatientId(e.target.value)} />
         </div>
       </div>
-    </div>
+      <div className="md:flex md:items-center mb-6">
+        <div className="md:w-1/3">
+          <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" htmlFor="date">
+            Date
+          </label>
+        </div>
+        <div className="md:w-2/3">
+          <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" name="date" type="text" value={appointment.date} onChange={handleChange} /></div>
+      
+      </div>
+
+      <div className="md:flex md:items-center mb-6">
+        <div className="md:w-1/3">
+          <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" htmlFor="time">
+            Time
+          </label>
+        </div>  
+        <div className="md:w-2/3">
+          <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" name="time" type="text" value={appointment.time} onChange={handleChange} />
+        </div>
+      </div>
+
+      <div className="md:flex md:items-center mb-6">
+        <div className="md:w-1/3">
+          <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" htmlFor="doctor">
+            Doctor
+          </label>
+        </div>
+        <div className="md:w-2/3">
+
+          <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" name="doctor" type="text" value={appointment.doctor} onChange={handleChange} /></div>
+      </div>
+    
+    </form>
   );
 };
 
-export default About;
+export default UpdatePatientAppointment;

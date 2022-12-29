@@ -10,11 +10,19 @@ import prescriptionRouter from './router/prescription';
 import doctorRouter from './router/doctor';
 import adminRouter from "./router/admin";
 import user from "./router/user";
+import Appointment from "./router/app";
+
+
+
+
+
+
 
 
 app.use(express.json());
 app.use(cors());
 
+app.use('/appo', Appointment);
 
 app.use('/auth', patientRouter);
 
@@ -28,6 +36,8 @@ app.use('/admin', adminRouter);
 
 // user
 app.use('/user', user);
+
+
 
 
 

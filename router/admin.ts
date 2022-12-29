@@ -5,6 +5,8 @@ import Admin from "../model/admin";
 import Doctor from "../model/doctor";
 import Patient from "../model/patient";
 
+
+
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 

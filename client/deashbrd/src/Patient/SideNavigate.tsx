@@ -26,7 +26,7 @@ const SideNavigate = (_props: any) => {
 
   return (
     <SideNav
-  /*  . */
+      /*  . */
       style={{
         backgroundColor: dark ? "#000" : "rgb(103 232 249)",
 
@@ -35,9 +35,28 @@ const SideNavigate = (_props: any) => {
           : "0px 0px 10px 0px #000",
       }}
       onSelect={selected => {
-        navigate(
-          selected === "dashboard" ? "/patient/dashboard" : "/patient/about"
-        );
+        // Add your code here
+
+        if (selected === "dashboard") {
+          navigate("/patient/dashboard");
+        } else if (selected === "about") {
+          navigate("/patient/about");
+        } else if (selected === "appointment") {  
+          navigate("/patient/appointment");
+        }
+
+        // console.log(selected);
+ 
+
+       
+                  
+
+
+            
+
+
+
+      
       }}
       className="
   h-full
@@ -118,6 +137,35 @@ const SideNavigate = (_props: any) => {
             about
           </NavText>
         </NavItem>
+        <NavItem eventKey="appointment">
+          <NavIcon>
+            <RiDashboardFill
+              style={{
+                color: dark ? "rgb(103 232 249)" : "black",
+                fontSize: "1.8rem",
+                fontWeight: "bold",
+                marginLeft: "1rem",
+                marginTop: "1rem",
+
+              }}
+            />
+          </NavIcon>
+          <NavText
+
+            style={{
+              color: dark ? "rgb(103 232 249)" : "black",
+              fontSize: "0.9rem",
+              fontWeight: "bold",
+              marginLeft: "1rem",
+
+              marginTop: "1rem",
+            }}
+          >
+            appointment
+          </NavText>
+        </NavItem>
+        
+      
       </SideNav.Nav>
     </SideNav>
   );
