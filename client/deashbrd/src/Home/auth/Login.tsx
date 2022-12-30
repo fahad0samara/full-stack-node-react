@@ -32,6 +32,7 @@ const Login = () => {
       localStorage.setItem("token", response.data.token);
       
 
+console.log(response.data.user.role);
 
 
        
@@ -39,18 +40,14 @@ const Login = () => {
         setlogAdmin(true);
         setlogPatient(false);
         setLoading(false);
-        setProfile(
-          response.data.user
-        );
+        setProfile(response.data.user);
         navigate("/admin/dashboard");
       } else if (response.data.user.role === "Basic") {
         setlogPatient(true);
         setlogAdmin(false);
         setLoading(false);
-        setProfile(
-          response.data.user
-        );
-    navigate("/patient/about");
+        setProfile(response.data.user);
+        navigate("/patient/about");
       }
     } catch (error) {
      /* Checking if the error is an axios error. If it is, it is getting the response from the error

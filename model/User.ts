@@ -1,4 +1,4 @@
-import { boolean } from "joi";
+
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(

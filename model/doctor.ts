@@ -1,6 +1,12 @@
 import mongoose from "mongoose";
 
 const doctorSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+
   name: {
     firstName: {
       type: String,
@@ -42,12 +48,6 @@ const doctorSchema = new mongoose.Schema({
     },
   },
 
-
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
   date: {
     type: Date,
     required: true,
@@ -56,29 +56,24 @@ const doctorSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  password: {
-    type: String,
-    required: true,
-  },
+
   bloodGroup: {
     type: String,
     required: true,
-    },
-    degree: {
-        type: String,
-        required: true,
-    },
-    specialty: {
-        type: String,
-        required: true,
-    },
-    experience: {
-        type: String,
-        required: true,
-    },
-
+  },
+  degree: {
+    type: String,
+    required: true,
+  },
+  specialty: {
+    type: String,
+    required: true,
+  },
+  experience: {
+    type: String,
+    required: true,
+  },
 });
-
 
 const Doctor = mongoose.model("Doctor", doctorSchema);
 

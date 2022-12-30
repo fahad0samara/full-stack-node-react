@@ -5,14 +5,17 @@ import Admin from "../model/admin";
 import Doctor from "../model/doctor";
 import Patient from "../model/patient";
 
-
-
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import User from "../model/User";
 
 const {
+  doctorValidation,
   adminValidation,
   loginAdminValidation,
+  registerUserValidation,
+
+  addPrescriptionsValidation,
 } = require("../middleware/validtion");
 
 // registerAdmin
@@ -52,31 +55,33 @@ router.post("/registerAdmin", async (req, res) => {
 });
 
 // loginAdmin
-router.post("/loginAdmin",
+router.post(
+  "/loginAdmin",
 
   async (req, res) => {
-  // validate the data before we make a admin
-  const {error} = loginAdminValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+    // validate the data before we make a admin
+    const {error} = loginAdminValidation(req.body);
+    if (error) return res.status(400).send(error.details[0].message);
 
-  // check if the admin is already in the database
-  const admin = await Admin.findOne({
-    email: req.body.email,
-  });
-  if (!admin) return res.status(400).send("Email is not found");
+    // check if the admin is already in the database
+    const admin = await Admin.findOne({
+      email: req.body.email,
+    });
+    if (!admin) return res.status(400).send("Email is not found");
 
-  // check if the password is correct
-  const validPass = await bcrypt.compare(req.body.password, admin.password);
-  if (!validPass) return res.status(400).send("Invalid password");
-  // create and assign a token
-  const token = jwt.sign({_id: admin._id}, process.env.JWT_SECRET as string);
-  res.header("auth-token", token);
+    // check if the password is correct
+    const validPass = await bcrypt.compare(req.body.password, admin.password);
+    if (!validPass) return res.status(400).send("Invalid password");
+    // create and assign a token
+    const token = jwt.sign({_id: admin._id}, process.env.JWT_SECRET as string);
+    res.header("auth-token", token);
 
-  res.json({
-    token,
-    admin,
-  });
-});
+    res.json({
+      token,
+      admin,
+    });
+  }
+);
 
 // getAllAdmin
 router.get("/getAllAdmin", async (req, res) => {
@@ -166,4 +171,59 @@ router.delete("/deletePatient/:healthID", async (req, res) => {
   }
 });
 
+router.post("/update", async (req, res) => {
+  try {
+    // Find the user to be updated
+    const user = await User.findOne({email: req.body.email});
+    if (!user) return res.status(404).send("User not found");
+
+    // Update the user's role to "Admin"
+    user.role = "admin";
+    await user.save();
+
+    res.json({
+      message: "User updated successfully",
+      user,
+    });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+// Router for an administrator to register a new user with any role:
+
+router.post("/register-user", async (req: any, res: any) => {
+  // Check if the user is an admin
+
+  // check if the user is already in the database
+  const emailFind = await User.findOne({
+    email: req.body.email,
+  });
+  if (emailFind) return res.status(400).send("Email already exists");
+
+  // destructure the request body
+  const {name, email, password, role} = req.body;
+
+  // hash the password
+  const salt = bcrypt.genSaltSync(10);
+  const hashPassword = bcrypt.hashSync(password, salt);
+
+  // create a new user with the specified role
+  try {
+    const user = new User({
+      name,
+      email,
+      password: hashPassword,
+      role,
+      
+    });
+    await user.save();
+    res.json({
+      message: "User created successfully",
+      user,
+    });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
 export default router;

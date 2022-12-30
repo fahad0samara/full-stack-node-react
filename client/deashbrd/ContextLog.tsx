@@ -82,7 +82,10 @@ const LogCheck = ({children}: any) => {
          console.log(response.data.user);
          
          // check for admin
-         if (response.data.success && response.data.user.user.role === "admin") {
+         if (
+           response.data.success &&
+           response.data.user.user.role === "admin"
+         ) {
            setLoading(false);
            setlogAdmin(true);
            setProfile(response.data.user);

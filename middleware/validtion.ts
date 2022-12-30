@@ -100,6 +100,8 @@ const addPrescriptionsValidation = (data: any) => {
 // doctor validation
 const doctorValidation = (data: any) => {
   const schema = Joi.object({
+    user: Joi.string(),
+
     name: Joi.object({
       firstName: Joi.string().min(1).required(),
       middleName: Joi.string().min(1),
@@ -113,10 +115,9 @@ const doctorValidation = (data: any) => {
       ZipCode: Joi.number().min(1).max(999999).required(),
       Country: Joi.string().min(1).required(),
     }),
-    email: Joi.string().min(5).required().email(),
+
     date: Joi.date().required(),
 
-    password: Joi.string().min(5).required(),
     bloodGroup: Joi.string().required(),
     degree: Joi.string().min(1).required(),
     specialty: Joi.string().min(1).required(),
