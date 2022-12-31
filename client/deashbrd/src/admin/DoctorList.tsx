@@ -1,25 +1,31 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
-import { useLogIN } from "../../ContextLog";
-
+import {useLogIN} from "../../ContextLog";
+import {RiDeleteBin5Line} from "react-icons/ri";
 const DoctorList = () => {
-      const {
-        logPatient,
+  const {
+    logPatient,
 
-        Profile,
-        setProfile,
-        loading,
-        setLoading,
-        dark,
-        setdark,
-      } = useLogIN()
+    Profile,
+    setProfile,
+    loading,
+    setLoading,
+    dark,
+    setdark,
+  } = useLogIN();
   const [doctors, setDoctors] = useState([]);
+  const [updatedr, setupdatedr] = useState({
+    name: {
+      firstName: '',
+      lastName: ''
+    },
+    hospital: '',
+    specialty: '',
+    experience: 0
+  });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
-  // Join date
-  const joinDate = (date: any) => {
-    const newDate = new Date(date);
-    return newDate.toLocaleDateString();
-  };
 
 
   useEffect(() => {
@@ -34,6 +40,74 @@ const DoctorList = () => {
         setDoctors(res.data);
       });
   }, []);
+
+  // delet the doctor
+  const deleteDoctor = (id: any) => {
+    if (window.confirm("Are you sure you want to delete this doctor?")) {
+      axios
+        .delete(`http://localhost:3000/admin/doctor/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then(res => {
+          console.log(res.data);
+          setDoctors(doctors.filter((doctor: any) => doctor._id !== id));
+        });
+    }
+  };
+
+  //update the dr
+  const updateDoctor = (id: any) => {
+    axios
+      .put(`http://localhost:3000/admin/doctor/${id}`, updatedr, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then(res => {
+        console.log(res.data);
+        setDoctors(doctors.filter((doctor: any) => doctor._id !== id));
+      });
+  };
+
+  const onChange = (e: any) => {
+    setupdatedr({ ...updatedr, [e.target.name]: e.target.value });
+  };
+
+  //model for updata the dr
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+  
+
+
+
+
 
   return (
     <div
@@ -60,6 +134,7 @@ const DoctorList = () => {
                     <th className="py-3 px-6 text-center">email</th>
                     <th className="py-3 px-6 text-center">joinDate</th>
                     <th className="py-3 px-6 text-center">phoneNumber</th>
+                    <th className="py-3 px-6 text-center">Age</th>
                     <th className="py-3 px-6 text-center">specialty</th>
                     <th className="py-3 px-6 text-center">Actions</th>
                   </tr>
@@ -107,9 +182,7 @@ const DoctorList = () => {
                         </td>
                         <td className="py-3 px-6 ">
                           <div className="flex items-center text-center">
-                            <div className="mr-2">
-                           
-                            </div>
+                            <div className="mr-2"></div>
                             <span>{doctor.user.email}</span>
                           </div>
                         </td>
@@ -131,6 +204,18 @@ const DoctorList = () => {
                         <td className="py-3 px-6 text-center">
                           <div className="flex items-center justify-center">
                             <span>{doctor.phoneNumber}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-6 text-center">
+                          <div className="flex items-center justify-center">
+                            <span>
+                              {doctor.date
+                                .toString()
+                                .substring(0, 10)
+                                .split("-")
+                                .reverse()
+                                .join("-")}
+                            </span>
                           </div>
                         </td>
                         <td class="py-3 px-6 text-center">
@@ -186,7 +271,15 @@ const DoctorList = () => {
                                 />
                               </svg>
                             </div>
+
                             <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
+
+                              {
+                                //edit
+
+                              }
+                              
+
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -202,19 +295,14 @@ const DoctorList = () => {
                               </svg>
                             </div>
                             <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                                />
-                              </svg>
+                            
+                              
+                              <RiDeleteBin5Line
+                                onClick={() => {
+                                  deleteDoctor(doctor._id);
+                                }}
+
+                              />
                             </div>
                           </div>
                         </td>
@@ -232,5 +320,3 @@ const DoctorList = () => {
 };
 
 export default DoctorList;
-
-

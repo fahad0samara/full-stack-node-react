@@ -87,6 +87,16 @@ router.put("/doctor/:id", checkAdmin, (req, res) => {
     .catch(err => res.status(400).json(err));
 });
 
+// Delete a doctor from the database
+router.delete("/doctor/:id", checkAdmin, (req, res) => {
+  Doctor.findByIdAndDelete(req.params.id)
+    .then(doctor => res.json(doctor))
+    .catch(err => res.status(400).json(err));
+});
+
+
+
+
 // Get a list of all patients
 router.get("/patients", checkAdmin, (req, res) => {
   Patient.find()
@@ -100,6 +110,12 @@ router.delete("/patient/:id", checkAdmin, (req, res) => {
     .then(patient => res.json(patient))
     .catch(err => res.status(400).json(err));
 });
+
+
+
+
+
+
 
 
 

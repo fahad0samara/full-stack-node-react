@@ -60,37 +60,42 @@ router.get("/getDoctor", async (req, res) => {
   } catch (error) {
     res.status(500).send(error.message);
   }
+
 });
+
+
 
 
 // loginDoctor
-router.post("/loginDoctor", async (req, res) => {
-  // validate the data before we make a doctor
-  const {error} = loginDoctorValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+// router.post("/loginDoctor", async (req, res) => {
+//   // validate the data before we make a doctor
+//   const {error} = loginDoctorValidation(req.body);
+//   if (error) return res.status(400).send(error.details[0].message);
 
-  // check if the doctor is already in the database
-  try {
-    const doctor = await User.findOne({
-      email: req.body.email,
-    });
-    if (!doctor) return res.status(400).send("Email is not found");
+//   // check if the doctor is already in the database
+//   try {
+//     const doctor = await User.findOne({
+//       email: req.body.email,
+//     });
+//     if (!doctor) return res.status(400).send("Email is not found");
 
-    // create and assign a token
-    const token = jwt.sign({_id: doctor._id}, process.env.JWT_SECRET as string);
-    res.header("auth-token", token);
+//     // create and assign a token
+//     const token = jwt.sign({_id: doctor._id}, process.env.JWT_SECRET as string);
+//     res.header("auth-token", token);
 
-    res.json({
-      token,
-      doctor,
-    });
-  } catch (error) {
-    res.status(400).json({
-      message: (error as Error).message,
-      error,
-    });
-  }
-});
+//     res.json({
+//       token,
+//       doctor,
+//     });
+//   } catch (error) {
+//     res.status(400).json({
+//       message: (error as Error).message,
+//       error,
+//     });
+//   }
+// });
+
+
 
 
 
