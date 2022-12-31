@@ -34,29 +34,17 @@ const SideNavigate = (_props: any) => {
           ? "0px 0px 10px 0px rgb(103 232 249)  "
           : "0px 0px 10px 0px #000",
       }}
-      onSelect={selected => {
+      onSelect={function (selected: string): void {
         // Add your code here
-
         if (selected === "dashboard") {
           navigate("/patient/dashboard");
         } else if (selected === "about") {
           navigate("/patient/about");
-        } else if (selected === "appointment") {  
+        } else if (selected === "appointment") {
           navigate("/patient/appointment");
         }
 
         // console.log(selected);
- 
-
-       
-                  
-
-
-            
-
-
-
-      
       }}
       className="
   h-full

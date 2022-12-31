@@ -3,9 +3,6 @@ import SideNavigate from "./SideNavigate";
 
 import About from "./About";
 import Dashboard from "./Dashboard";
-import DoctorList from "./DoctorList";
-
-
 
 const RouterPatient = () => {
   return (
@@ -15,8 +12,6 @@ const RouterPatient = () => {
       <Routes>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="about" element={<About />} />
-        <Route path="doctorList" element={<DoctorList />} />
-
       </Routes>
     </div>
   );

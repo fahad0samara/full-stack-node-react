@@ -10,16 +10,18 @@ import Login from "./Home/auth/Login";
 import RegisterPatient from "./patient/auth/RegisterPatient";
 
 const Router = () => {
-  const {logPatient, logAdmin, setlogAdmin, setlogPatient} = useLogIN();
+  const { logPatient, logAdmin,
+    logDr,
+    setlogAdmin, setlogPatient } = useLogIN();
 
   return (
     <Routes>
       {logPatient && <Route path="/patient/*" element={<RouterPatient />} />}
       {logAdmin && <Route path="/admin/*" element={<RouterAdmin />} />}
+      {logDr && <Route path="/doctor/*" element={<RouterAdmin />} />}
 
       <Route path="/" element={<Hero />} />
-      <Route path="/patient/*" element={<RouterPatient />} />
-      <Route path="/admin/*" element={<RouterAdmin />} />
+    
 
       <Route path="/RegisterPatient" element={<RegisterPatient />} />
 

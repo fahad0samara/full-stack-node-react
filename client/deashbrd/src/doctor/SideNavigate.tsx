@@ -13,8 +13,7 @@ import {RiDashboardFill} from "react-icons/ri";
 import {useLogIN} from "../../ContextLog";
 
 const SideNavigate = (_props: any) => {
-  const { Profile, setProfile, loading, setLoading, dark, setdark} =
-    useLogIN();
+  const {Profile, setProfile, loading, setLoading, dark, setdark} = useLogIN();
   const navigate = useNavigate();
 
   return (
@@ -27,34 +26,23 @@ const SideNavigate = (_props: any) => {
           ? "0px 0px 10px 0px rgb(103 232 249)  "
           : "0px 0px 10px 0px #000",
       }}
-      onSelect={function (selected: string): void {
-        // Add your code here
-        if (selected === "dashboard") {
-          navigate("dashboard");
-        } else if (selected === "about") {
-          navigate("about");
-        } else if (selected === "doctorList") {
-          navigate("doctorList");
-        }
-
-        // console.log(selected);
+      onSelect={(selected: string) => {
+        navigate(
+          //admin
+          selected === "dashboard" ? "/admin/dashboard" : "/admin/about"
+        );
       }}
-      
+      className="
+  h-full
 
+      fixed
 
- 
-      
     
-  
-       
-     
-
+      top-0
+      left-0
       
-          
-           
-
-   
-
+  z-50
+  "
     >
       <SideNav.Toggle
         style={{
@@ -123,57 +111,6 @@ const SideNavigate = (_props: any) => {
             about
           </NavText>
         </NavItem>
-
-        <NavItem eventKey="doctorList">
-          <NavIcon>
-            <RiDashboardFill
-              style={{
-                color: dark ? "rgb(103 232 249)" : "black",
-                fontSize: "1.8rem",
-                fontWeight: "bold",
-                marginLeft: "1rem",
-                marginTop: "1rem",
-
-              }}
-            />
-          </NavIcon>
-          <NavText
-            style={{
-              color: dark ? "rgb(103 232 249)" : "black",
-              fontSize: "0.9rem",
-              fontWeight: "bold",
-              marginLeft: "1rem",
-              marginTop: "1rem",
-            }}
-          >
-            doctorList
-          </NavText>
-        </NavItem>
-        {/* <NavItem eventKey="patientList">
-          <NavIcon>
-            <RiDashboardFill
-              style={{
-                color: dark ? "rgb(103 232 249)" : "black",
-                fontSize: "1.8rem",
-                fontWeight: "bold",
-                marginLeft: "1rem",
-                marginTop: "1rem",
-              }}
-            />
-          </NavIcon>
-          <NavText
-            style={{
-              color: dark ? "rgb(103 232 249)" : "black",
-              fontSize: "0.9rem",
-              fontWeight: "bold",
-              marginLeft: "1rem",
-              marginTop: "1rem",
-            }}
-          >
-            patientList
-          </NavText>
-        </NavItem> */}
-
       </SideNav.Nav>
     </SideNav>
   );

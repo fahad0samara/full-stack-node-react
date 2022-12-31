@@ -14,11 +14,14 @@ const ContextLog = createContext(
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
     dark: boolean;
     setdark: React.Dispatch<React.SetStateAction<boolean>>;
+    logDr: boolean;
+    setlogDr: React.Dispatch<React.SetStateAction<boolean>>;
   }
 );
 const LogCheck = ({children}: any) => {
   const [logPatient, setlogPatient] = useState(false);
   const [logAdmin, setlogAdmin] = useState(false);
+  const [logDr, setlogDr] = useState(false);
 
   const [Profile, setProfile] = useState();
   const [loading, setLoading] = useState(false);
@@ -186,6 +189,9 @@ const LogCheck = ({children}: any) => {
   return (
     <ContextLog.Provider
       value={{
+
+        logDr,
+        setlogDr,
         logPatient,
         setlogPatient,
         logAdmin,
@@ -196,6 +202,8 @@ const LogCheck = ({children}: any) => {
         setLoading,
         dark,
         setdark,
+
+
       }}
     >
       {loading ? <APPloader /> : children}

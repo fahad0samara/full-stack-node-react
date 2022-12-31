@@ -1,7 +1,6 @@
 import express from "express";
 const router = express.Router();
 
-import Admin from "../model/admin";
 import Doctor from "../model/doctor";
 import Patient from "../model/patient";
 
@@ -19,157 +18,100 @@ const {
 } = require("../middleware/validtion");
 
 // registerAdmin
-router.post("/registerAdmin", async (req, res) => {
-  // validate the data before we make a admin
-  const {error} = adminValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
 
-  // check if the admin is already in the database
-  const emailExist = await Admin.findOne({
-    email: req.body.email,
-  });
-  if (emailExist) return res.status(400).send("Email already exists");
 
-  // hash passwords
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
-  // create a new admin
-  const admin = new Admin({
-    name: req.body.name,
-    email: req.body.email,
-    password: hashedPassword,
-    phoneNumber: req.body.phoneNumber,
-  });
-  try {
-    const savedAdmin = await admin.save();
-    res.send({
-      savedAdmin,
-    });
-  } catch (error) {
-    res.status(400).json({
-      message: (error as Error).message,
-      error,
-    });
+interface JwtPayload {
+  _id: string;
+}
+// Middleware to check if user is an admin
+
+const checkAdmin =async (req: any, res: any, next: any) => {
+  if (req.header && req.headers.authorization) {
+    const token = req.headers.authorization.split(" ")[1];
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+      const user = await User.findById((decoded as JwtPayload)._id);
+      if (!user) {
+        return res.status(400).send("user not found");
+      }
+      req.user = user;
+      next();
+    } catch (error) {
+      res.status(400).send("Invalid Token 2");
+    }
+  } else {
+    res.status(400).send("Invalid Token");
   }
+};
+
+// Get a list of all admin  
+router.get("/admins", checkAdmin, (req, res) => {
+  User.find({ role: "admin" })
+    .then(admins => res.json(admins))
+    .catch(err => res.status(400).json(err));
 });
 
-// loginAdmin
-router.post(
-  "/loginAdmin",
-
-  async (req, res) => {
-    // validate the data before we make a admin
-    const {error} = loginAdminValidation(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
-    // check if the admin is already in the database
-    const admin = await Admin.findOne({
-      email: req.body.email,
-    });
-    if (!admin) return res.status(400).send("Email is not found");
-
-    // check if the password is correct
-    const validPass = await bcrypt.compare(req.body.password, admin.password);
-    if (!validPass) return res.status(400).send("Invalid password");
-    // create and assign a token
-    const token = jwt.sign({_id: admin._id}, process.env.JWT_SECRET as string);
-    res.header("auth-token", token);
-
-    res.json({
-      token,
-      admin,
-    });
-  }
-);
-
-// getAllAdmin
-router.get("/getAllAdmin", async (req, res) => {
-  try {
-    const admin = await Admin.find();
-    res.json(admin);
-  } catch (error) {
-    res.status(400).json({
-      message: (error as Error).message,
-      error,
-    });
-  }
+// Delete an admin from the database
+router.delete("/admin/:id", checkAdmin, (req, res) => {
+  User.findByIdAndDelete(req.params.id)
+    .then(admin => res.json(admin))
+    .catch(err => res.status(400).json(err));
 });
 
-// getAllDoctor
-router.get("/getAllDoctor", async (req, res) => {
-  try {
-    const doctor = await Doctor.find();
-    res.json(doctor);
-  } catch (error) {
-    res.status(400).json({
-      message: (error as Error).message,
-      error,
-    });
-  }
+
+
+
+
+    
+
+
+  
+
+
+
+// Get a list of all doctors
+router.get("/doctors", checkAdmin, (req, res) => {
+  Doctor.find()
+    .populate("user")
+    .then(doctors => res.json(doctors))
+    .catch(err => res.status(400).json(err));
 });
 
-// getAllPatient
-router.get("/getAllPatient", async (req, res) => {
-  try {
-    const patient = await Patient.find();
-    res.json(patient);
-  } catch (error) {
-    res.status(400).json({
-      message: (error as Error).message,
-      error,
-    });
-  }
+
+
+// Update a doctor's information
+router.put("/doctor/:id", checkAdmin, (req, res) => {
+  Doctor.findByIdAndUpdate(req.params.id, req.body, {new: true})
+    .then(doctor => res.json(doctor))
+    .catch(err => res.status(400).json(err));
 });
 
-// delete doctor
-router.delete("/deleteDoctor/:id", async (req, res) => {
-  // checking if the id is correct in the database or not
-  const doctor = await Doctor.findById({
-    _id: req.params.id,
-  });
-  if (!doctor) return res.status(400).send("Doctor s is not found");
-
-  try {
-    /* Checking if the doctor is in the database or not. */
-    const doctor = await Doctor.findById(req.params.id);
-    if (!doctor) return res.status(400).send("Doctor is not found");
-
-    /* Deleting the doctor from the database. */
-
-    const removedDoctor = await Doctor.findByIdAndDelete({_id: req.params.id});
-    res.json(`Doctor with id ${req.params.id}has been deleted successfully.`);
-  } catch (error) {
-    res.status(400).json({
-      message: (error as Error).message,
-      error,
-    });
-  }
+// Get a list of all patients
+router.get("/patients", checkAdmin, (req, res) => {
+  Patient.find()
+    .then(patients => res.json(patients))
+    .catch(err => res.status(400).json(err));
 });
 
-// delete patient
-router.delete("/deletePatient/:healthID", async (req, res) => {
-  /* Checking if the patient is in the database or not. */
-  const patient = await Patient.findOne({
-    healthID: req.params.healthID,
-  });
-  if (!patient) return res.status(400).send("Patient is not found");
-
-  try {
-    const patient = await Patient.findOneAndDelete({
-      healthID: req.params.healthID,
-    });
-
-    res.json(
-      `Patient with healthID ${req.params.healthID} has been deleted successfully`
-    );
-  } catch (error) {
-    res.status(400).json({
-      message: (error as Error).message,
-      error,
-    });
-  }
+// Delete a patient from the database
+router.delete("/patient/:id", checkAdmin, (req, res) => {
+  Patient.findByIdAndDelete(req.params.id)
+    .then(patient => res.json(patient))
+    .catch(err => res.status(400).json(err));
 });
+
+
+
+
+
+
+
+
+
+
+
+
 
 router.post("/update", async (req, res) => {
   try {
@@ -189,6 +131,14 @@ router.post("/update", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
+
+
+
+
+
+
+
+
 
 // Router for an administrator to register a new user with any role:
 

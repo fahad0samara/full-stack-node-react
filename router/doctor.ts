@@ -3,7 +3,8 @@ const router = express.Router();
 
 import jwt from "jsonwebtoken";
 import Doctor from "../model/doctor";
-import User from "../model/User";
+import User from '../model/User';
+import Pre from "../model/pre"
 
 import Patient from "../model/patient";
 const {
@@ -15,24 +16,21 @@ const {
 // create a new doctor
 router.post("/register", async (req, res) => {
   // validate the data before we make a doctor
-  const { error } = doctorValidation(req.body);
+  const {error} = doctorValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
+  // check if the User is already in the database
+  const Userfind = await User.findById(req.body.user);
+  if (!Userfind) return res.status(400).send("User not1 found");
 
-
-  // check if the doctor is already in the database
- 
-
+  // check if the User the role is doctor
+  if (Userfind.role !== "doctor") return res.status(400).send("User not doctor");
 
   // check if the doctor is already in the database
   const userExist = await Doctor.findOne({
     user: req.body.user,
   });
   if (userExist) return res.status(400).send("User already exists");
-
-
-
-
 
   const doctor = new Doctor({
     user: req.body.user,
@@ -103,6 +101,7 @@ router.post("/addPrescriptions/:id", async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
+   /* Finding a patient by id and if it is not found it is returning a 400 status code with a message. */
     const patient = await Patient.findOne({
       _id: req.params.id,
     });
@@ -130,6 +129,22 @@ router.post("/addPrescriptions/:id", async (req, res) => {
     });
   }
 });
+
+router.post("/patients/:id/prescriptions", (req, res) => {
+  const patientId = req.params.id;
+  const prescription = req.body;
+
+  // Add the prescription to the patient's prescriptions array
+  Patient.findByIdAndUpdate(
+    patientId,
+    {$push: {prescriptions: prescription}},
+    {new: true}
+  )
+    .then(updatedPatient => res.send(updatedPatient))
+    .catch(err => res.status(400).send(err));
+});
+
+
 
 router.get("/getPrescriptions/:id", async (req, res) => {
   try {
@@ -198,6 +213,56 @@ router.get("/getPatientForDoctor/:id", async (req, res) => {
     });
   }
 });
+
+
+// Create a new prescription
+router.post('/pre', (req, res) => {
+ 
+
+  Patient.findById(req.body.patient, (err: any, patient: any) => {
+    if (err || !patient) {
+      return res.status(400).send('Invalid patient ID');
+    }
+
+    Doctor.findById(req.body.doctor, (err: any, doctor: any) => {
+      if (err || !doctor) {
+        return res.status(400).send('Invalid doctor ID');
+      }
+
+      const prescription = new Pre(req.body);
+      prescription.save((err: any) => {
+        if (err) {
+          return res.send(err);
+        }
+        res.json({ message: 'Prescription created successfully' });
+      });
+    });
+  });
+});
+
+// Get all prescriptions
+router.get('/pre', (req, res) => {
+  Pre.find((err: any, prescriptions: any) => {
+    if (err) {
+      return
+    }
+    res.json(prescriptions);
+  });
+});
+
+// Get a prescription by ID
+router.get('/pre/:id', (req, res) => {
+  Pre.findById(req.params.id, (err: any, prescription: any) => {
+    if (err) {
+      return
+    }
+    res.json(prescription);
+  });
+});
+
+
+
+
 
 
 

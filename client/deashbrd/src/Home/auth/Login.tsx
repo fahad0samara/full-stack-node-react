@@ -4,8 +4,15 @@ import {Link, useNavigate} from "react-router-dom";
 import {useLogIN} from "../../../ContextLog";
 
 const Login = () => {
-  const {setProfile, setLoading, setlogAdmin, setlogPatient, dark, setdark} =
-    useLogIN();
+  const {
+    setProfile,
+    setlogDr,
+    setLoading,
+    setlogAdmin,
+    setlogPatient,
+    dark,
+    setdark,
+  } = useLogIN();
 
   const navigate = useNavigate();
 
@@ -17,7 +24,6 @@ const Login = () => {
   const HandelLogin = async (e: {preventDefault: () => void}) => {
     e.preventDefault();
     setLoading(true);
-    
 
     try {
       const response = await axios.post(
@@ -28,14 +34,10 @@ const Login = () => {
         }
       );
 
-
       localStorage.setItem("token", response.data.token);
-      
 
-console.log(response.data.user.role);
+      console.log(response.data.user.role);
 
-
-       
       if (response.data.user.role === "admin") {
         setlogAdmin(true);
         setlogPatient(false);
@@ -47,14 +49,22 @@ console.log(response.data.user.role);
         setlogAdmin(false);
         setLoading(false);
         setProfile(response.data.user);
-        navigate("/patient/about");
+        //"about/:id"
+        navigate("/patient/dashboard");
+      } else if (response.data.user.role === "doctor") {
+        setlogDr(true);
+        setlogPatient(false);
+        setlogAdmin(false);
+        setLoading(false);
+        setProfile(response.data.user);
+        navigate("/doctor/dashboard");
       }
     } catch (error) {
-     /* Checking if the error is an axios error. If it is, it is getting the response from the error
+      /* Checking if the error is an axios error. If it is, it is getting the response from the error
      and setting the error to the response data message. If it is not an axios error, it is logging
      the error. */
-      if (axios.isAxiosError(error)){
-        const showError = error.response
+      if (axios.isAxiosError(error)) {
+        const showError = error.response;
         if (showError) {
           setError(showError.data.message);
         }
@@ -64,11 +74,8 @@ console.log(response.data.user.role);
           "🚀 ~ file: RegisterAdmin.tsx ~ line 64 ~ HandelLogin ~ error",
           error
         );
-        
-
-      
+      }
     }
-    };
   };
 
   return (
@@ -216,4 +223,4 @@ console.log(response.data.user.role);
   );
 };
 
-export default Login
+export default Login;
