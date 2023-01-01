@@ -1,182 +1,128 @@
-import {Link, Outlet, useNavigate} from "react-router-dom";
 import {useState} from "react";
-import SideNav, {
-  Toggle,
-  Nav,
-  NavItem,
-  NavIcon,
-  NavText,
-} from "@trendmicro/react-sidenav";
-
-import "@trendmicro/react-sidenav/dist/react-sidenav.css";
-import {RiDashboardFill} from "react-icons/ri";
+import {Link, NavLink, useLocation} from "react-router-dom";
+import {IconContext} from "react-icons/lib";
+import { FaTimes } from "react-icons/fa";
+import { AiOutlineClose } from "react-icons/ai";
+import { AiOutlineMenu } from "react-icons/ai";
+import { AiOutlineCloseCircle } from "react-icons/ai";
+import { AiOutlineCloseSquare } from "react-icons/ai";
 import {useLogIN} from "../../ContextLog";
+function SideNavigate() {
+  const [showSidebar, setShowSidebar] = useState(true);
+  const location = useLocation();
+    const {
+      logPatient,
 
-const SideNavigate = (_props: any) => {
-  const { Profile, setProfile, loading, setLoading, dark, setdark} =
-    useLogIN();
-  const navigate = useNavigate();
+      Profile,
+      setProfile,
+      loading,
+      setLoading,
+      dark,
+      setdark,
+    } = useLogIN()
 
   return (
-    <SideNav
-      /*  . */
-      style={{
-        backgroundColor: dark ? "#000" : "rgb(103 232 249)",
+    <>
+      {showSidebar ? (
+        <button
+          className="
+          fixed z-30 flex items-center cursor-pointer left-10 top-6 text-4xl font-semibold text-white
+          "
+          onClick={() => setShowSidebar(!showSidebar)}
+        >
+          x
+        </button>
+      ) : (
+          <AiOutlineMenu
+           onClick={() => setShowSidebar(!showSidebar)}
+            className="fixed 
 
-        boxShadow: dark
-          ? "0px 0px 10px 0px rgb(103 232 249)  "
-          : "0px 0px 10px 0px #000",
-      }}
-      onSelect={function (selected: string): void {
-        // Add your code here
-        if (selected === "dashboard") {
-          navigate("dashboard");
-        } else if (selected === "about") {
-          navigate("about");
-        } else if (selected === "doctorList") {
-          navigate("doctorList");
-        }
+             z-30 flex items-center cursor-pointer left-10 top-6"
+          />
 
-        // console.log(selected);
-      }}
-      
-
-
- 
-      
     
-  
-       
-     
+      )}
 
-      
-          
-           
-
-   
-
-    >
-      <SideNav.Toggle
-        style={{
-          color: dark ? "red" : "black",
-          fontSize: "1.5rem",
-          fontWeight: "bold",
-        }}
-      />
-      <SideNav.Nav
-        defaultOpenKeys={["dashboard"]}
-        className="
-
-        "
-        style={{
-          color: dark ? "white" : "black",
-          fontSize: "1.5rem",
-          fontWeight: "bold",
-        }}
-        defaultSelected="dashboard"
+      <div
+        className={`
+        fixed  top-0 
+        min-h-screen flex
+        flex-col items-center justify-between
+        left-0 h-screen w-48 bg-blue-500 transition-all duration-500 ease-in-out transform
+        ${showSidebar ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <NavItem eventKey="dashboard">
-          <NavIcon>
-            <RiDashboardFill
-              style={{
-                color: dark ? "rgb(103 232 249)" : "black",
-                fontSize: "1.8rem",
-                fontWeight: "bold",
-                marginLeft: "1rem",
-                marginTop: "1rem",
-              }}
-            />
-          </NavIcon>
-          <NavText
-            style={{
-              color: dark ? "rgb(103 232 249)" : "black",
-              fontSize: "0.9rem",
-              fontWeight: "bold",
-              marginLeft: "1rem",
-              marginTop: "1rem",
-            }}
-          >
-            dashboard
-          </NavText>
-        </NavItem>
-        <NavItem eventKey="about">
-          <NavIcon>
-            <RiDashboardFill
-              style={{
-                color: dark ? "rgb(103 232 249)" : "black",
-                fontSize: "1.8rem",
-                fontWeight: "bold",
-                marginLeft: "1rem",
-                marginTop: "1rem",
-              }}
-            />
-          </NavIcon>
-          <NavText
-            style={{
-              color: dark ? "rgb(103 232 249)" : "black",
-              fontSize: "0.9rem",
-              fontWeight: "bold",
-              marginLeft: "1rem",
-              marginTop: "1rem",
-            }}
-          >
-            about
-          </NavText>
-        </NavItem>
+      
+       
+          <aside
+            className="
+            font-bold
+            text-white
+            text-2xl
 
-        <NavItem eventKey="doctorList">
-          <NavIcon>
-            <RiDashboardFill
-              style={{
-                color: dark ? "rgb(103 232 249)" : "black",
-                fontSize: "1.8rem",
-                fontWeight: "bold",
-                marginLeft: "1rem",
-                marginTop: "1rem",
-
-              }}
-            />
-          </NavIcon>
-          <NavText
-            style={{
-              color: dark ? "rgb(103 232 249)" : "black",
-              fontSize: "0.9rem",
-              fontWeight: "bold",
-              marginLeft: "1rem",
-              marginTop: "1rem",
-            }}
+            flex
+            flex-col
+            items-center
+            justify-center
+            mt-24
+      
+            
+            "
+         
           >
-            doctorList
-          </NavText>
-        </NavItem>
-        {/* <NavItem eventKey="patientList">
-          <NavIcon>
-            <RiDashboardFill
-              style={{
-                color: dark ? "rgb(103 232 249)" : "black",
-                fontSize: "1.8rem",
-                fontWeight: "bold",
-                marginLeft: "1rem",
-                marginTop: "1rem",
-              }}
-            />
-          </NavIcon>
-          <NavText
-            style={{
-              color: dark ? "rgb(103 232 249)" : "black",
-              fontSize: "0.9rem",
-              fontWeight: "bold",
-              marginLeft: "1rem",
-              marginTop: "1rem",
-            }}
-          >
-            patientList
-          </NavText>
-        </NavItem> */}
+              <nav>
+                <ul>
+                  <li>
+                    <NavLink
+                      to="/admin/dashboard"
+                      activeClassName={
+                        location.pathname === "/admin/dashboard" ? "active" : ""
+                      }
+                    >
+                      Dashboard
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/admin/about"
+                      activeClassName={
+                        location.pathname === "/admin/about" ? "active" : ""
+                      }
+                    >
+                      About
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/admin/doctorList"
+                      activeClassName={
+                        location.pathname === "/admin/doctorList"
+                          ? "active"
+                          : ""
+                      }
+                    >
+                      Doctor List
+                    </NavLink>
+             
+                  </li>
+                  <li>
+                    <NavLink
+                      to="/admin/Eedit"
+                      activeClassName={
+                        location.pathname === "/admin/Eedit" ? "active" : ""
+                      }
+                    >
+                      Employee Edit
+                    </NavLink>
+                  </li>
+                </ul>
+              </nav>
+            </aside>
 
-      </SideNav.Nav>
-    </SideNav>
+         
+        
+      </div>
+    </>
   );
-};
+}
 
 export default SideNavigate;

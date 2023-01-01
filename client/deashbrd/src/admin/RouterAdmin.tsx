@@ -4,6 +4,12 @@ import SideNavigate from "./SideNavigate";
 import About from "./About";
 import Dashboard from "./Dashboard";
 import DoctorList from "./DoctorList";
+import Eedit from "./Eedit";
+import NotFound from "./NotFound";
+
+
+
+
 
 
 
@@ -15,8 +21,12 @@ const RouterPatient = () => {
       <Routes>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="about" element={<About />} />
+
         <Route path="doctorList" element={<DoctorList />} />
 
+        <Route path="*" element={<NotFound />} />
+
+        <Route path="Eedit" element={<Eedit />} />
       </Routes>
     </div>
   );

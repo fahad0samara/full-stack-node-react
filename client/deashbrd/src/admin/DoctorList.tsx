@@ -1,7 +1,11 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {useLogIN} from "../../ContextLog";
-import {RiDeleteBin5Line} from "react-icons/ri";
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { FaEdit } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+
+
 const DoctorList = () => {
   const {
     logPatient,
@@ -25,6 +29,8 @@ const DoctorList = () => {
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+
+
 
 
 
@@ -58,7 +64,31 @@ const DoctorList = () => {
     }
   };
 
+
+  const UpdateDoctorButton = ({ id }: { id: string }) => {
+    return (
+      <button
+        onClick={() => {
+          updateDoctor(id);
+          handleClose();
+        }}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      >
+        Update
+      </button>
+    );
+  };
+
+
+
+
+
+
+
+
+
   //update the dr
+
   const updateDoctor = (id: any) => {
     axios
       .put(`http://localhost:3000/admin/doctor/${id}`, updatedr, {
@@ -81,32 +111,6 @@ const DoctorList = () => {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-  
-
-
-
 
 
   return (
@@ -141,7 +145,10 @@ const DoctorList = () => {
                 </thead>
                 {doctors.map(doctor => {
                   return (
-                    <tbody className=" text-sm font-extrabold font-light">
+                    <tbody
+                      key={doctor._id}
+                      className=" text-sm font-extrabold font-light"
+                    >
                       <tr className="border-b border-gray-200 hover:bg-gray-100 hover:text-black">
                         <td className="py-3 px-6 text-left whitespace-nowrap">
                           <div className="flex items-center">
@@ -273,35 +280,13 @@ const DoctorList = () => {
                             </div>
 
                             <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
-
-                              {
-                                //edit
-
-                              }
-                              
-
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                                />
-                              </svg>
+                          
                             </div>
                             <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
-                            
-                              
                               <RiDeleteBin5Line
                                 onClick={() => {
                                   deleteDoctor(doctor._id);
                                 }}
-
                               />
                             </div>
                           </div>
