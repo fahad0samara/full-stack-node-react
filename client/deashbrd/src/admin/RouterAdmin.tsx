@@ -26,7 +26,7 @@ const RouterPatient = () => {
 
         <Route path="*" element={<NotFound />} />
 
-        <Route path="Eedit" element={<Eedit />} />
+        <Route path="/Eedit/:id" element={<Eedit />} />
       </Routes>
     </div>
   );

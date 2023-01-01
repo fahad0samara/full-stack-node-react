@@ -1,12 +1,14 @@
 
 import React from 'react'
-
+import {useParams} from "react-router-dom";
 const Eedit = () => {
-  console.log('====================================');
-  console.log(
-"dgdfg"
-  );
-  console.log('====================================');
+  const { id } = useParams();;
+  console.log(id);
+ 
+  
+  
+
+
   return (
     <div
       className='bg-black

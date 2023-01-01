@@ -4,6 +4,7 @@ import {useLogIN} from "../../ContextLog";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { FaEdit } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 
 const DoctorList = () => {
@@ -20,19 +21,15 @@ const DoctorList = () => {
   const [doctors, setDoctors] = useState([]);
   const [updatedr, setupdatedr] = useState({
     name: {
-      firstName: '',
-      lastName: ''
+      firstName: "",
+      lastName: "",
     },
-    hospital: '',
-    specialty: '',
-    experience: 0
+    hospital: "",
+    specialty: "",
+    experience: 0,
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-
-
-
-
 
   useEffect(() => {
     axios
@@ -60,30 +57,13 @@ const DoctorList = () => {
         .then(res => {
           console.log(res.data);
           setDoctors(doctors.filter((doctor: any) => doctor._id !== id));
+        
+
         });
     }
   };
-
-
-  const UpdateDoctorButton = ({ id }: { id: string }) => {
-    return (
-      <button
-        onClick={() => {
-          updateDoctor(id);
-          handleClose();
-        }}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      >
-        Update
-      </button>
-    );
-  };
-
-
-
-
-
-
+  //useLocation
+  const location = useLocation();
 
 
 
@@ -104,14 +84,13 @@ const DoctorList = () => {
   };
 
   const onChange = (e: any) => {
-    setupdatedr({ ...updatedr, [e.target.name]: e.target.value });
+    setupdatedr({...updatedr, [e.target.name]: e.target.value});
   };
 
   //model for updata the dr
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
 
   return (
     <div
@@ -280,7 +259,12 @@ const DoctorList = () => {
                             </div>
 
                             <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
-                          
+                              <Link
+                                to={`/admin/Eedit/${doctor._id}`}
+                                className="text-gray-600 hover:text-gray-900"
+                              >
+                                EDi
+                              </Link>
                             </div>
                             <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
                               <RiDeleteBin5Line
