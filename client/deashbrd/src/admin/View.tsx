@@ -1,71 +1,69 @@
-
 import axios from "axios";
 import React, {useEffect} from "react";
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useLogIN} from "../../ContextLog";
 
 import {useLocation} from "react-router-dom";
 const View = () => {
-     const {
-       logPatient,
+  const {
+    logPatient,
 
-       Profile,
-       setProfile,
-       loading,
-       setLoading,
-       dark,
-       setdark,
-     } = useLogIN()
-    const { id } = useParams();
- const [data, setData] = React.useState<any>({
-   name: {
-     firstName: "",
-     middleName: "",
-     lastName: "",
-   },
-   user: {
-     email: "",
-     password: "",
-   },
+    Profile,
+    setProfile,
+    loading,
+    setLoading,
+    dark,
+    setdark,
+  } = useLogIN();
+  const {id} = useParams();
+  const [data, setData] = React.useState<any>({
+    name: {
+      firstName: "",
+      middleName: "",
+      lastName: "",
+    },
+    user: {
+      email: "",
+      password: "",
+    },
 
-   phoneNumber: "",
-   Hospital: "",
-   HospitalAddress: {
-     city: "",
-     building: "",
-     state: "",
-     ZipCode: "",
-     Country: "",
-   },
-   specialty: "",
-   degree: "",
-   experience: "",
-   date: "",
-   bloodGroup: "",
- });
+    phoneNumber: "",
+    Hospital: "",
+    HospitalAddress: {
+      city: "",
+      building: "",
+      state: "",
+      ZipCode: "",
+      Country: "",
+    },
+    specialty: "",
+    degree: "",
+    experience: "",
+    date: "",
+    bloodGroup: "",
+  });
 
-    const [error, setError] = React.useState(false);
+  const [error, setError] = React.useState(false);
 
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3000/admin/doctor/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then(res => {
+        console.log(res.data);
+        setData(res.data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.log(err);
+        setError(true);
+      });
+  }, [id]);
 
-      useEffect(() => {
-        axios
-          .get(`http://localhost:3000/admin/doctor/${id}`, {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          })
-          .then(res => {
-            console.log(res.data);
-            setData(res.data);
-            setLoading(false);
-          })
-          .catch(err => {
-            console.log(err);
-            setError(true);
-          });
-      }, [id]);
-    
   return (
     <div
       style={{
@@ -77,7 +75,16 @@ const View = () => {
       }}
     >
       <div className="p-16">
-        <div className="p-8 shadow mt-24">
+        <div
+          style={{
+            backgroundColor: dark ? "#000" : "white",
+            color: dark ? "white" : "black",
+            boxShadow: dark
+              ? "0px 0px 10px 0px rgb(103 232 249)"
+              : "0px 0px 10px 0px rgb(103 232 249)",
+          }}
+          className="p-8 shadow mt-24 "
+        >
           {" "}
           <div className="grid grid-cols-1 md:grid-cols-3">
             {" "}
@@ -101,7 +108,7 @@ const View = () => {
             </div>{" "}
             <div className="relative">
               {" "}
-              <div className="w-48 h-48 bg-indigo-100 mx-auto rounded-full shadow-2xl absolute inset-x-0 top-0 -mt-24 flex items-center justify-center text-indigo-500">
+              <div className="w-48 h-48 bg-red-100 mx-auto rounded-full shadow-2xl absolute inset-x-0 top-0 -mt-24 flex items-center justify-center text-indigo-500">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-24 w-24"
@@ -118,11 +125,17 @@ const View = () => {
               </div>{" "}
             </div>{" "}
             <div className="space-x-8 flex justify-between mt-32 md:mt-0 md:justify-center">
-              <button className=" py-2 px-4 uppercase rounded bg-blue-400 hover:bg-blue-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
+              <button className=" py-2 px-4 uppercase rounded bg-cyan-400 hover:bg-blue-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
                 {" "}
                 Connect
               </button>{" "}
-              <button className=" py-2 px-4 uppercase rounded bg-gray-700 hover:bg-gray-800 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">
+              <button
+                style={{
+                  backgroundColor: dark ? "#fff" : "black",
+                  color: dark ? "black" : "#fff",
+                }}
+                className=" py-2 px-4 uppercase rounded  hover:bg-gray-800 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5"
+              >
                 {" "}
                 Message
               </button>{" "}
@@ -134,19 +147,52 @@ const View = () => {
               <span className="font-light ml-3  ">{data.name.firstName}</span>
               <span className="font-light ml-3  ">{data.name.lastName}</span>
             </h1>
+
             <p className="font-light  mt-3">{data.Hospital}</p>
             <p className="font-light  mt-3">{data.HospitalAddress.Country}</p>
-            <p className="mt-8 ">
-              <span className="font-medium">Speciality:</span>{" "}
-            </p>
-            <p className="mt-2 ">{data.specialty}</p>{" "}
-          </div>{" "}
+            <div className="w-20 h-1 bg-cyan-400 mt-3 mx-auto"></div>
+            <div
+              className="
+                            grid
+                            grid-cols-1
+                            md:grid-cols-2
+                            gap-4
+                            mt-8
+                            md:mt-0"
+            >
+              <div>
+                <p className="font-medium mt-8">Email:</p>
+                <p className="mt-2">{data.user.email}</p>
+              </div>
+              <div>
+                <p className="font-medium mt-8">Phone:</p>
+                <p className="mt-2">{data.phoneNumber}</p>
+              </div>
+            </div>
+
+            <div
+              className="
+                            grid
+                            grid-cols-1
+                            md:grid-cols-2
+                            gap-4
+                            mt-8
+                            md:mt-0"
+            >
+              <div>
+                <p className="font-medium mt-8">degree:</p>
+                <p className="mt-2">{data.degree}</p>
+              </div>
+              <div>
+                <p className="mt-8 ">
+                  <span className="font-medium">bloodGroup:</span>{" "}
+                </p>
+                <p className="mt-2 ">{data.bloodGroup}</p>{" "}
+              </div>
+            </div>
+          </div>
           <div className="mt-12 flex flex-col justify-center">
-            {" "}
-            <p className="text-gray-600 text-center font-light lg:px-16">
-   
-            </p>{" "}
-            <button className="text-indigo-500 py-2 px-4  font-medium mt-4">
+            <button className="text-cyan-400 py-2 px-4  font-medium mt-4">
               {" "}
               Show more
             </button>{" "}
@@ -155,6 +201,6 @@ const View = () => {
       </div>
     </div>
   );
-}
+};
 
-export default View
+export default View;
