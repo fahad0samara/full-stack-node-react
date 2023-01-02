@@ -685,12 +685,8 @@ export default function RegisterPatient(props: any) {
               </div>
 
               <div
-                className="  grid lg:grid-cols-3
-              md:grid-cols-2
-      
-       
-            
-             "
+                className="grid lg:grid-cols-3
+              md:grid-cols-2"
               >
                 <div className="col-span-5 ">
                   <h1 className=" lg:text-xl  my-1 font-bold px-4 grid col-start-1 col-span-3">

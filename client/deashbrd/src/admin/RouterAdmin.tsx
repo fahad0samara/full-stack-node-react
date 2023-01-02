@@ -4,8 +4,9 @@ import SideNavigate from "./SideNavigate";
 import About from "./About";
 import Dashboard from "./Dashboard";
 import DoctorList from "./DoctorList";
-import Eedit from "./Eedit";
+import Edit from "./Edit";
 import NotFound from "./NotFound";
+import View from "./View";
 
 
 
@@ -26,7 +27,8 @@ const RouterPatient = () => {
 
         <Route path="*" element={<NotFound />} />
 
-        <Route path="/Eedit/:id" element={<Eedit />} />
+        <Route path="/Edit/:id" element={<Edit />} />
+        <Route path="/View/:id" element={<View />} />
       </Routes>
     </div>
   );

@@ -105,14 +105,7 @@ function SideNavigate() {
               </NavLink>
             </li>
             <li>
-   <NavLink
-  to="/admin/Eedit/:id"
-  activeClassName={location.pathname === "/admin/Eedit/:id" ? "active" : ""}
 
->
-              
-                Employee Edit
-              </NavLink>
             </li>
           </ul>
         </nav>

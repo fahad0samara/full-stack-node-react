@@ -19,14 +19,12 @@ const {
 
 // registerAdmin
 
-
-
 interface JwtPayload {
   _id: string;
 }
 // Middleware to check if user is an admin
 
-const checkAdmin =async (req: any, res: any, next: any) => {
+const checkAdmin = async (req: any, res: any, next: any) => {
   if (req.header && req.headers.authorization) {
     const token = req.headers.authorization.split(" ")[1];
     try {
@@ -45,9 +43,9 @@ const checkAdmin =async (req: any, res: any, next: any) => {
   }
 };
 
-// Get a list of all admin  
+// Get a list of all admin
 router.get("/admins", checkAdmin, (req, res) => {
-  User.find({ role: "admin" })
+  User.find({role: "admin"})
     .then(admins => res.json(admins))
     .catch(err => res.status(400).json(err));
 });
@@ -59,26 +57,21 @@ router.delete("/admin/:id", checkAdmin, (req, res) => {
     .catch(err => res.status(400).json(err));
 });
 
-
-
-
-
-    
-
-
-  
-
-
-
 // Get a list of all doctors
-router.get("/doctors", checkAdmin, (req, res) => {
+router.get("/doctor", checkAdmin, (req, res) => {
   Doctor.find()
     .populate("user")
     .then(doctors => res.json(doctors))
     .catch(err => res.status(400).json(err));
 });
 
-
+// Get a doctor by id
+router.get("/doctor/:id", checkAdmin, (req, res) => {
+  Doctor.findById(req.params.id)
+    .populate("user")
+    .then(doctor => res.json(doctor))
+    .catch(err => res.status(400).json(err));
+});
 
 // Update a doctor's information
 router.put("/doctor/:id", checkAdmin, (req, res) => {
@@ -94,9 +87,6 @@ router.delete("/doctor/:id", checkAdmin, (req, res) => {
     .catch(err => res.status(400).json(err));
 });
 
-
-
-
 // Get a list of all patients
 router.get("/patients", checkAdmin, (req, res) => {
   Patient.find()
@@ -110,24 +100,6 @@ router.delete("/patient/:id", checkAdmin, (req, res) => {
     .then(patient => res.json(patient))
     .catch(err => res.status(400).json(err));
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 router.post("/update", async (req, res) => {
   try {
@@ -147,14 +119,6 @@ router.post("/update", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
-
-
-
-
-
-
-
-
 
 // Router for an administrator to register a new user with any role:
 
@@ -181,7 +145,6 @@ router.post("/register-user", async (req: any, res: any) => {
       email,
       password: hashPassword,
       role,
-      
     });
     await user.save();
     res.json({

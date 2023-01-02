@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {useLogIN} from "../../ContextLog";
 import { RiDeleteBin5Line } from "react-icons/ri";
-import { FaEdit } from "react-icons/fa";
+import {FiEdit2, FiEye} from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
@@ -26,14 +26,14 @@ const DoctorList = () => {
     },
     hospital: "",
     specialty: "",
-    experience: 0,
+    experience: "",
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/admin/doctors", {
+      .get("http://localhost:3000/admin/doctor", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -63,34 +63,13 @@ const DoctorList = () => {
     }
   };
   //useLocation
-  const location = useLocation();
 
 
 
-  //update the dr
 
-  const updateDoctor = (id: any) => {
-    axios
-      .put(`http://localhost:3000/admin/doctor/${id}`, updatedr, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then(res => {
-        console.log(res.data);
-        setDoctors(doctors.filter((doctor: any) => doctor._id !== id));
-      });
-  };
 
-  const onChange = (e: any) => {
-    setupdatedr({...updatedr, [e.target.name]: e.target.value});
-  };
 
-  //model for updata the dr
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+
 
   return (
     <div
@@ -237,35 +216,21 @@ const DoctorList = () => {
                         <td className="py-3 px-6 text-center">
                           <div className="flex item-center justify-center">
                             <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                                />
-                                <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                                />
-                              </svg>
-                            </div>
-
-                            <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
                               <Link
-                                to={`/admin/Eedit/${doctor._id}`}
-                                className="text-gray-600 hover:text-gray-900"
+                                to={`/admin/View/${doctor._id}`}
+                                className="w-4 mr-2 transform text-cyan-400 hover:text-cyan-400 hover:scale-150"
                               >
-                                EDi
+                                <FiEye />
                               </Link>
                             </div>
+
+                            <Link
+                              to={`/admin/Edit/${doctor._id}`}
+                              className="w-4 mr-2 transform text-cyan-400 hover:text-cyan-400 hover:scale-150"
+                            >
+                              <FiEdit2 />
+                            </Link>
+
                             <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
                               <RiDeleteBin5Line
                                 onClick={() => {
