@@ -10,7 +10,7 @@ import SideNav, {
 
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 import {RiDashboardFill} from "react-icons/ri";
-import {useLogIN} from "../../ContextLog";
+import {useLogIN} from "../../hooks/ContextLog";
 
 const SideNavigate = (_props: any) => {
   const {Profile, setProfile, loading, setLoading, dark, setdark} = useLogIN();

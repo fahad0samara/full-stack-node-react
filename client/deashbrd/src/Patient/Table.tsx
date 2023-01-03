@@ -1,4 +1,4 @@
-import {useLogIN} from "../../ContextLog";
+import {useLogIN} from "../../hooks/ContextLog";
 
 const Table = () => {
   const {log, setLog, Profile, setProfile, loading, setLoading, dark} =

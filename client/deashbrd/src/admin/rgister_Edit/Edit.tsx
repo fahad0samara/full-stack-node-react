@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
 import axios from "axios";
-import AgeDisplay from "../tools/AgeDisplay";
-import { useLogIN } from "../../ContextLog";
+import AgeDisplay from "../../tools/AgeDisplay";
+import {useLogIN} from "../../../ContextLog";
 
 import {useLocation} from "react-router-dom";
 const Edit = () => {
@@ -16,7 +16,7 @@ const Edit = () => {
     setLoading,
     dark,
     setdark,
-  } = useLogIN();
+  } = useLogIN()
 
   const [data, setData] = React.useState<any>({
     name: {

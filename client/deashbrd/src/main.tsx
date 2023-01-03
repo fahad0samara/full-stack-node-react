@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 import App from './App'
 import './index.css'
-import LogCheck from '../ContextLog';
+import LogCheck from '../ContextLog'
 
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

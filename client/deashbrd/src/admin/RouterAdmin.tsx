@@ -1,10 +1,10 @@
 import {Routes, Route} from "react-router-dom";
 import SideNavigate from "./SideNavigate";
 
-import About from "./About";
+import About from "./Register";
 import Dashboard from "./Dashboard";
-import DoctorList from "./DoctorList";
-import Edit from "./Edit";
+import DoctorList from "./List/DoctorList";
+import Edit from "./rgister_Edit/Edit";
 import NotFound from "./NotFound";
 import View from "./View";
 

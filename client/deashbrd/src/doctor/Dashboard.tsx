@@ -1,5 +1,5 @@
 import React from "react";
-import {useLogIN} from "../../ContextLog";
+import {useLogIN} from "../../hooks/ContextLog";
 
 function Dashboard() {
   const {
