@@ -55,6 +55,7 @@ const DoctorList = () => {
 
   // delet the doctor
   const deleteDoctor = (id: any) => {
+    setLoading(true);
     if (window.confirm("Are you sure you want to delete this doctor?")) {
       axios
         .delete(`http://localhost:3000/admin/doctor/${id}`, {
@@ -66,12 +67,29 @@ const DoctorList = () => {
         .then(res => {
           console.log(res.data);
           setDoctors(doctors.filter((doctor: any) => doctor._id !== id));
+          setLoading(false);
         
 
-        });
+        }).then(res => {
+          setLoading(false);
+          setSuccess("Doctor deleted successfully");
+          setTimeout(() => {
+            setSuccess("");
+          }, 2000);
+        })
+        .catch(err => {
+          setError("Error deleting doctor");
+          setTimeout(() => {
+            setError("");
+          }, 2000);
+        }
+      );
+      
+        
+     
     }
   };
-  //useLocation
+       
 
 
 

@@ -5,6 +5,7 @@ import AgeDisplay from "../../tools/AgeDisplay";
 import {useLogIN} from "../../../ContextLog";
 
 import {useLocation} from "react-router-dom";
+import Loder from "../../tools/Loder";
 const Edit = () => {
   const {id} = useParams();
   const {
@@ -12,11 +13,10 @@ const Edit = () => {
 
     Profile,
     setProfile,
-    loading,
-    setLoading,
+
     dark,
     setdark,
-  } = useLogIN()
+  } = useLogIN();
 
   const [data, setData] = React.useState<any>({
     name: {
@@ -46,11 +46,10 @@ const Edit = () => {
   });
 
   const [error, setError] = React.useState(false);
-
-
-
+  const [loading, setLoading] = React.useState(true);
 
   useEffect(() => {
+    setLoading(true);
     axios
       .get(`http://localhost:3000/admin/doctor/${id}`, {
         headers: {
@@ -66,13 +65,11 @@ const Edit = () => {
       .catch(err => {
         console.log(err);
         setError(true);
+        setLoading(false);
       });
   }, [id]);
 
-
   const navigating = useLocation().pathname === "/admin/doctor" ? true : false;
-
-
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -93,8 +90,6 @@ const Edit = () => {
         console.log(res.data);
 
         alert("Doctor Updated Successfully");
-        
-
       })
       .catch(err => {
         console.log(err);
@@ -497,6 +492,7 @@ const Edit = () => {
           Update
         </button>
         <div className="my-11"></div>
+        {loading ? <Loder /> : null}
       </div>
     </div>
   );
