@@ -12,7 +12,7 @@ const ContextLog = createContext(
     setlogAdmin: React.Dispatch<React.SetStateAction<boolean>>;
     Profile: any;
     setProfile: React.Dispatch<React.SetStateAction<any>>;
-    loading: boolean;
+    Loading: boolean;
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
     dark: boolean;
     setdark: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,7 +26,7 @@ const LogCheck = ({children}: any) => {
   const [logDr, setlogDr] = useState(false);
 
   const [Profile, setProfile] = useState();
-  const [loading, setLoading] = useState(false);
+  const [Loading, setLoading] = useState(false);
   const [dark, setdark] = useState(
     localStorage.getItem("dark") === "true" ? true : false
   );
@@ -127,16 +127,13 @@ const LogCheck = ({children}: any) => {
         setlogAdmin,
         Profile,
         setProfile,
-        loading,
+        Loading,
         setLoading,
         dark,
         setdark,
       }}
     >
-      {loading ? 
-        <Loder/>
-      : children
-}
+      {Loading ? <Loder /> : children}
     </ContextLog.Provider>
   );
 };
