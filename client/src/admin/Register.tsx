@@ -1,257 +1,16 @@
-// import React, {useState} from "react";
-// import axios, {AxiosError} from "axios";
-// import { useLogIN } from "../../ContextLog";
-// import {useNavigate} from "react-router-dom";
 
-// const About: React.FC = () => {
-//   const {
-//     logPatient,
-
-//     Profile,
-//     setProfile,
-   
-//     setLoading,
-//     dark,
-//     setdark,
-//   } = useLogIN();
-//   const [name, setName] = useState<string>("");
-//   const [email, setEmail] = useState<string>("");
-//   const [password, setPassword] = useState<string>("");
-//   const [role, setrole] = useState<string>("");
-//   const [error, setError] = useState<string | null>("");
-//     const [userId, setUserId] = useState("");
-
-//   const [success, setSuccess] = useState<string>("");
-//   const navigate = useNavigate();
-
-// const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  
-//   if (e.target.name === "name") {
-//     setName(e.target.value);
-//   }
-//   if (e.target.name === "email") {
-//     setEmail(e.target.value);
-//   }
-//   if (e.target.name === "password") {
-//     setPassword(e.target.value);
-    
-//   }
-//   if (e.target.name === "role") {
-//     setrole(e.target.value);
-//   }
-
-
-
-//   if (!name || !email || !password) {
-//     setSuccess("");
-//   }
-
-
-//   if (name.length > 3 && email.length > 3 && password.length > 3) {
-//     setError("");
-//   }
-// };
-
-//   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-//     e.preventDefault();
-//     try {
-//       //http://localhost:3000/admin/register-user
-//       const {data} = await axios.post(
-//         "http://localhost:3000/admin/register-user",
-//         {
-//           name,
-//           email,
-//           password,
-//           role,
-//         },
-//         {
-//           headers: {
-//             "Content-Type": "application/json",
-//             Authorization: `Bearer ${localStorage.getItem("token")}`,
-//           },
-//         }
-//       );
-//       // generate the user ID
-//       setUserId(data.user._id);
-      
-
-//       console.log(data.user._id);
-//       console.log(data);
-
-//       // navigate to the second page of the registration form and pass the user's ID as a prop
-//       navigate(`/admin/RegisterDr/${data.user._id}`);
-
-//       setName("");
-//       setEmail("");
-//       setPassword("");
-//       setrole("");
-//       setSuccess("User Created");
-//     }
-//     catch (error) {
-//       if (error.response) {
-//         setError(error.response.data);
-//       }
-//       //deley the erorr
-//       setTimeout(() => {
-//         setError(null);
-//       }
-//         , 3000)
-  
-//     }
-//   };
-
-//   return (
-//     <div
-//       className={`${
-//         dark ? "bg-black" : "bg-white"
-//         //color
-//       } ${dark ? "text-white" : "text-black"}
-//         ${
-//           //font
-//           dark ? "font-bold" : "font-normal"
-//         }
-//          h-screen flex flex-col justify-center items-center`}
-//     >
-//       <div className="w-full max-w-xs">
-//         <h1 className="text-2xl font-bold mb-4">Register</h1>
-//         {
-//           //error
-//           error ? (
-//             <div
-//               className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-//               role="alert"
-//             >
-//               <strong className="font-bold">Error!</strong>
-//               <span className="block sm:inline">{error}</span>
-//             </div>
-//           ) : (
-//          null
-//           )
-//         }
-//         {success
-//           ? (
-//             <div
-//               className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
-//               role="alert"
-//             >
-//               <strong className="font-bold">Success!</strong>
-//               <span className="block sm:inline">{success}</span>
-
-
-//             </div>
-//           )
-//           : null}
-        
-//         </div>
-        
-
-//       <form
-//         className=" mx-28 shadow-md rounded px-8 pt-6 pb-8 mb-4"
-//         onSubmit={onSubmit}
-//       >
-//         <div className="mb-4">
-//           <label className="block  text-sm font-bold mb-2" htmlFor="name">
-//             Name
-//           </label>
-//           <input
-//             className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"
-//             type="text"
-//             name="name"
-//             value={name}
-//             onChange={onChange}
-//             placeholder="Name"
-//             required
-//           />
-//         </div>
-//         <div className="mb-4">
-//           <label className="block  text-sm font-bold mb-2" htmlFor="email">
-//             Email
-//           </label>
-//           <input
-//             className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"
-//             type="email"
-//             name="email"
-//             value={email}
-//             onChange={onChange}
-//             placeholder="Email"
-//             required
-//           />
-//         </div>
-//         <div className="mb-4">
-//           <label className="block  text-sm font-bold mb-2" htmlFor="password">
-//             Password
-//           </label>
-//           <input
-//             className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"
-//             type="password"
-//             name="password"
-//             value={password}
-//             onChange={onChange}
-//             placeholder="Password"
-//             required
-//           />
-//         </div>
-//         <div className="mb-4 flex">
-//           <label className="block  text-sm font-bold mb-2 mr-4" htmlFor="role">
-//             Role:
-//           </label>
-//           <label className="inline-flex items-center">
-//             <input
-//               type="checkbox"
-//               name="role"
-//               value="admin"
-//               checked={role === "admin"}
-//               onChange={onChange}
-//             />
-//             <span className="ml-2">Admin</span>
-//           </label>
-
-//           <label className="inline-flex items-center ml-4">
-//             <input
-//               type="checkbox"
-//               name="role"
-//               value="user"
-//               checked={role === "user"}
-//               onChange={onChange}
-//             />
-//             <span className="ml-2">User</span>
-//           </label>
-//           <label className="inline-flex items-center ml-4">
-//             <input
-//               type="checkbox"
-//               name="role"
-//               value="doctor"
-//               checked={role === "doctor"}
-//               onChange={onChange}
-//             />
-//             <span className="ml-2">Dr</span>
-//           </label>
-//         </div>
-//         <div className="flex items-center justify-between">
-//           <button
-//             className="bg-cyan-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-//             type="submit"
-//           >
-//             Register
-//           </button>
-
-//           {success && <p>{success}</p>}
-//         </div>
-//       </form>
-//     </div>
-//   );
-// };
 
 // export default About;
 import {useLogIN} from "../../ContextLog";
 
-import {useLocation} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import Loder from "../tools/Loder";
 
-import React, {useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import axios from "axios";
-
+import {useNavigate} from "react-router-dom";
 const RegisterDr = () => {
+  const Navigate = useNavigate();
   const [step, setStep] = useState(1);
   const [success, setsuccess] = useState(false);
 
@@ -294,13 +53,24 @@ const RegisterDr = () => {
 
   // Proceed to next step
   const nextStep = () => {
+    //
     setStep(step + 1);
   };
+  // Create a mutable ref object to store the form data
+  const formDataRef = useRef(formData);
 
-  // Go back to prev step
+  // Use the useEffect hook to update the value of the ref object
+  // whenever the form data changes
+  useEffect(() => {
+    formDataRef.current = formData;
+  }, [formData]);
+
+  // Update the form data when the user goes back a step
   const prevStep = () => {
+    setFormData(formDataRef.current);
     setStep(step - 1);
   };
+
 
   // Handle fields change
   const handleChange = input => e => {
@@ -308,7 +78,8 @@ const RegisterDr = () => {
   };
 
   // Handle form submission
-  const handleSubmit  =async (e: { preventDefault: () => void; }) => {
+  const handleSubmit = async (e: {preventDefault: () => void}) => {
+    setLoading(true);
     e.preventDefault();
 
     const {
@@ -327,55 +98,51 @@ const RegisterDr = () => {
       experience,
     } = formData;
 
-if (step === 1) {
-  try {
-    const res = await axios.post('http://localhost:3000/admin/register-user', { name, email, password, role })
-    setStep(2)
-    setFormData({ ...formData, user: res.data.user._id })
-    console.log(res.data.user._id);
-    console.log(res.data.user);
-    
-    
-  } catch (error) {
-    console.log(
-      'Error: ',
-      error.response.data
-    );
-    
-
-    
-  }
-} else if (step === 2) {
-  try {
-    await axios.post('http://localhost:3000/admin/register', { 
-      user,
-      name: name, 
-      Hospital: Hospital, 
-      HospitalAddress: HospitalAddress, 
-      date: date, 
-      phoneNumber: phoneNumber, 
-      bloodGroup: bloodGroup, 
-      degree: degree, 
-      specialty: specialty, 
-      experience: experience
-    })
-    setStep(3)
-  } catch (error) {
-    if (error.response.status === 400) {
-      console.log(
-        'Error: ',
-        error.response.data
-      );
-      
-      
-    } else {
-      // handle other errors
-      console.error(error)
-    }
-  }
+    if (step === 1) {
+      setLoading(true);
+      try {
+        const res = await axios.post(
+          "http://localhost:3000/admin/register-user",
+          {name, email, password, role}
+        );
+        setStep(2);
+        setFormData({...formData, user: res.data.user._id});
+        setLoading(false);
+      } catch (error) {
+        console.log("Error: ", error.response.data);
+      }
+    } else if (step === 2) {
+      setLoading(true);
+      try {
+        await axios.post("http://localhost:3000/admin/register", {
+          user,
+          name: name,
+          Hospital: Hospital,
+          HospitalAddress: HospitalAddress,
+          date: date,
+          phoneNumber: phoneNumber,
+          bloodGroup: bloodGroup,
+          degree: degree,
+          specialty: specialty,
+          experience: experience,
+        });
+        setStep(3);
+        setLoading(false);
+        // Navigate to the appropriate route based on the user's role
+        if (role === "admin") {
+          Navigate("/admin/doctorList");
+        } else if (role === "user") {
+          Navigate("/user");
+        } else if (role === "doctor") {
+            Navigate("/admin/doctorList");
+        }
+      } catch (error) {
+        console.log("Error: ", error.response.data);
+        setError(error.response.data);
+        setLoading(false);
+      }
     }
   };
-  
 
   // Render the form based on the current step
   const renderForm = () => {
@@ -417,10 +184,7 @@ if (step === 1) {
             ) : null}
           </div>
 
-          <form
-            className=" mx-28 shadow-md rounded px-8 pt-6 pb-8 mb-4"
-            onSubmit={handleSubmit}
-          >
+          <form className=" mx-28 shadow-md rounded px-8 pt-6 pb-8 mb-4">
             <div className="mb-4">
               <label className="block  text-sm font-bold mb-2" htmlFor="email">
                 Email
@@ -465,9 +229,7 @@ if (step === 1) {
                   name="role"
                   value="admin"
                   checked={formData.role === "admin"}
-                  onChange={handleChange("role")
-
-                  }
+                  onChange={handleChange("role")}
                 />
                 <span className="ml-2">Admin</span>
               </label>
@@ -495,12 +257,19 @@ if (step === 1) {
             </div>
             <div className="flex items-center justify-between">
               <button
+                onClick={prevStep}
                 className="bg-cyan-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="submit"
               >
-                Register
+                back
               </button>
-
+              <button
+                onClick={handleSubmit}
+                className="bg-cyan-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Next
+              </button>
               {success && <p>{success}</p>}
             </div>
           </form>
@@ -917,6 +686,14 @@ if (step === 1) {
                 <button
                   className="bg-cyan-400 hover:bg-cyan-500  font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
                   type="button"
+                  onClick={prevStep}
+                >
+                  Previous
+                </button>
+
+                <button
+                  className="bg-cyan-400 hover:bg-cyan-500  font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
+                  type="button"
                   onClick={handleSubmit}
                 >
                   Update
@@ -930,9 +707,26 @@ if (step === 1) {
       );
     } else if (step === 3) {
       return (
-        <div>
-          <h1>Step 3: Success</h1>
-          <p>Doctor created successfully</p>
+        <div
+          className="flex
+        justify-center
+        items-center
+        mt-10"
+        >
+          <div className="text-2xl font-bold text-green-500">
+            Registration Successful
+          </div>
+
+          <div className="my-11">
+            <Link to="/login">
+              <button
+                className="bg-cyan-400 hover:bg-cyan-500  font-bold py-2 px-8 rounded focus:outline-none focus:shadow-outline"
+                type="button"
+              >
+                Login
+              </button>
+            </Link>
+          </div>
         </div>
       );
     }
