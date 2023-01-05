@@ -1,5 +1,3 @@
-
-
 // export default About;
 import {useLogIN} from "../../ContextLog";
 
@@ -14,15 +12,7 @@ const RegisterDr = () => {
   const [step, setStep] = useState(1);
   const [success, setsuccess] = useState(false);
 
-  const {
-    logPatient,
-
-    Profile,
-    setProfile,
-
-    dark,
-    setdark,
-  } = useLogIN();
+  const {logPatient, Profile, setProfile, dark, setdark} = useLogIN();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: {
@@ -71,7 +61,6 @@ const RegisterDr = () => {
     setStep(step - 1);
   };
 
-
   // Handle fields change
   const handleChange = input => e => {
     setFormData({...formData, [input]: e.target.value});
@@ -100,20 +89,59 @@ const RegisterDr = () => {
 
     if (step === 1) {
       setLoading(true);
+
+      // Check if email and password are not empty
+      if (!name || !email || !password || !role) {
+        setError("Please fill in all fields");
+        setTimeout(() => setError(""), 2000);
+        setLoading(false);
+        return;
+      }
+      // Check if the user has already been registered
+      if (formData.user) {
+        // If the user has already been registered, don't register them again
+        setStep(2);
+        setLoading(false);
+        return;
+      }
+
       try {
         const res = await axios.post(
           "http://localhost:3000/admin/register-user",
           {name, email, password, role}
         );
+
         setStep(2);
         setFormData({...formData, user: res.data.user._id});
         setLoading(false);
       } catch (error) {
         console.log("Error: ", error.response.data);
+        setError(error.response.data);
+        setTimeout(() => setError(""), 2000);
+        setLoading(false);
       }
     } else if (step === 2) {
-      setLoading(true);
+      setTimeout(() => {
+        setsuccess(true);
+      }, 2000);
+
       try {
+        if (
+          !formData.name.firstName ||
+          !formData.name.lastName ||
+          !formData.Hospital ||
+          !formData.HospitalAddress.city ||
+          !formData.phoneNumber ||
+          !formData.bloodGroup ||
+          !formData.degree ||
+          !formData.specialty ||
+          !formData.experience
+        ) {
+          setError("Please fill in all fields");
+          setTimeout(() => setError(""), 2000);
+          setLoading(false);
+        }
+
         await axios.post("http://localhost:3000/admin/register", {
           user,
           name: name,
@@ -134,7 +162,7 @@ const RegisterDr = () => {
         } else if (role === "user") {
           Navigate("/user");
         } else if (role === "doctor") {
-            Navigate("/admin/doctorList");
+          Navigate("/admin/doctorList");
         }
       } catch (error) {
         console.log("Error: ", error.response.data);
@@ -168,20 +196,19 @@ const RegisterDr = () => {
                   className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
                   role="alert"
                 >
-                  <strong className="font-bold">Error!</strong>
+                  <strong
+                    className="
+                  font-bold
+                  
+                  "
+                  >
+                    Error!
+                  </strong>
                   <span className="block sm:inline">{error}</span>
                 </div>
               ) : null
             }
-            {success ? (
-              <div
-                className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
-                role="alert"
-              >
-                <strong className="font-bold">Success!</strong>
-                <span className="block sm:inline">{success}</span>
-              </div>
-            ) : null}
+       
           </div>
 
           <form className=" mx-28 shadow-md rounded px-8 pt-6 pb-8 mb-4">
@@ -190,7 +217,9 @@ const RegisterDr = () => {
                 Email
               </label>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"
+                className={`appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none
+                ${error ? "border-red-500 " : ""}
+                `}
                 type="email"
                 name="email"
                 value={formData.email}
@@ -207,7 +236,9 @@ const RegisterDr = () => {
                 Password
               </label>
               <input
-                className="shadow appearance-none border rounded w-full py-2 px-3  leading-tight focus:outline-none focus:shadow-outline"
+                className={`appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none
+                ${error ? "border-red-500  " : ""}
+                `}
                 type="password"
                 name="password"
                 value={formData.password}
@@ -256,20 +287,22 @@ const RegisterDr = () => {
               </label>
             </div>
             <div className="flex items-center justify-between">
-              <button
-                onClick={prevStep}
-                className="bg-cyan-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="submit"
-              >
-                back
-              </button>
-              <button
-                onClick={handleSubmit}
-                className="bg-cyan-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="submit"
-              >
-                Next
-              </button>
+              {formData.email && formData.password ? (
+                <button
+                  onClick={handleSubmit}
+                  className="bg-cyan-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  type="submit"
+                >
+                  Next
+                </button>
+              ) : (
+                <button
+                  className="bg-gray-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  type="submit"
+                >
+                  Next
+                </button>
+              )}
               {success && <p>{success}</p>}
             </div>
           </form>
@@ -287,400 +320,451 @@ const RegisterDr = () => {
                 color: dark ? "white" : "black",
               }}
               className="
+              
+               
+              
     
       "
             >
-              <form className="w-full max-w-screen-md mx-auto  ">
-                <h1 className="text-3xl font-bold text-center pt-4 mb-5">
-                  Edit Doctor
-                </h1>
-                <div
-                  className=" grid grid-cols-4 gap-6 
+              {
+                //error
+                error ? (
+                  <div
+                    className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                    role="alert"
+                  >
+                    <strong
+                      className="
+                  font-bold
+                  
+                  "
+                    >
+                      Error!
+                    </strong>
+                    <span className="block sm:inline">{error}</span>
+                  </div>
+                ) : (
+                  <form
+                    className="
+                mx-28 shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-11
+                "
+                  >
+                    <h1 className="text-3xl font-bold text-center pt-4 mb-5">
+                      Register
+                    </h1>
+                    <div
+                      className=" grid grid-cols-4 gap-6 
   
   
         "
-                >
-                  <label
-                    className="block font-bold text-lg mb-2"
-                    htmlFor="name"
-                  >
-                    Name
-                  </label>
-                  <input
-                    className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
-                    type="name"
-                    name="name"
-                    id="name"
-                    value={formData.name.firstName}
-                    onChange={e =>
-                      setFormData({
-                        ...formData,
-                        name: {...formData.name, firstName: e.target.value},
-                      })
-                    }
-                  />
-                  <input
-                    className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
-                    type="text"
-                    name="name"
-                    id="name"
-                    value={formData.name.middleName}
-                    onChange={e =>
-                      setFormData({
-                        ...formData,
-                        name: {...formData.name, middleName: e.target.value},
-                      })
-                    }
-                  />
-
-                  <input
-                    className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
-                    type="text"
-                    name="name"
-                    id="name"
-                    value={formData.name.lastName}
-                    onChange={e =>
-                      setFormData({
-                        ...formData,
-                        name: {...formData.name, lastName: e.target.value},
-                      })
-                    }
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label
-                    className="block font-bold text-lg mb-2"
-                    htmlFor="phone"
-                  >
-                    Phone
-                  </label>
-                  <input
-                    className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
-                    type="text"
-                    name="phone"
-                    id="phone"
-                    value={formData.phoneNumber}
-                    onChange={e =>
-                      setFormData({...formData, phoneNumber: e.target.value})
-                    }
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-28">
-                  <div className="mb-4">
-                    <label
-                      className="block font-bold text-lg mb-2"
-                      htmlFor="bloodGroup"
                     >
-                      bloodGroup
-                    </label>
-                    <select
-                      style={{
-                        backgroundColor: dark ? "#000" : "white",
-                        color: dark ? "white" : "black",
-                      }}
-                      name="bloodGroup"
-                      id="bloodGroup"
-                      value={formData.bloodGroup}
-                      onChange={e =>
-                        setFormData({...formData, bloodGroup: e.target.value})
-                      }
-                      className="block appearance-none w-full  border-b border-cyan-400 hover:border-cyan-400
+                      <label
+                        className="block font-bold text-lg mb-2"
+                        htmlFor="name"
+                      >
+                        Name
+                      </label>
+                      <input
+                        className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
+                        type="name"
+                        name="name"
+                        id="name"
+                        value={formData.name.firstName}
+                        onChange={e =>
+                          setFormData({
+                            ...formData,
+                            name: {...formData.name, firstName: e.target.value},
+                          })
+                        }
+                      />
+                      <input
+                        className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
+                        type="text"
+                        name="name"
+                        id="name"
+                        value={formData.name.middleName}
+                        onChange={e =>
+                          setFormData({
+                            ...formData,
+                            name: {
+                              ...formData.name,
+                              middleName: e.target.value,
+                            },
+                          })
+                        }
+                      />
+
+                      <input
+                        className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
+                        type="text"
+                        name="name"
+                        id="name"
+                        value={formData.name.lastName}
+                        onChange={e =>
+                          setFormData({
+                            ...formData,
+                            name: {...formData.name, lastName: e.target.value},
+                          })
+                        }
+                      />
+                    </div>
+
+                    <div className="mb-4">
+                      <label
+                        className="block font-bold text-lg mb-2"
+                        htmlFor="phone"
+                      >
+                        Phone
+                      </label>
+                      <input
+                        className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
+                        type="text"
+                        name="phone"
+                        id="phone"
+                        value={formData.phoneNumber}
+                        onChange={e =>
+                          setFormData({
+                            ...formData,
+                            phoneNumber: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-28">
+                      <div className="mb-4">
+                        <label
+                          className="block font-bold text-lg mb-2"
+                          htmlFor="bloodGroup"
+                        >
+                          bloodGroup
+                        </label>
+                        <select
+                          style={{
+                            backgroundColor: dark ? "#000" : "white",
+                            color: dark ? "white" : "black",
+                          }}
+                          name="bloodGroup"
+                          id="bloodGroup"
+                          value={formData.bloodGroup}
+                          onChange={e =>
+                            setFormData({
+                              ...formData,
+                              bloodGroup: e.target.value,
+                            })
+                          }
+                          className="block appearance-none w-full  border-b border-cyan-400 hover:border-cyan-400
             px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                    >
-                      <option value="">Select bloodGroup</option>
-                      <option value="A+">A+</option>
-                      <option value="A-">A-</option>
-                      <option value="B+">B+</option>
-                      <option value="B-">B-</option>
-                      <option value="AB+">AB+</option>
-                      <option value="AB-">AB-</option>
-                      <option value="O+">O+</option>
-                      <option value="O-">O-</option>
-                    </select>
-                  </div>{" "}
-                  <div className="mb-4">
-                    <label
-                      className="block font-bold text-lg mb-2"
-                      htmlFor=" date"
-                    >
-                      date
-                    </label>
+                        >
+                          <option value="">Select bloodGroup</option>
+                          <option value="A+">A+</option>
+                          <option value="A-">A-</option>
+                          <option value="B+">B+</option>
+                          <option value="B-">B-</option>
+                          <option value="AB+">AB+</option>
+                          <option value="AB-">AB-</option>
+                          <option value="O+">O+</option>
+                          <option value="O-">O-</option>
+                        </select>
+                      </div>{" "}
+                      <div className="mb-4">
+                        <label
+                          className="block font-bold text-lg mb-2"
+                          htmlFor=" date"
+                        >
+                          date
+                        </label>
 
-                    <input
-                      className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
-                      required
-                      type={formData.date}
-                      name="date"
-                      id="date"
-                      value={formData.date
-                        .toString()
-                        .substring(0, 10)
-                        .split("-")
-                        .reverse()
-                        .join("-")}
-                      onChange={e =>
-                        setFormData({...formData, date: e.target.value})
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-8  mb-4  mt-9">
-                  <div className="mb-4">
-                    <label
-                      htmlFor="speciality"
-                      className="
+                        <input
+                          className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
+                          required
+                          type={formData.date}
+                          name="date"
+                          id="date"
+                          value={formData.date
+                            .toString()
+                            .substring(0, 10)
+                            .split("-")
+                            .reverse()
+                            .join("-")}
+                          onChange={e =>
+                            setFormData({...formData, date: e.target.value})
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-8  mb-4  mt-9">
+                      <div className="mb-4">
+                        <label
+                          htmlFor="speciality"
+                          className="
   mt-2
   text-lg
   font-bold
   
   "
-                    >
-                      Speciality
-                    </label>
-                    <select
-                      style={{
-                        backgroundColor: dark ? "#000" : "white",
-                        color: dark ? "white" : "black",
-                      }}
-                      name="speciality"
-                      id="speciality"
-                      value={formData.specialty}
-                      onChange={e =>
-                        setFormData({...formData, specialty: e.target.value})
-                      }
-                      className="block appearance-none w-full bg-inherit   border-b border-cyan-400 hover:border-cyan-400 
+                        >
+                          Speciality
+                        </label>
+                        <select
+                          style={{
+                            backgroundColor: dark ? "#000" : "white",
+                            color: dark ? "white" : "black",
+                          }}
+                          name="speciality"
+                          id="speciality"
+                          value={formData.specialty}
+                          onChange={e =>
+                            setFormData({
+                              ...formData,
+                              specialty: e.target.value,
+                            })
+                          }
+                          className="block appearance-none w-full bg-inherit   border-b border-cyan-400 hover:border-cyan-400 
             px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-                    >
-                      <option value="">Select Speciality</option>
-                      <option value="Cardiologist">Cardiologist</option>
-                      <option value="Dentist">Dentist</option>
-                      <option value="Dermatologist">Dermatologist</option>
-                      <option value="Endocrinologist">Endocrinologist</option>
-                      <option value="Gastroenterologist">
-                        Gastroenterologist
-                      </option>
-                      <option value="Gynecologist">Gynecologist</option>
-                      <option value="Neurologist">Neurologist</option>
-                      <option value="Oncologist">Oncologist</option>
-                      <option value="Ophthalmologist">Ophthalmologist</option>
-                      <option value="Orthopedic">Orthopedic</option>
-                      <option value="Pediatrician">Pediatrician</option>
-                      <option value="Psychiatrist">Psychiatrist</option>
-                      <option value="Pulmonologist">Pulmonologist</option>
-                      <option value="Rheumatologist">Rheumatologist</option>
-                      <option value="Urologist">Urologist</option>
-                    </select>
-                  </div>
+                        >
+                          <option value="">Select Speciality</option>
+                          <option value="Cardiologist">Cardiologist</option>
+                          <option value="Dentist">Dentist</option>
+                          <option value="Dermatologist">Dermatologist</option>
+                          <option value="Endocrinologist">
+                            Endocrinologist
+                          </option>
+                          <option value="Gastroenterologist">
+                            Gastroenterologist
+                          </option>
+                          <option value="Gynecologist">Gynecologist</option>
+                          <option value="Neurologist">Neurologist</option>
+                          <option value="Oncologist">Oncologist</option>
+                          <option value="Ophthalmologist">
+                            Ophthalmologist
+                          </option>
+                          <option value="Orthopedic">Orthopedic</option>
+                          <option value="Pediatrician">Pediatrician</option>
+                          <option value="Psychiatrist">Psychiatrist</option>
+                          <option value="Pulmonologist">Pulmonologist</option>
+                          <option value="Rheumatologist">Rheumatologist</option>
+                          <option value="Urologist">Urologist</option>
+                        </select>
+                      </div>
 
-                  <div className="mb-4">
-                    <label
-                      className="block font-bold text-lg mb-2"
-                      htmlFor="experience"
-                    >
-                      experience
-                    </label>
-                    <input
-                      className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
-                      name="experience"
-                      id="experience"
-                      value={formData.experience}
-                      onChange={e =>
-                        setFormData({...formData, experience: e.target.value})
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-8  mb-4  mt-9">
-                  <div className="mb-5">
-                    <label
-                      className="block font-bold text-lg mb-2"
-                      htmlFor="address"
-                    >
-                      Hospital
-                    </label>
-                    <input
-                      className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
-                      type="text"
-                      name="address"
-                      id="address"
-                      value={formData.Hospital}
-                      onChange={e =>
-                        setFormData({...formData, Hospital: e.target.value})
-                      }
-                    />
-                  </div>
-                  <div className="mb-5">
-                    <label
-                      className="block font-bold text-lg  mb-2"
-                      htmlFor="degree"
-                    >
-                      Degree
-                    </label>
-                    <select
-                      style={{
-                        backgroundColor: dark ? "#000" : "white",
-                        color: dark ? "white" : "black",
-                      }}
-                      className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
-                      name="degree"
-                      id="degree"
-                      value={formData.degree}
-                      onChange={e =>
-                        setFormData({...formData, degree: e.target.value})
-                      }
-                    >
-                      <option value="MBBS">MBBS</option>
-                      <option value="MD">MD</option>
-                      <option value="MS">MS</option>
-                      <option value="MDS">MDS</option>
-                      <option value="MCh">MCh</option>
-                      <option value="DM">DM</option>
-                      <option value="DNB">DNB</option>
-                      <option value="BDS">BDS</option>
-                      <option value="BHMS">BHMS</option>
-                      <option value="BAMS">BAMS</option>
-                      <option value="BSc">BSc</option>
-                      <option value="BPT">BPT</option>
-                      <option value="BPharm">BPharm</option>
-                    </select>
-                  </div>
-                </div>
-                <div>
-                  <label className="block font-bold text-lg " htmlFor="address">
-                    HospitalAddress
-                  </label>
-                </div>
-                <div className="grid grid-cols-5 gap-8  mb-4  mt-9">
-                  <div>
-                    <label
-                      className="block font-bold text-lg mb-2"
-                      htmlFor="address"
-                    >
-                      Street
-                    </label>
-                    <input
-                      className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
-                      type="text"
-                      name="address"
-                      id="address"
-                      value={formData.HospitalAddress.city}
-                      onChange={e =>
-                        setFormData({
-                          ...formData,
-                          HospitalAddress: {
-                            ...formData.HospitalAddress,
-                            city: e.target.value,
-                          },
-                        })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <label
-                      className="block font-bold text-lg mb-2"
-                      htmlFor="address"
-                    >
-                      City
-                    </label>
+                      <div className="mb-4">
+                        <label
+                          className="block font-bold text-lg mb-2"
+                          htmlFor="experience"
+                        >
+                          experience
+                        </label>
+                        <input
+                          className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
+                          name="experience"
+                          id="experience"
+                          value={formData.experience}
+                          onChange={e =>
+                            setFormData({
+                              ...formData,
+                              experience: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-8  mb-4  mt-9">
+                      <div className="mb-5">
+                        <label
+                          className="block font-bold text-lg mb-2"
+                          htmlFor="address"
+                        >
+                          Hospital
+                        </label>
+                        <input
+                          className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
+                          type="text"
+                          name="address"
+                          id="address"
+                          value={formData.Hospital}
+                          onChange={e =>
+                            setFormData({...formData, Hospital: e.target.value})
+                          }
+                        />
+                      </div>
+                      <div className="mb-5">
+                        <label
+                          className="block font-bold text-lg  mb-2"
+                          htmlFor="degree"
+                        >
+                          Degree
+                        </label>
+                        <select
+                          style={{
+                            backgroundColor: dark ? "#000" : "white",
+                            color: dark ? "white" : "black",
+                          }}
+                          className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
+                          name="degree"
+                          id="degree"
+                          value={formData.degree}
+                          onChange={e =>
+                            setFormData({...formData, degree: e.target.value})
+                          }
+                        >
+                          <option value="MBBS">MBBS</option>
+                          <option value="MD">MD</option>
+                          <option value="MS">MS</option>
+                          <option value="MDS">MDS</option>
+                          <option value="MCh">MCh</option>
+                          <option value="DM">DM</option>
+                          <option value="DNB">DNB</option>
+                          <option value="BDS">BDS</option>
+                          <option value="BHMS">BHMS</option>
+                          <option value="BAMS">BAMS</option>
+                          <option value="BSc">BSc</option>
+                          <option value="BPT">BPT</option>
+                          <option value="BPharm">BPharm</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <label
+                        className="block font-bold text-lg "
+                        htmlFor="address"
+                      >
+                        HospitalAddress
+                      </label>
+                    </div>
+                    <div className="grid grid-cols-5 gap-8  mb-4  mt-9">
+                      <div>
+                        <label
+                          className="block font-bold text-lg mb-2"
+                          htmlFor="address"
+                        >
+                          Street
+                        </label>
+                        <input
+                          className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
+                          type="text"
+                          name="address"
+                          id="address"
+                          value={formData.HospitalAddress.city}
+                          onChange={e =>
+                            setFormData({
+                              ...formData,
+                              HospitalAddress: {
+                                ...formData.HospitalAddress,
+                                city: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label
+                          className="block font-bold text-lg mb-2"
+                          htmlFor="address"
+                        >
+                          City
+                        </label>
 
-                    <input
-                      className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
-                      type="text"
-                      name="address"
-                      id="address"
-                      value={formData.HospitalAddress.building}
-                      onChange={e =>
-                        setFormData({
-                          ...formData,
-                          HospitalAddress: {
-                            ...formData.HospitalAddress,
-                            building: e.target.value,
-                          },
-                        })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <label
-                      className="block font-bold text-lg mb-2"
-                      htmlFor="address"
-                    >
-                      Building
-                    </label>
-                    <input
-                      className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
-                      type="text"
-                      name="address"
-                      id="address"
-                      value={formData.HospitalAddress.state}
-                      onChange={e =>
-                        setFormData({
-                          ...formData,
-                          HospitalAddress: {
-                            ...formData.HospitalAddress,
-                            state: e.target.value,
-                          },
-                        })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <label
-                      className="block font-bold text-lg mb-2"
-                      htmlFor="address"
-                    >
-                      Country
-                    </label>
+                        <input
+                          className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
+                          type="text"
+                          name="address"
+                          id="address"
+                          value={formData.HospitalAddress.building}
+                          onChange={e =>
+                            setFormData({
+                              ...formData,
+                              HospitalAddress: {
+                                ...formData.HospitalAddress,
+                                building: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label
+                          className="block font-bold text-lg mb-2"
+                          htmlFor="address"
+                        >
+                          Building
+                        </label>
+                        <input
+                          className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
+                          type="text"
+                          name="address"
+                          id="address"
+                          value={formData.HospitalAddress.state}
+                          onChange={e =>
+                            setFormData({
+                              ...formData,
+                              HospitalAddress: {
+                                ...formData.HospitalAddress,
+                                state: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label
+                          className="block font-bold text-lg mb-2"
+                          htmlFor="address"
+                        >
+                          Country
+                        </label>
 
-                    <input
-                      className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
-                      type="text"
-                      name="address"
-                      id="address"
-                      value={formData.HospitalAddress.Country}
-                      onChange={e =>
-                        setFormData({
-                          ...formData,
-                          HospitalAddress: {
-                            ...formData.HospitalAddress,
-                            Country: e.target.value,
-                          },
-                        })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <label
-                      className="block font-bold text-lg mb-2"
-                      htmlFor="address"
-                    >
-                      ZipCode
-                    </label>
+                        <input
+                          className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
+                          type="text"
+                          name="address"
+                          id="address"
+                          value={formData.HospitalAddress.Country}
+                          onChange={e =>
+                            setFormData({
+                              ...formData,
+                              HospitalAddress: {
+                                ...formData.HospitalAddress,
+                                Country: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                      </div>
+                      <div>
+                        <label
+                          className="block font-bold text-lg mb-2"
+                          htmlFor="address"
+                        >
+                          ZipCode
+                        </label>
 
-                    <input
-                      className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
-                      type="number"
-                      name="ZipCode"
-                      id="ZipCode"
-                      value={formData.HospitalAddress.ZipCode}
-                      onChange={e =>
-                        setFormData({
-                          ...formData,
-                          HospitalAddress: {
-                            ...formData.HospitalAddress,
-                            ZipCode: e.target.value,
-                          },
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-              </form>
+                        <input
+                          className="appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none"
+                          type="number"
+                          name="ZipCode"
+                          id="ZipCode"
+                          value={formData.HospitalAddress.ZipCode}
+                          onChange={e =>
+                            setFormData({
+                              ...formData,
+                              HospitalAddress: {
+                                ...formData.HospitalAddress,
+                                ZipCode: e.target.value,
+                              },
+                            })
+                          }
+                        />
+                      </div>
+                    </div>
+                  </form>
+                )
+              }
+
               <div
                 className="flex
         justify-center
         items-center
+        space-x-4
         mt-10"
               >
                 <button
@@ -696,7 +780,7 @@ const RegisterDr = () => {
                   type="button"
                   onClick={handleSubmit}
                 >
-                  Update
+                  Submit
                 </button>
                 <div className="my-11"></div>
                 {loading ? <Loder /> : null}

@@ -1,14 +1,12 @@
 import React, {useState, useEffect} from "react";
 import axios from "axios";
 import {useLogIN} from "../../../ContextLog";
-import { RiDeleteBin5Line } from "react-icons/ri";
+import {RiDeleteBin5Line} from "react-icons/ri";
 import {FiEdit2, FiEye} from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import "../../../lodar.css"
+import {Link, useNavigate} from "react-router-dom";
+import {useLocation} from "react-router-dom";
+import "../../../lodar.css";
 import Loder from "../../tools/Loder";
-
-
 
 const DoctorList = () => {
   const {
@@ -34,9 +32,8 @@ const DoctorList = () => {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-
   useEffect(() => {
-        setLoading(true);
+    setLoading(true);
 
     axios
       .get("http://localhost:3000/admin/doctor", {
@@ -48,8 +45,6 @@ const DoctorList = () => {
       .then(res => {
         setDoctors(res.data);
         setLoading(false);
-        
-
       });
   }, []);
 
@@ -68,9 +63,8 @@ const DoctorList = () => {
           console.log(res.data);
           setDoctors(doctors.filter((doctor: any) => doctor._id !== id));
           setLoading(false);
-        
-
-        }).then(res => {
+        })
+        .then(res => {
           setLoading(false);
           setSuccess("Doctor deleted successfully");
           setTimeout(() => {
@@ -82,21 +76,9 @@ const DoctorList = () => {
           setTimeout(() => {
             setError("");
           }, 2000);
-        }
-      );
-      
-        
-     
+        });
     }
   };
-       
-
-
-
-
-
-
-
 
   return (
     <div
@@ -117,7 +99,7 @@ const DoctorList = () => {
               className=" shadow-md rounded my-6"
             >
               {loading ? (
-               < Loder/>
+                <Loder />
               ) : (
                 <table className="min-w-max w-full table-auto">
                   <thead>

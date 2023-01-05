@@ -80,24 +80,6 @@
   
 
 
-//   const validateForm = () => {
-//     // check if the required fields are empty
-//     if (
-//       !data.name.firstName ||
-//       !data.name.lastName ||
-//       !data.Hospital ||
-//       !data.HospitalAddress.city ||
-//       !data.phoneNumber ||
-//       !data.bloodGroup ||
-//       !data.degree ||
-//       !data.specialty ||
-//       !data.experience
-//     ) {
-//       alert("All fields are required");
-//       return false;
-//     }
-//     return true;
-//   };
 
 
 //   const handleSubmit = event => {
