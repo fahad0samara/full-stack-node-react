@@ -6,10 +6,16 @@ import Loder from "../tools/Loder";
 
 import React, {useEffect, useRef, useState} from "react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import "./SideNavigate.css"
+import { useNavigate } from "react-router-dom";
+import img1 from '../assets/1.png'
+import img2 from '../assets/2.png'
+import img3 from '../assets/3.png'
 const RegisterDr = () => {
   const Navigate = useNavigate();
   const [step, setStep] = useState(1);
+
+
   const [success, setsuccess] = useState(false);
 
   const {logPatient, Profile, setProfile, dark, setdark} = useLogIN();
@@ -40,6 +46,11 @@ const RegisterDr = () => {
     bloodGroup: "",
   });
   const [error, setError] = useState("");
+
+     const totalSteps = 2;
+                 const currentStep = 1;
+  const progress = (currentStep / totalSteps) * 100;
+
 
   // Proceed to next step
   const nextStep = () => {
@@ -185,127 +196,179 @@ const RegisterDr = () => {
           //font
           dark ? "font-bold" : "font-normal"
         }
-         h-screen flex flex-col justify-center items-center`}
+          grid grid-cols-3 card 
+          `}
         >
-          <div className="w-full max-w-xs">
-            <h1 className="text-2xl font-bold mb-4">Register</h1>
-            {
-              //error
-              error ? (
-                <div
-                  className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
-                  role="alert"
-                >
-                  <strong
-                    className="
+          <img
+            src={img1}
+            alt="Image"
+            className="object-cover bottom-5 
+            h-72 ml-32
+  
+
+              "
+          />
+
+          <div
+            className={`
+        ${
+          //font
+          dark ? "font-bold" : "font-normal"
+        }
+         h-screen flex flex-col justify-center items-center   `}
+          >
+            <div className="w-full   ">
+              <div className="text-center mb-6">
+                <h1 className="text-3xl font-bold">Register</h1>
+                <p className="text-sm text-gray-600">
+                  Please fill in this form to create an account.
+                </p>
+              </div>
+
+              {
+                //error
+                error ? (
+                  <div
+                    className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                    role="alert"
+                  >
+                    <strong
+                      className="
                   font-bold
                   
                   "
-                  >
-                    Error!
-                  </strong>
-                  <span className="block sm:inline">{error}</span>
-                </div>
-              ) : null
-            }
-       
-          </div>
+                    >
+                      Error!
+                    </strong>
+                    <span className="block sm:inline">{error}</span>
+                  </div>
+                ) : null
+              }
+            </div>
 
-          <form className=" mx-28 shadow-md rounded px-8 pt-6 pb-8 mb-4">
-            <div className="mb-4">
-              <label className="block  text-sm font-bold mb-2" htmlFor="email">
-                Email
-              </label>
-              <input
-                className={`appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none
+            <form
+              className="
+            w-full max-w-sm
+            mx-auto
+            mt-10
+            rounded-lg
+            shadow-xl
+            overflow-hidden
+            glass-object 
+           
+            
+
+      
+
+            "
+              onSubmit={handleSubmit}
+            >
+              <div className="mb-4">
+                <label
+                  className="block  text-sm font-bold mb-2"
+                  htmlFor="email"
+                >
+                  Email
+                </label>
+                <input
+                  className={`appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none
                 ${error ? "border-red-500 " : ""}
                 `}
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange("email")}
-                placeholder="Email"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label
-                className="block  text-sm font-bold mb-2"
-                htmlFor="password"
-              >
-                Password
-              </label>
-              <input
-                className={`appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange("email")}
+                  placeholder="Email"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label
+                  className="block  text-sm font-bold mb-2"
+                  htmlFor="password"
+                >
+                  Password
+                </label>
+                <input
+                  className={`appearance-none bg-transparent  border-b-2 border-cyan-400 w-full  mr-3 py-1 px-2 leading-tight focus:outline-none
                 ${error ? "border-red-500  " : ""}
                 `}
-                type="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange("password")}
-                placeholder="Password"
-                required
-              />
-            </div>
-            <div className="mb-4 flex">
-              <label
-                className="block  text-sm font-bold mb-2 mr-4"
-                htmlFor="role"
-              >
-                Role:
-              </label>
-              <label className="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  name="role"
-                  value="admin"
-                  checked={formData.role === "admin"}
-                  onChange={handleChange("role")}
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange("password")}
+                  placeholder="Password"
+                  required
                 />
-                <span className="ml-2">Admin</span>
-              </label>
+              </div>
+              <div className="mb-4 flex">
+                <label
+                  className="block  text-sm font-bold mb-2 mr-4"
+                  htmlFor="role"
+                >
+                  Role:
+                </label>
+                <label className="inline-flex items-center">
+                  <input
+                    type="checkbox"
+                    name="role"
+                    value="admin"
+                    checked={formData.role === "admin"}
+                    onChange={handleChange("role")}
+                  />
+                  <span className="ml-2">Admin</span>
+                </label>
 
-              <label className="inline-flex items-center ml-4">
-                <input
-                  type="checkbox"
-                  name="role"
-                  value="user"
-                  checked={formData.role === "user"}
-                  onChange={handleChange("role")}
-                />
-                <span className="ml-2">User</span>
-              </label>
-              <label className="inline-flex items-center ml-4">
-                <input
-                  type="checkbox"
-                  name="role"
-                  value="doctor"
-                  checked={formData.role === "doctor"}
-                  onChange={handleChange("role")}
-                />
-                <span className="ml-2">Dr</span>
-              </label>
-            </div>
-            <div className="flex items-center justify-between">
-              {formData.email && formData.password ? (
-                <button
-                  onClick={handleSubmit}
-                  className="bg-cyan-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="submit"
-                >
-                  Next
-                </button>
-              ) : (
-                <button
-                  className="bg-gray-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                  type="submit"
-                >
-                  Next
-                </button>
-              )}
-              {success && <p>{success}</p>}
-            </div>
-          </form>
+                <label className="inline-flex items-center ml-4">
+                  <input
+                    type="checkbox"
+                    name="role"
+                    value="user"
+                    checked={formData.role === "user"}
+                    onChange={handleChange("role")}
+                  />
+                  <span className="ml-2">User</span>
+                </label>
+                <label className="inline-flex items-center ml-4">
+                  <input
+                    type="checkbox"
+                    name="role"
+                    value="doctor"
+                    checked={formData.role === "doctor"}
+                    onChange={handleChange("role")}
+                  />
+                  <span className="ml-2">Dr</span>
+                </label>
+              </div>
+              <div className="flex items-center justify-between">
+                {formData.email && formData.password ? (
+                  <button
+                    onClick={handleSubmit}
+                    className="bg-cyan-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                  >
+                    Next
+                  </button>
+                ) : (
+                  <button
+                    className="bg-gray-400 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                  >
+                    Next
+                  </button>
+                )}
+                {success && <p>{success}</p>}
+              </div>
+            </form>
+          </div>
+          <img
+            src={img3}
+            alt="Image"
+            className="object-cover 
+            object-center h-72 w-72
+
+              "
+          />
         </div>
       );
     } else if (step === 2) {
@@ -345,7 +408,8 @@ const RegisterDr = () => {
                   </div>
                 ) : (
                   <form
-                    className="
+                        className="
+                      w-full max-w-sm
                 mx-28 shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-11
                 "
                   >
