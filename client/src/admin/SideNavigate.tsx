@@ -15,7 +15,7 @@ function SideNavigate() {
 
     Profile,
     setProfile,
-    loading,
+
     setLoading,
     dark,
     setdark,
@@ -86,9 +86,9 @@ function SideNavigate() {
             </li>
             <li>
               <NavLink
-                to="/admin/about"
+                to="/admin/RegisterDr"
                 activeClassName={
-                  location.pathname === "/admin/about" ? "active" : ""
+                  location.pathname === "/admin/RegisterDr" ? "active" : ""
                 }
               >
                 About
@@ -104,9 +104,7 @@ function SideNavigate() {
                 Doctor List
               </NavLink>
             </li>
-            <li>
-
-            </li>
+            <li></li>
           </ul>
         </nav>
       </div>

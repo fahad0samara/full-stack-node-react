@@ -1,7 +1,7 @@
 import {Routes, Route} from "react-router-dom";
 import SideNavigate from "./SideNavigate";
 
-import About from "./Register";
+import About from "./rgister_Edit/RegisterDr";
 import Dashboard from "./Dashboard";
 import DoctorList from "./List/DoctorList";
 import Edit from "./rgister_Edit/Edit";
@@ -22,7 +22,7 @@ const RouterPatient = () => {
 
       <Routes>
         <Route path="dashboard" element={<Dashboard />} />
-        <Route path="about" element={<About />} />
+        <Route path="RegisterDr" element={<RegisterDr />} />
 
         <Route path="doctorList" element={<DoctorList />} />
 
