@@ -5,11 +5,10 @@ import {RiDeleteBin5Line} from "react-icons/ri";
 import {FiEdit2, FiEye} from "react-icons/fi";
 import {Link, useNavigate} from "react-router-dom";
 import {useLocation} from "react-router-dom";
-
+import "../../../lodar.css";
 import Loder from "../../tools/Loder";
-import {Data, Doctor} from "../../types";
 
-const DoctorList = () => {
+const PatientList = () => {
   const {
     logPatient,
 
@@ -19,7 +18,7 @@ const DoctorList = () => {
     dark,
     setdark,
   } = useLogIN();
-  const [doctors, setDoctors] = useState<Doctor[]>([]);
+  const [patients, setpatients] = useState([]);
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -29,24 +28,25 @@ const DoctorList = () => {
     setLoading(true);
 
     axios
-      .get("http://localhost:3000/admin/doctor", {
+      .get("http://localhost:3000/admin/patient", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
       .then(res => {
-        setDoctors(res.data);
+        console.log(res.data);
+        setpatients(res.data);
         setLoading(false);
       });
   }, []);
 
-  // delet the doctor
-  const deleteDoctor = (id: any) => {
+  // delet the patients
+  const deletepatients = (id: any) => {
     setLoading(true);
-    if (window.confirm("Are you sure you want to delete this doctor?")) {
+    if (window.confirm("Are you sure you want to delete this patients?")) {
       axios
-        .delete(`http://localhost:3000/admin/doctor/${id}`, {
+        .delete(`http://localhost:3000/admin/patient/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -54,18 +54,18 @@ const DoctorList = () => {
         })
         .then(res => {
           console.log(res.data);
-          setDoctors(doctors.filter((doctor: any) => doctor._id !== id));
+          setpatients(patients.filter((patients: any) => patients._id !== id));
           setLoading(false);
         })
         .then(res => {
           setLoading(false);
-          setSuccess("Doctor deleted successfully");
+          setSuccess("patients deleted successfully");
           setTimeout(() => {
             setSuccess("");
           }, 2000);
         })
         .catch(err => {
-          setError("Error deleting doctor");
+          setError("Error deleting patients");
           setTimeout(() => {
             setError("");
           }, 2000);
@@ -81,39 +81,36 @@ const DoctorList = () => {
       }}
     >
       <div className="overflow-x-auto ">
-        <div className="min-w-screen mt-4 min-h-screen  flex  justify-center overflow-hidden">
-          <div
-            style={{
-              boxShadow: dark
-                ? "0px 0px 10px 0px rgb(103 232 249)  "
-                : "0px 0px 10px 0px #000",
-            }}
-            className=" shadow-md rounded min-w-screen mx-auto bg-violet-700 my-5"
-          >
-            {loading ? (
-              <Loder />
-            ) : (
-              <table
-                className=" w-full table-auto 
-                bg-violet-700 text-white"
-              >
-                <thead>
-                  <tr className=" uppercase text-sm leading-normal">
-                    <th className="py-3 px-6 text-left">name</th>
-                    <th className="py-3 px-6 text-center">email</th>
-                    <th className="py-3 px-6 text-center">joinDate</th>
-                    <th className="py-3 px-6 text-center">phoneNumber</th>
-                    <th className="py-3 px-6 text-center">Age</th>
-                    <th className="py-3 px-6 text-center">specialty</th>
-                    <th className="py-3 px-6 text-center">Actions</th>
-                  </tr>
-                </thead>
-                {doctors &&
-                  doctors.map(doctor => {
+        <div className="min-w-screen mt-4 min-h-screen flex  justify-center overflow-hidden">
+          <div className="w-full lg:w-5/6">
+            <div
+              style={{
+                boxShadow: dark
+                  ? "0px 0px 10px 0px rgb(103 232 249)  "
+                  : "0px 0px 10px 0px #000",
+              }}
+              className=" shadow-md rounded my-6"
+            >
+              {loading ? (
+                <Loder />
+              ) : (
+                <table className="min-w-max w-full table-auto">
+                  <thead>
+                    <tr className=" uppercase text-sm leading-normal">
+                      <th className="py-3 px-6 text-left">name</th>
+                      <th className="py-3 px-6 text-center">email</th>
+                      <th className="py-3 px-6 text-center">joinDate</th>
+                      <th className="py-3 px-6 text-center">phoneNumber</th>
+                      <th className="py-3 px-6 text-center">Age</th>
+                      <th className="py-3 px-6 text-center">specialty</th>
+                      <th className="py-3 px-6 text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  {patients.map(patients => {
                     return (
                       <tbody
-                        key={doctor._id}
-                        className=" text-sm font-extrabold "
+                        key={patients._id}
+                        className=" text-sm font-extrabold font-light"
                       >
                         <tr className="border-b border-gray-200 hover:bg-gray-100 hover:text-black">
                           <td className="py-3 px-6 text-left whitespace-nowrap">
@@ -149,22 +146,23 @@ const DoctorList = () => {
                                 </svg>
                               </div>
                               <span className="font-medium">
-                                {doctor.name.firstName} {doctor.name.lastName}
+                                {patients.name.firstName}{" "}
+                                {patients.name.LastName}
                               </span>
                             </div>
                           </td>
                           <td className="py-3 px-6 ">
                             <div className="flex items-center text-center">
                               <div className="mr-2"></div>
-                              <span>{doctor.user.email}</span>
+                              <span>{patients.user.email}</span>
                             </div>
                           </td>
-                          <td className="py-3ml-2 text-center">
+                          <td className="py-3 px-6 text-center">
                             <div className="flex items-center justify-center">
-                              <span className="ml-2">
+                              <span>
                                 {
                                   //createdAt
-                                  doctor.user.createdAt
+                                  patients.user.createdAt
                                     .toString()
                                     .substring(0, 10)
                                     .split("-")
@@ -176,13 +174,13 @@ const DoctorList = () => {
                           </td>
                           <td className="py-3 px-6 text-center">
                             <div className="flex items-center justify-center">
-                              <span>{doctor.phoneNumber}</span>
+                              <span>{patients.mobile}</span>
                             </div>
                           </td>
-                          <td className="py-3  text-center">
+                          <td className="py-3 px-6 text-center">
                             <div className="flex items-center justify-center">
                               <span>
-                                {doctor.date
+                                {patients.date
                                   .toString()
                                   .substring(0, 10)
                                   .split("-")
@@ -191,41 +189,41 @@ const DoctorList = () => {
                               </span>
                             </div>
                           </td>
-                          <td className="py-3 px-6 text-center">
+                          {/* <td class="py-3 px-6 text-center">
                             <span
                               className={`py-1 px-2 rounded-full text-white text-md  text-center border-b border-gray-100 hover:bg-black hover:text-white ${
-                                doctor.specialty === "Oncology"
+                                patients.specialty === "Oncology"
                                   ? "bg-green-400"
                                   : ""
                               } ${
-                                doctor.specialty === "Surgery"
+                                patients.specialty === "Surgery"
                                   ? "bg-rose-500"
                                   : ""
                               }
-                              ${
-                                doctor.specialty === "Cardiology"
-                                  ? "bg-red-600"
-                                  : ""
-                              }${
-                                doctor.specialty === "Neurology"
+                            ${
+                              patients.specialty === "Cardiology"
+                                ? "bg-red-600"
+                                : ""
+                            }${
+                                patients.specialty === "Neurology"
                                   ? "bg-purple-500"
                                   : ""
                               }
-                               ${
-                                 doctor.specialty === "Pediatrics"
-                                   ? "bg-yellow-500"
-                                   : ""
-                               }`}
+                             ${
+                               patients.specialty === "Pediatrics"
+                                 ? "bg-yellow-500"
+                                 : ""
+                             }`}
                             >
-                              {doctor.specialty}
+                              {patients.specialty}
                             </span>
-                          </td>
+                          </td> */}
 
                           <td className="py-3 px-6 text-center">
                             <div className="flex item-center justify-center">
                               <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
                                 <Link
-                                  to={`/admin/View/${doctor._id}`}
+                                  to={`/admin/View/${patients._id}`}
                                   className="w-4 mr-2 transform text-cyan-400 hover:text-cyan-400 hover:scale-150"
                                 >
                                   <FiEye />
@@ -233,7 +231,7 @@ const DoctorList = () => {
                               </div>
 
                               <Link
-                                to={`/admin/Edit/${doctor._id}`}
+                                to={`/admin/Edit/${patients._id}`}
                                 className="w-4 mr-2 transform text-cyan-400 hover:text-cyan-400 hover:scale-150"
                               >
                                 <FiEdit2 />
@@ -242,7 +240,7 @@ const DoctorList = () => {
                               <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
                                 <RiDeleteBin5Line
                                   onClick={() => {
-                                    deleteDoctor(doctor._id);
+                                    deletepatients(patients._id);
                                   }}
                                 />
                               </div>
@@ -252,8 +250,9 @@ const DoctorList = () => {
                       </tbody>
                     );
                   })}
-              </table>
-            )}
+                </table>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -261,4 +260,4 @@ const DoctorList = () => {
   );
 };
 
-export default DoctorList;
+export default PatientList;

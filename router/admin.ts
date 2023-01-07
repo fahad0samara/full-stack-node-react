@@ -88,8 +88,8 @@ router.delete("/doctor/:id", checkAdmin, (req, res) => {
 });
 
 // Get a list of all patients
-router.get("/patients", checkAdmin, (req, res) => {
-  Patient.find()
+router.get("/patient", checkAdmin, (req, res) => {
+  Patient.find().populate("user")
     .then(patients => res.json(patients))
     .catch(err => res.status(400).json(err));
 });
@@ -100,6 +100,49 @@ router.delete("/patient/:id", checkAdmin, (req, res) => {
     .then(patient => res.json(patient))
     .catch(err => res.status(400).json(err));
 });
+
+// Get a patient by id
+router.get("/patient/:id", checkAdmin, async (req, res) => {
+  try {
+    const patient = await Patient.findById(req.params.id).populate("user");
+    if (!patient) return res.status(404).send("Patient not found");
+    res.json(patient);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+// Update a patient's information
+router.put("/patient/:id", checkAdmin, async (req, res) => {
+  try {
+    const patient
+      = await
+        Patient.findByIdAndUpdate(req
+          .params
+          .
+          id
+          , req
+            .body
+          , { new: true });
+    if (!patient) return res.status(404).send("Patient not found"); 
+    res.json(patient);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+
+
+
+
+
+
+
+
+ 
+  
+
+
 
 router.post("/update", async (req, res) => {
   try {

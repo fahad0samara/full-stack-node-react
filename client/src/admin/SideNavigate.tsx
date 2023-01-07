@@ -91,7 +91,7 @@ function SideNavigate() {
                   location.pathname === "/admin/RegisterDr" ? "active" : ""
                 }
               >
-                About
+                Register Doctor
               </NavLink>
             </li>
             <li>
@@ -104,7 +104,16 @@ function SideNavigate() {
                 Doctor List
               </NavLink>
             </li>
-            <li></li>
+            <li>
+              <NavLink
+                to="/admin/patientList"
+                activeClassName={
+                  location.pathname === "/admin/patientList" ? "active" : ""
+                }
+              >
+                Patient List
+              </NavLink>
+            </li>
           </ul>
         </nav>
       </div>

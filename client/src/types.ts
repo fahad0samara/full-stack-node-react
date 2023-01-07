@@ -17,7 +17,42 @@ export interface HospitalAddress {
   Country: string;
 }
 
+export interface Doctor {
+  _id: string;
+  name: {
+    firstName: string;
+    middleName: string;
+    lastName: string;
+  };
+  user: {
+    email: string;
+    password: string;
+    createdAt: string;
+  };
+  phoneNumber: string;
+  Hospital: string;
+  HospitalAddress: {
+    city: string;
+    building: string;
+    state: string;
+    ZipCode: string;
+    Country: string;
+  };
+  specialty: string;
+  degree: string;
+  experience: string;
+  date: string;
+  bloodGroup: string;
+}
+
+
+
 export interface Data {
+  filter(arg0: (doctor: any) => boolean): import("react").SetStateAction<Data>;
+  map(arg0: (doctor: any) => JSX.Element): import("react").ReactNode;
+  length: number;
+
+
   name: Name;
   user: User;
   phoneNumber: string;
@@ -29,3 +64,7 @@ export interface Data {
   date: string;
   bloodGroup: string;
 }
+
+
+
+

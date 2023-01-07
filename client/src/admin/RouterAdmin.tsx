@@ -8,6 +8,8 @@ import Edit from "./rgister_Edit/Edit";
 import NotFound from "./NotFound";
 import View from "./View";
 import RegisterDr from "./rgister_Edit/RegisterDr";
+import PatientList from "./List/PatientList";
+
 
 
 
@@ -25,6 +27,7 @@ const RouterPatient = () => {
         <Route path="RegisterDr" element={<RegisterDr />} />
 
         <Route path="doctorList" element={<DoctorList />} />
+        <Route path="patientList" element={<PatientList />} />
 
         <Route path="*" element={<NotFound />} />
 
