@@ -44,7 +44,7 @@ const Login = () => {
         setLoading(false);
         setProfile(response.data.user);
         navigate("/admin/dashboard");
-      } else if (response.data.user.role === "Basic") {
+      } else if (response.data.user.role === "patient") {
         setlogPatient(true);
         setlogAdmin(false);
         setLoading(false);

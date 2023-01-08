@@ -13,6 +13,8 @@ const {
   adminValidation,
   loginAdminValidation,
   registerUserValidation,
+   registerValidation,
+  loginValidation,
 
   addPrescriptionsValidation,
 } = require("../middleware/validtion");
@@ -199,7 +201,8 @@ router.post("/register-user", async (req: any, res: any) => {
   }
 });
 
-router.post("/register", async (req, res) => {
+// Router for an administrator to register a new doctor:
+router.post("/register-dr", async (req, res) => {
   // validate the data before we make a doctor
   const {error} = doctorValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
@@ -236,6 +239,71 @@ router.post("/register", async (req, res) => {
     res.status(400).json({message: err.message});
   }
 });
+
+// Router for an administrator to register a new patient:
+router.post("/register-patient", async (req, res) => {
+  // validate the data before we make a patient
+  const { error } = registerValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  // check if the User is already in the database
+  const Userfind = await User.findById
+    (req.body.user);
+  if (!Userfind) return res.status(400).send("User not found");
+
+  // check if the User the role is patient
+  if (Userfind.role !== "patient") return res.status(400).send("User not patient");
+
+  // check if the patient is already in the database
+  const userExist = await Patient.findOne({
+    user: req.body.user,
+  });
+  if (userExist) return res.status(400).send("User already exists");
+      // create  healthID id for user start from 10
+    const healthID = await Patient.find().countDocuments();
+    const healthIDNumber = healthID + 10;
+
+
+    // hash passwords
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+  const patient = new Patient({
+    user: req.body.user,
+     prescriptions: req.body.prescriptions,
+      healthIDNumber: healthIDNumber,
+      name: req.body.name,
+      password: hashedPassword,
+      mobile: req.body.mobile,
+      email: req.body.email,
+      relation: req.body.relation,
+      address: req.body.address,
+      date: req.body.date,
+      medicationList: req.body.medicationList,
+      diseaseList: req.body.diseaseList,
+      allergyList: req.body.allergyList,
+      bloodGroup: req.body.bloodGroup,
+    contactPerson: req.body.contactPerson,
+ 
+  });
+  try {
+    const newPatient = await patient.save();
+    res.status(201).json(newPatient);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+
+
+
+
+  
+
+
+
+
+
 
 
 

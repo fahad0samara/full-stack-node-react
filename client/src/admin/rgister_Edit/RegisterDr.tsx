@@ -129,8 +129,8 @@ const RegisterDr = () => {
         if (role === "doctor") {
           Navigate("/admin/RegisterDr");
         }
-        if (role === "user") {
-          Navigate("/user");
+        if (role === "patient") {
+          Navigate("/admin/Rg_patient");
         }
         setLoading(false);
 
@@ -163,7 +163,7 @@ const RegisterDr = () => {
           setLoading(false);
         }
 
-        await axios.post("http://localhost:3000/admin/register", {
+        await axios.post("http://localhost:3000/admin/register-dr", {
           user,
           name: name,
           Hospital: Hospital,

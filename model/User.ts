@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
-   
     email: {
       type: String,
       required: true,
@@ -16,11 +15,9 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      default: "Basic",
+      default: "patient",
       required: true,
     },
-
-    
   },
 
   {
