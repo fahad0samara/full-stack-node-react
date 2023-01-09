@@ -44,7 +44,7 @@ const registerValidation = (data: any) => {
         city: Joi.string().min(3).required(),
         Street: Joi.string().min(3).required(),
         district: Joi.string().min(3).required(),
-        state: Joi.string().min(3).required(),
+        state: Joi.string().min(1).required(),
         ZipCode: Joi.number().min(1).max(999999).required(),
       },
     ],

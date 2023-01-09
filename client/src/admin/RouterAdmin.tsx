@@ -17,6 +17,7 @@ import PatientList from "./List/PatientList";
 
 
 
+
 const RouterPatient = () => {
   return (
     <div>
@@ -25,7 +26,7 @@ const RouterPatient = () => {
       <Routes>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="RegisterDr" element={<RegisterDr />} />
-        <Route path="rg_patient" element={<Rg_patient />} />
+ 
 
         <Route path="doctorList" element={<DoctorList />} />
         <Route path="patientList" element={<PatientList />} />

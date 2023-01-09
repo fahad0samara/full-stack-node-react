@@ -227,7 +227,10 @@ const RegisterDr = () => {
               <div className="text-center mb-6">
                 <h1 className="text-3xl font-bold text-black">Register</h1>
                 <p className="text-md font-bold  text-black">
-                  Please fill in this form to create an account.
+                  Please fill in this form to create an account!
+
+
+                
                 </p>
               </div>
 
@@ -321,16 +324,6 @@ const RegisterDr = () => {
                   <span className="ml-2">Admin</span>
                 </label>
 
-                <label className="inline-flex items-center ml-4">
-                  <input
-                    type="checkbox"
-                    name="role"
-                    value="user"
-                    checked={formData.role === "user"}
-                    onChange={handleChange("role")}
-                  />
-                  <span className="ml-2">User</span>
-                </label>
                 <label className="inline-flex items-center ml-4">
                   <input
                     type="checkbox"

@@ -108,7 +108,7 @@ function SideNavigate() {
               <NavLink
                 to="/admin/patientList"
                 activeClassName={
-                  location.pathname === "/admin/patientList" ? "active" : ""
+                  location.pathname === "/admin/patientList" ? "active" : ""  //  <---  This is the problem
                 }
               >
                 Patient List
