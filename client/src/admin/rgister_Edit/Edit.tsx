@@ -71,7 +71,7 @@ const Edit = () => {
       });
   }, [id]);
 
-  const navigating = useLocation().pathname === "/admin/doctor" ? true : false;
+
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

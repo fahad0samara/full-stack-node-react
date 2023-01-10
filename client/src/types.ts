@@ -7,6 +7,7 @@ export interface Name {
 export interface User {
   email: string;
   password: string;
+  createdAt: string;
 }
 
 export interface HospitalAddress {
@@ -19,25 +20,11 @@ export interface HospitalAddress {
 
 export interface Doctor {
   _id: string;
-  name: {
-    firstName: string;
-    middleName: string;
-    lastName: string;
-  };
-  user: {
-    email: string;
-    password: string;
-    createdAt: string;
-  };
+  name: Name;
+  user: User;
   phoneNumber: string;
   Hospital: string;
-  HospitalAddress: {
-    city: string;
-    building: string;
-    state: string;
-    ZipCode: string;
-    Country: string;
-  };
+  HospitalAddress: HospitalAddress;
   specialty: string;
   degree: string;
   experience: string;
@@ -45,6 +32,53 @@ export interface Doctor {
   bloodGroup: string;
 }
 
+export interface patient {
+  _id: string;
+  healthIDNumber: string;
+  name: {
+    firstName: string;
+    middleName: string;
+    LastName: string;
+  };
+  user: User;
+  mobile: number;
+  address: {
+    [x: string]: any;
+    building: string;
+    city: string;
+    street: string;
+    district: string;
+    state: string;
+    zipCode: number;
+  };
+  date: string;
+  bloodGroup: string;
+  Disease: {
+    disease: string;
+    yearRound: number;
+  };
+
+  Allergy: {
+    allergy: string;
+    yearRound: number;
+  };
+
+  Medication: {
+    medication: string;
+    yearRound: number;
+  };
+
+  ContactPerson: {
+    name: Name;
+    mobile: number;
+    email: string;
+    relation: string;
+    age: string;
+  };
+}
+
+
+  
 
 
 export interface Data {

@@ -11,9 +11,11 @@ import {useNavigate} from "react-router-dom";
 import img1 from "../assets/1.png";
 import img2 from "../assets/2.png";
 import img3 from "../assets/3.png";
+import e from "cors";
 const RegisterDr = () => {
   const Navigate = useNavigate();
   const [step, setStep] = useState(1);
+  const [role, setRole] = useState("");
 
   const [success, setsuccess] = useState(false);
 
@@ -27,7 +29,7 @@ const RegisterDr = () => {
     },
     email: "",
     password: "",
-    role: "",
+
     user: "",
     phoneNumber: "",
     Hospital: "",
@@ -84,7 +86,7 @@ const RegisterDr = () => {
       name,
       email,
       password,
-      role,
+    
       user,
       Hospital,
       HospitalAddress,
@@ -95,6 +97,7 @@ const RegisterDr = () => {
       specialty,
       experience,
     } = formData;
+
 
     if (step === 1) {
       setLoading(true);
@@ -228,9 +231,6 @@ const RegisterDr = () => {
                 <h1 className="text-3xl font-bold text-black">Register</h1>
                 <p className="text-md font-bold  text-black">
                   Please fill in this form to create an account!
-
-
-                
                 </p>
               </div>
 
@@ -318,20 +318,29 @@ const RegisterDr = () => {
                     type="checkbox"
                     name="role"
                     value="admin"
-                    checked={formData.role === "admin"}
-                    onChange={handleChange("role")}
+                    checked={
+                      role ==="role"
+
+                    }
+                    onChange={e => {
+
+                      setRole(e.target.value)
+                      console.log(e.target.value)
+ 
+                    } 
+                    }  
                   />
                   <span className="ml-2">Admin</span>
                 </label>
 
                 <label className="inline-flex items-center ml-4">
-                  <input
+                  {/* <input
                     type="checkbox"
                     name="role"
                     value="doctor"
                     checked={formData.role === "doctor"}
                     onChange={handleChange("role")}
-                  />
+                  /> */}
                   <span className="ml-2">Dr</span>
                 </label>
               </div>

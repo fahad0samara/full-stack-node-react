@@ -1,25 +1,24 @@
 import axios from "axios";
 import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
-import {useLogIN} from "../../ContextLog";
+import {useLogIN} from "../../../ContextLog";
 
 import {useLocation} from "react-router-dom";
-import {Data} from "../types";
-import Loder from "../tools/Loder";
-const View = () => {
+import {Doctor} from "../../types";
+import Loder from "../../tools/Loder";
+const ViewDr = () => {
   const {
     logPatient,
 
     Profile,
     setProfile,
- 
 
-   
     dark,
     setdark,
   } = useLogIN();
   const {id} = useParams();
-  const [data, setData] = React.useState<Data>({
+  const [data, setData] = React.useState<Doctor>({
+    _id: "",
     name: {
       firstName: "",
       middleName: "",
@@ -28,8 +27,8 @@ const View = () => {
     user: {
       email: "",
       password: "",
+      createdAt: "",
     },
-
     phoneNumber: "",
     Hospital: "",
     HospitalAddress: {
@@ -46,13 +45,11 @@ const View = () => {
     bloodGroup: "",
   });
 
-  const [error, setError] = React.useState(false);
-  const [Loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<boolean>(false);
+  const [Loading, setLoading] = React.useState<boolean>(true);
 
   useEffect(() => {
-
-    
-
+    setLoading(true);
     axios
       .get(`http://localhost:3000/admin/doctor/${id}`, {
         headers: {
@@ -64,13 +61,11 @@ const View = () => {
         console.log(res.data);
         setData(res.data);
         setLoading(false);
-     
       })
       .catch(err => {
         console.log(err);
         setError(true);
         setLoading(false);
-       
       });
   }, [id]);
 
@@ -91,18 +86,19 @@ const View = () => {
           <div className="p-16">
             <div
               style={{
-                backgroundColor: dark ? "#000" : "white",
-                color: dark ? "white" : "black",
                 boxShadow: dark
                   ? "0px 0px 10px 0px rgb(103 232 249)"
                   : "0px 0px 10px 0px rgb(103 232 249)",
               }}
-              className="p-8 shadow mt-24 "
+              className="p-8 shadow mt-14 "
             >
-              {" "}
-              <div className="grid grid-cols-1 md:grid-cols-3">
+              <div className={"grid grid-cols-1 md:grid-cols-3"}>
                 {" "}
-                <div className="grid grid-cols-3 text-center order-last md:order-first mt-20 md:mt-0">
+                <div
+                  className={
+                    "grid grid-cols-3 text-center order-last md:order-first mt-20 md:mt-0"
+                  }
+                >
                   {" "}
                   <div>
                     {" "}
@@ -173,12 +169,12 @@ const View = () => {
                 <div className="w-20 h-1 bg-cyan-400 mt-3 mx-auto"></div>
                 <div
                   className="
-                            grid
-                            grid-cols-1
-                            md:grid-cols-2
-                            gap-4
-                            mt-8
-                            md:mt-0"
+                          grid
+                          grid-cols-1
+                          md:grid-cols-2
+                          gap-4
+                          mt-8
+                          md:mt-0"
                 >
                   <div>
                     <p className="font-medium mt-8">Email:</p>
@@ -192,12 +188,12 @@ const View = () => {
 
                 <div
                   className="
-                            grid
-                            grid-cols-1
-                            md:grid-cols-2
-                            gap-4
-                            mt-8
-                            md:mt-0"
+                          grid
+                          grid-cols-1
+                          md:grid-cols-2
+                          gap-4
+                          mt-8
+                          md:mt-0"
                 >
                   <div>
                     <p className="font-medium mt-8">degree:</p>
@@ -215,7 +211,7 @@ const View = () => {
                 <button className="text-cyan-400 py-2 px-4  font-medium mt-4">
                   {" "}
                   Show more
-                </button>{" "}
+                </button>
               </div>
             </div>
           </div>
@@ -225,4 +221,4 @@ const View = () => {
   );
 };
 
-export default View;
+export default ViewDr;

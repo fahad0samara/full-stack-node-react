@@ -225,7 +225,7 @@ const DoctorList = () => {
                             <div className="flex item-center justify-center">
                               <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
                                 <Link
-                                  to={`/admin/View/${doctor._id}`}
+                                  to={`/admin/ViewDr/${doctor._id}`}
                                   className="w-4 mr-2 transform text-cyan-400 hover:text-cyan-400 hover:scale-150"
                                 >
                                   <FiEye />

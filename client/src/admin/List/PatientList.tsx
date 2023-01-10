@@ -8,6 +8,8 @@ import {useLocation} from "react-router-dom";
 import "../../../lodar.css";
 import Loder from "../../tools/Loder";
 
+import {patient} from "../../types";
+
 const PatientList = () => {
   const {
     logPatient,
@@ -18,7 +20,7 @@ const PatientList = () => {
     dark,
     setdark,
   } = useLogIN();
-  const [patients, setpatients] = useState([]);
+  const [patients, setpatients] = useState<patient[]>([]);
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -82,7 +84,7 @@ const PatientList = () => {
     >
       <div className="overflow-x-auto ">
         <div className="min-w-screen mt-4 min-h-screen flex  justify-center overflow-hidden">
-          <div className="w-full lg:w-5/6">
+          <div className={"w-full lg:w-5/6"}>
             <div
               style={{
                 boxShadow: dark
@@ -97,12 +99,13 @@ const PatientList = () => {
                 <table className="min-w-max w-full table-auto">
                   <thead>
                     <tr className=" uppercase text-sm leading-normal">
-                      <th className="py-3 px-6 text-left">name</th>
+                      <th className="py-3 px-6 text-left">healthIDNumber</th>
+                      <th className="py-3 px-6 ">name</th>
                       <th className="py-3 px-6 text-center">email</th>
                       <th className="py-3 px-6 text-center">joinDate</th>
                       <th className="py-3 px-6 text-center">phoneNumber</th>
                       <th className="py-3 px-6 text-center">Age</th>
-                      <th className="py-3 px-6 text-center">specialty</th>
+
                       <th className="py-3 px-6 text-center">Actions</th>
                     </tr>
                   </thead>
@@ -110,9 +113,18 @@ const PatientList = () => {
                     return (
                       <tbody
                         key={patients._id}
-                        className=" text-sm font-extrabold font-light"
+                        className={" text-sm font-light"}
                       >
-                        <tr className="border-b border-gray-200 hover:bg-gray-100 hover:text-black">
+                        <tr
+                          className={
+                            "border-b border-gray-200 hover:bg-gray-100 hover:text-black"
+                          }
+                        >
+                          <td className="py-3 px-8 text-left whitespace-nowrap">
+                            <span className="font-medium text-center ml-8">
+                              {patients.healthIDNumber}
+                            </span>
+                          </td>
                           <td className="py-3 px-6 text-left whitespace-nowrap">
                             <div className="flex items-center">
                               <div className="mr-2">
@@ -146,7 +158,7 @@ const PatientList = () => {
                                 </svg>
                               </div>
                               <span className="font-medium">
-                                {patients.name.firstName}{" "}
+                                {patients.name.firstName}
                                 {patients.name.LastName}
                               </span>
                             </div>
@@ -189,41 +201,16 @@ const PatientList = () => {
                               </span>
                             </div>
                           </td>
-                          {/* <td class="py-3 px-6 text-center">
-                            <span
-                              className={`py-1 px-2 rounded-full text-white text-md  text-center border-b border-gray-100 hover:bg-black hover:text-white ${
-                                patients.specialty === "Oncology"
-                                  ? "bg-green-400"
-                                  : ""
-                              } ${
-                                patients.specialty === "Surgery"
-                                  ? "bg-rose-500"
-                                  : ""
-                              }
-                            ${
-                              patients.specialty === "Cardiology"
-                                ? "bg-red-600"
-                                : ""
-                            }${
-                                patients.specialty === "Neurology"
-                                  ? "bg-purple-500"
-                                  : ""
-                              }
-                             ${
-                               patients.specialty === "Pediatrics"
-                                 ? "bg-yellow-500"
-                                 : ""
-                             }`}
-                            >
-                              {patients.specialty}
-                            </span>
-                          </td> */}
 
                           <td className="py-3 px-6 text-center">
-                            <div className="flex item-center justify-center">
-                              <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
+                            <div className="flex item-center justify-center mt-3 ">
+                              <div
+                                className={
+                                  "w-4 mr-2  transform hover:text-purple-500 hover:scale-110"
+                                }
+                              >
                                 <Link
-                                  to={`/admin/View/${patients._id}`}
+                                  to={`/admin/ViewPatient/${patients._id}`}
                                   className="w-4 mr-2 transform text-cyan-400 hover:text-cyan-400 hover:scale-150"
                                 >
                                   <FiEye />
@@ -232,12 +219,18 @@ const PatientList = () => {
 
                               <Link
                                 to={`/admin/Edit/${patients._id}`}
-                                className="w-4 mr-2 transform text-cyan-400 hover:text-cyan-400 hover:scale-150"
+                                className={
+                                  "w-4 mr-2 transform text-cyan-400 hover:text-cyan-400 hover:scale-150"
+                                }
                               >
                                 <FiEdit2 />
                               </Link>
 
-                              <div className="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
+                              <div
+                                className={
+                                  "w-4 mr-2 transform hover:text-purple-500 hover:scale-110"
+                                }
+                              >
                                 <RiDeleteBin5Line
                                   onClick={() => {
                                     deletepatients(patients._id);
