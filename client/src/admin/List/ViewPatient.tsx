@@ -17,54 +17,62 @@ const ViewPatient = () => {
     setdark,
   } = useLogIN();
   const {id} = useParams();
-const [data, setData] = React.useState<patient>({
-  _id: "",
-  healthIDNumber: "",
-  name: {
-    firstName: "",
-    middleName: "",
-    LastName: "",
-  },
-  user: {
-    email: "",
-    password: "",
-    createdAt: "",
-  },
-  mobile: 0,
-  address: {
-    building: "",
-    city: "",
-    street: "",
-    district: "",
-    state: "",
-    zipCode: 0,
-  },
-  date: "",
-  bloodGroup: "",
-  Disease: {
-    disease: "",
-    yearRound: 0,
-  },
-  Allergy: {
-    allergy: "",
-    yearRound: 0,
-  },
-  Medication: {
-    medication: "",
-    yearRound: 0,
-  },
-  ContactPerson: {
+  const [data, setData] = React.useState<patient>({
+    _id: "",
+    healthIDNumber: "",
     name: {
       firstName: "",
       middleName: "",
-      lastName: "",
+      LastName: "",
+    },
+    user: {
+      email: "",
+      password: "",
+      createdAt: "",
     },
     mobile: 0,
-    email: "",
-    relation: "",
-    age: "",
-  },
-});
+    address: {
+      building: "",
+      city: "",
+      street: "",
+      district: "",
+      state: "",
+      zipCode: 0,
+    },
+    date: "",
+    bloodGroup: "",
+    diseaseList: {
+      disease: "",
+      YearRound: 0,
+    },
+    allergyList: {
+      allergy: "",
+      yearRound: 0,
+    },
+    Medication: {
+      medication: "",
+      yearRound: 0,
+    },
+    contactPerson: {
+      name: {
+        firstName: "",
+        middleName: "",
+        LastName: "",
+      },
+      mobile: 0,
+      email: "",
+      relation: "",
+      age: "",
+      address: {
+        building: "",
+        city: "",
+        zipCode: 0,
+        street: "",
+        district: "",
+        state: "",
+      },
+    },
+  });
 
   const [error, setError] = React.useState<boolean>(false);
   const [Loading, setLoading] = React.useState<boolean>(true);
@@ -183,7 +191,7 @@ const [data, setData] = React.useState<patient>({
                   className=" mx-4  my-3  rounded-2xl  
                  p-4"
                 >
-                  <h1 className="font-bold text-xl leading-8 my-1">
+                  <h1 className="font-bold text-xl leading-8 my-1 text-cyan-400">
                     {data.name.firstName} {data.name.middleName}{" "}
                   </h1>
 
@@ -223,55 +231,51 @@ const [data, setData] = React.useState<patient>({
                   className=" p-8 my-3 col-span-2 rounded-2xl  
                   shadow-lg  "
                 >
-                  <div className="flex items-center space-x-2 font-semibold  leading-8">
-                    <span className=" text-2xl mb-5 ">About</span>
+                  <div className="flex items-center space-x-2 font-bold  leading-8">
+                    <span className=" text-2xl mb-5 text-cyan-400 ">About</span>
                   </div>
                   <div className="">
                     <div className="grid md:grid-cols-2 text-sm">
                       <div className="grid grid-cols-2">
-                        <div className="px-4 py-2 font-semibold">
-                          First Name
-                        </div>
+                        <div className="px-4 py-2 font-bold">First Name</div>
                         <div className="px-4 py-2">{data.name.firstName}</div>
                       </div>
                       <div className="grid grid-cols-2">
-                        <div className="px-4 py-2 font-semibold">Last Name</div>
+                        <div className="px-4 py-2 font-bold">Last Name</div>
                         <div className="px-4 py-2">{data.name.LastName}</div>
                       </div>
                       <div className="grid grid-cols-2 ">
-                        <div className="px-4 py-2 font-semibold">
+                        <div className="px-4 py-2 font-bold">
                           Health ID Number:
                         </div>
                         <div className="px-4 py-2">{data.healthIDNumber}</div>
                       </div>
                       <div className="grid grid-cols-2">
-                        <div className="px-4 py-2 font-semibold">Gender</div>
+                        <div className="px-4 py-2 font-bold">Gender</div>
                         <div className="px-4 py-2">Female</div>
                       </div>
                       <div className="grid grid-cols-2">
-                        <div className="px-4 py-2 font-semibold">
-                          Contact No.
-                        </div>
+                        <div className="px-4 py-2 font-bold">Contact No.</div>
                         <div className="px-4 py-2">{data.mobile}</div>
                       </div>
                       <div className="grid grid-cols-2">
-                        <div className="px-4 py-2 font-semibold">
+                        <div className="px-4 py-2 font-bold">
                           Current Address
                         </div>
                         <div className="px-4 py-2">{data.address.city}</div>
                       </div>
                       <div className="grid grid-cols-2">
-                        <div className="px-4 py-2 font-semibold">
+                        <div className="px-4 py-2 font-bold">
                           {data.address.district}
                         </div>
                         <div className="px-4 py-2">{data.address.state}</div>
                       </div>
                       <div className="grid grid-cols-2">
-                        <div className="px-4 py-2 font-semibold">Email.</div>
+                        <div className="px-4 py-2 font-bold">Email.</div>
                         <div className="mr-8 py-2">{data.user.email}</div>
                       </div>
                       <div className="grid grid-cols-2">
-                        <div className="px-4 py-2 font-semibold">Birthday</div>
+                        <div className="px-4 py-2 font-bold">Birthday</div>
                         <div className="px-4 py-2">
                           {data.date
                             .split("T")[0]
@@ -282,18 +286,157 @@ const [data, setData] = React.useState<patient>({
                       </div>
                     </div>
                   </div>
-                  <button className="block w-full text-cyan-300 text-sm font-semibold rounded-lg hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-gray-100 hover:shadow-xs p-3 my-4">
+                  <button className="block w-full text-cyan-300 text-sm font-bold rounded-lg hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-gray-100 hover:shadow-xs p-3 my-4">
                     Show Full Information
                   </button>
                 </div>
               </div>
+              <div className="  grid grid-cols-3 mt-2 ">
+                <div
+                  style={{
+                    boxShadow: dark
+                      ? "0px 0px 01px 0px #cccc "
+                      : "0px 0px 10px 0px  #ccc",
+                  }}
+                  className=" mx-4  my-3  rounded-2xl  
+                 p-4"
+                >
+                  <h1>
+                    <span className="text-2xl font-bold text-cyan-400 my-6">
+                      Emergency Contact
+                    </span>
+                  </h1>
+                  <div className=" grid grid-cols-2 ">
+                    <div className="px-4 py-2 font-bold">Name</div>
+                    <div className="px-4 py-2">
+                      {data.contactPerson.name.firstName}
+                      <span className="font-semibold ml-1">
+                        {data.contactPerson.name.LastName}
+                      </span>
+                    </div>
 
-            
-              <div className="mt-12 flex flex-col justify-center">
-                <button className="text-cyan-400 py-2 px-4  font-medium mt-4">
-                  {" "}
-                  Show more
-                </button>
+                    <div className="px-4 py-2 font-bold">Contact No.</div>
+                    <div className="px-4 py-2">{data.contactPerson.mobile}</div>
+                    <div className="px-4 py-2 font-bold">Email</div>
+                    <div className="px-4 py-2">{data.contactPerson.email}</div>
+
+                    <div className="px-4 py-2 font-bold">relation</div>
+                    <div className="px-4 py-2">
+                      {data.contactPerson.relation}
+                    </div>
+
+                    <div className="px-4 py-2 font-bold">age</div>
+                    <div className="px-4 py-2">
+                      {data.contactPerson.age
+                        .split("T")[0]
+                        .split("-")
+                        .reverse()
+                        .join("-")}
+                    </div>
+
+                    <div className="px-2 py-2 font-bold">Address</div>
+                    <div className=" py-2 font-semibold ">
+                      {data.contactPerson.address.city}
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={{
+                    boxShadow: dark
+                      ? "0px 0px 01px 0px #cccc "
+                      : "0px 0px 10px 0px  #ccc",
+                  }}
+                  className=" p-8 my-3 col-span-2 rounded-2xl  
+                  shadow-lg  "
+                >
+                  <div className="flex items-center space-x-2 font-bold  leading-8">
+                    <span className=" text-2xl mb-5 text-cyan-400 ">
+                      Medical History
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2">
+                    <div className="px-4 py-2 font-bold">Blood Group</div>
+                    <div className="px-4 py-2">{data.bloodGroup}</div>
+                  </div>
+
+                  <div className="grid grid-cols-3">
+                    <div className="px-4 py-2 font-bold">Allergies</div>
+                    <div className="px-4 py-2">
+                      {data.allergyList[0].allergy}
+                    </div>
+                    <div className="px-4 py-2 font-bold">
+                      <h1>YearRound</h1>
+                      <h2>{data.allergyList[0].YearRound}</h2>
+                    </div>
+                    <div></div>
+                  </div>
+                  <div className="grid grid-cols-2">
+                    <div className="px-4 py-2 font-bold">disease</div>
+                    <div className="px-4 py-2">
+                      {data.diseaseList[0].disease}
+                    </div>
+                  </div>
+
+                  <button className="block w-full text-cyan-300 text-sm font-bold rounded-lg hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-gray-100 hover:shadow-xs p-3 my-4">
+                    Show Full Information
+                  </button>
+                </div>
+              </div>
+              <div>
+                <div className="p-5 h-screen bg-gray-100">
+                  <h1 className="text-xl mb-2">Your orders</h1>
+
+                  <div className="overflow-auto rounded-lg shadow hidden md:block">
+                    <table className="w-full">
+                      <thead className="bg-gray-50 border-b-2 border-gray-200">
+                        <tr>
+                          <th className="w-20 p-3 text-sm font-semibold tracking-wide text-left">
+                            No.
+                          </th>
+                          <th className="p-3 text-sm font-semibold tracking-wide text-left">
+                            Details
+                          </th>
+                          <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
+                            Status
+                          </th>
+                          <th className="w-24 p-3 text-sm font-semibold tracking-wide text-left">
+                            Date
+                          </th>
+                          <th className="w-32 p-3 text-sm font-semibold tracking-wide text-left">
+                            Total
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100">
+                        <tr className="bg-white">
+                          <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                            <a
+                              href="#"
+                              className="font-bold text-blue-500 hover:underline"
+                            >
+                              10001
+                            </a>
+                          </td>
+                          <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                            Kring New Fit office chair, mesh + PU, black
+                          </td>
+                          <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                            <span className="p-1.5 text-xs font-medium uppercase tracking-wider text-green-800 bg-green-200 rounded-lg bg-opacity-50">
+                              Delivered
+                            </span>
+                          </td>
+                          <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                            16/10/2021
+                          </td>
+                          <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
+                            $200.00
+                          </td>
+                        </tr>
+                  
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

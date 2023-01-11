@@ -1,7 +1,7 @@
 export interface Name {
   firstName: string;
   middleName: string;
-  lastName: string;
+  LastName: string;
 }
 
 export interface User {
@@ -53,12 +53,12 @@ export interface patient {
   };
   date: string;
   bloodGroup: string;
-  Disease: {
+  diseaseList: {
     disease: string;
-    yearRound: number;
+    YearRound: number;
   };
 
-  Allergy: {
+  allergyList: {
     allergy: string;
     yearRound: number;
   };
@@ -68,12 +68,21 @@ export interface patient {
     yearRound: number;
   };
 
-  ContactPerson: {
+  contactPerson: {
     name: Name;
     mobile: number;
     email: string;
     relation: string;
     age: string;
+    address: {
+      [x: string]: any;
+      building: string;
+      city: string;
+      street: string;
+      district: string;
+      state: string;
+      zipCode: number;
+    };
   };
 }
 
