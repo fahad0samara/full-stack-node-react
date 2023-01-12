@@ -53,20 +53,22 @@ export interface patient {
   };
   date: string;
   bloodGroup: string;
+  weight: number;
+  height: number;
   diseaseList: {
     disease: string;
     YearRound: number;
-  };
+  }[],
 
   allergyList: {
+ 
     allergy: string;
     yearRound: number;
-  };
-
-  Medication: {
+  }[]
+  medicationList: {
     medication: string;
     yearRound: number;
-  };
+  }[];
 
   contactPerson: {
     name: Name;

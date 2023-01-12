@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
-import {useLogIN} from "../../../ContextLog";
+
 
 import {useLocation} from "react-router-dom";
 import {patient} from "../../types";
 import Loder from "../../tools/Loder";
+import { useLogIN } from "../../../ContextLog";
 const ViewPatient = () => {
   const {
     logPatient,
@@ -15,7 +16,7 @@ const ViewPatient = () => {
 
     dark,
     setdark,
-  } = useLogIN();
+  } = useLogIN()
   const {id} = useParams();
   const [data, setData] = React.useState<patient>({
     _id: "",
@@ -41,18 +42,22 @@ const ViewPatient = () => {
     },
     date: "",
     bloodGroup: "",
-    diseaseList: {
+    weight: 0,
+    height: 0,
+    diseaseList: [{
       disease: "",
       YearRound: 0,
-    },
-    allergyList: {
+    }],
+    allergyList: [{
       allergy: "",
       yearRound: 0,
-    },
-    Medication: {
-      medication: "",
-      yearRound: 0,
-    },
+    }],
+    medicationList: [
+      {
+        medication: "",
+        yearRound: 0,
+      },
+    ],
     contactPerson: {
       name: {
         firstName: "",
@@ -291,6 +296,7 @@ const ViewPatient = () => {
                   </button>
                 </div>
               </div>
+
               <div className="  grid grid-cols-3 mt-2 ">
                 <div
                   style={{
@@ -354,34 +360,79 @@ const ViewPatient = () => {
                       Medical History
                     </span>
                   </div>
-                  <div className="grid grid-cols-2">
-                    <div className="px-4 py-2 font-bold">Blood Group</div>
-                    <div className="px-4 py-2">{data.bloodGroup}</div>
-                  </div>
+                  <div className="grid grid-cols-5 gap-1">
+                    <div className="col-span-3 ">
+                      <div className="grid grid-cols-2">
+                        <div className="px-4 py-2 font-bold">Blood Group</div>
+                        <div className="px-4 py-2">{data.bloodGroup}</div>
+                        <div className="px-4 py-2 font-bold">Height</div>
+                        <div className="px-4 py-2">
+                          {data.height}
+                          <span className="font-semibold">cm</span>
+                        </div>
+                        <div className="px-4 py-2 font-bold">Weight</div>
+                        <div className="px-4 py-2">
+                          {data.weight}
+                          <span className="font-semibold">kg</span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-span-2 ">
+                      <div className="grid grid-cols-2">
+                        <div className="px-6 py-2 font-bold">Allergies:</div>
 
-                  <div className="grid grid-cols-3">
-                    <div className="px-4 py-2 font-bold">Allergies</div>
-                    <div className="px-4 py-2">
-                      {data.allergyList[0].allergy}
-                    </div>
-                    <div className="px-4 py-2 font-bold">
-                      <h1>YearRound</h1>
-                      <h2>{data.allergyList[0].YearRound}</h2>
-                    </div>
-                    <div></div>
-                  </div>
-                  <div className="grid grid-cols-2">
-                    <div className="px-4 py-2 font-bold">disease</div>
-                    <div className="px-4 py-2">
-                      {data.diseaseList[0].disease}
-                    </div>
-                  </div>
+                        {data.allergyList.length > 0 ? (
+                          <div className="mx-auto py-2">
+                            {data.allergyList.map(allergy => (
+                              <>
+                                <div
+                                  key={allergy.allergy}
+                                  className="px-2 py-1 m-1 text-center text-xs font-semibold text-white uppercase transition-all duration-150 ease-linear bg-red-500 rounded-full shadow outline-none focus:outline-none"
+                                >
+                                  {allergy.allergy}
+                                </div>
+                              </>
+                            ))}
+                          </div>
+                        ) : (
+                          <p>No Allergies Recorded</p>
+                        )}
 
-                  <button className="block w-full text-cyan-300 text-sm font-bold rounded-lg hover:bg-gray-100 focus:outline-none focus:shadow-outline focus:bg-gray-100 hover:shadow-xs p-3 my-4">
-                    Show Full Information
-                  </button>
+                        <div className="px-4 py-2 font-bold">Medications:</div>
+                        {data.medicationList.length > 0 ? (
+                          <div className="mx-auto py-2">
+                            {data.medicationList.map(medication => (
+                              <>
+                                <div className="px-2 py-1 m-1 text-center text-xs font-semibold text-white uppercase transition-all duration-150 ease-linear bg-red-500 rounded-full shadow outline-none focus:outline-none">
+                                  {medication.medication}
+                                </div>
+                              </>
+                            ))}
+                          </div>
+                        ) : (
+                          <p>No Allergies medication</p>
+                        )}
+
+                        <div className="px-4 py-2 font-bold">Diseases:</div>
+                        {data.diseaseList.length > 0 ? (
+                          <div className="mx-auto py-2">
+                            {data.diseaseList.map(disease => (
+                              <>
+                                <div className="px-2 py-1 m-1 text-center text-xs font-semibold text-white uppercase transition-all duration-150 ease-linear bg-red-500 rounded-full shadow outline-none focus:outline-none">
+                                  {disease.disease}
+                                </div>
+                              </>
+                            ))}
+                          </div>
+                        ) : (
+                          <p>No Allergies Recorded</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
+
               <div>
                 <div className="p-5 h-screen bg-gray-100">
                   <h1 className="text-xl mb-2">Your orders</h1>
@@ -432,7 +483,6 @@ const ViewPatient = () => {
                             $200.00
                           </td>
                         </tr>
-                  
                       </tbody>
                     </table>
                   </div>

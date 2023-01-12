@@ -9,6 +9,8 @@ const registerValidation = (data: any) => {
       middleName: Joi.string().min(1).required(),
       LastName: Joi.string().min(1).required(),
     }),
+    weight: Joi.number().min(1).max(999999).required(),
+    height: Joi.number().min(1).max(999999).required(),
 
     date: Joi.date().required(),
     user: Joi.required(),
@@ -163,8 +165,6 @@ const registerUserValidation = (data: any) => {
   const schema = Joi.object({
     email: Joi.string().min(5).required().email(),
     password: Joi.string().min(5).required(),
-
-
   });
   return schema.validate(data);
 };
@@ -177,11 +177,6 @@ const loginUserValidation = (data: any) => {
   });
   return schema.validate(data);
 };
-
-
-    
-
-    
 
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;

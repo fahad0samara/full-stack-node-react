@@ -10,7 +10,12 @@ const {
   loginValidation,
 } = require("../middleware/validtion");
 
-import {authAdmin, authPatient, isAdmin, isAuth} from "../middleware/jwtPatient";
+import {
+  authAdmin,
+  authPatient,
+  isAdmin,
+  isAuth,
+} from "../middleware/jwtPatient";
 import Patient from "../model/patient";
 
 // registerUser
@@ -34,10 +39,8 @@ router.post(
 
     // create a new user
     const user = new User({
-     
       email: req.body.email,
       password: hashedPassword,
-   
 
       role: req.body.role,
     });
@@ -226,7 +229,6 @@ router.get("/getUser/:id", async (req, res) => {
   }
 });
 
-
 router.get(
   "/profile",
   isAuth,
@@ -262,18 +264,11 @@ router.post("/patient", async (req, res) => {
     });
     if (patient2) return res.status(400).send("Patient is already exist");
 
-    // create  healthID id for user start from 10
-    const healthID = await Patient.find().countDocuments();
-    const healthIDNumber = healthID + 10;
-    // take the id from the user
-   
-
-
     //  update the user
     const patient = new Patient({
       user: req.body.user,
       mobile: req.body.mobile,
-      healthIDNumber: healthIDNumber,
+
       name: req.body.name,
       relation: req.body.relation,
       address: req.body.address,
@@ -283,14 +278,17 @@ router.post("/patient", async (req, res) => {
       allergyList: req.body.allergyList,
       bloodGroup: req.body.bloodGroup,
       contactPerson: req.body.contactPerson,
-    })
+    });
 
     const savedPatient = await (await patient.save()).populate("user");
-    // Create and assign a token 
-    const token = jwt.sign({ _id: patient._id }, process.env.JWT_SECRET as string);
-    res.header('auth-token', token)
+    // Create and assign a token
+    const token = jwt.sign(
+      {_id: patient._id},
+      process.env.JWT_SECRET as string
+    );
+    res.header("auth-token", token);
 
-
+    console.log(user);
 
     res.json({
       success: true,
@@ -299,8 +297,10 @@ router.post("/patient", async (req, res) => {
       token,
     });
   } catch (err) {
+    console.log(err);
+
     res.status(400).json({
-      message: (err as Error).message,
+      success: false,
       err,
     });
   }
@@ -314,8 +314,6 @@ router.get("/patient", async (req, res) => {
     res.json({message: (error as Error).message});
   }
 });
-
-
 
 router.get(
   "/userpatients",
@@ -341,12 +339,95 @@ router.get("/patient/:id", async (req, res) => {
     const patient = await Patient.findById(req.params.id).populate("user");
     res.json(patient);
   } catch (error) {
-    res.json({ message: (error as Error).message });
+    res.json({message: (error as Error).message});
   }
 });
 
+router.post("/register-user", async (req: any, res: any) => {
+  // Check if the user is an admin
 
+  // check if the user is already in the database
+  const emailFind = await User.findOne({
+    email: req.body.email,
+  });
+  if (emailFind) return res.status(400).send("Email already exists");
 
+  // destructure the request body
+  const {email, password, role} = req.body;
 
+  // hash the password
+  const salt = bcrypt.genSaltSync(10);
+  const hashPassword = bcrypt.hashSync(password, salt);
+
+  // create a new user with the specified role
+  try {
+    const user = new User({
+      email,
+      password: hashPassword,
+      role,
+    });
+    await user.save();
+    res.json({
+      success: true,
+      message: "User created successfully",
+      user,
+    });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+router.post("/register-patient", async (req, res) => {
+  // validate the data before we make a patient
+  const {error} = registerValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  // check if the User is already in the database
+  const Userfind = await User.findById(req.body.user);
+  if (!Userfind) return res.status(400).send("User not found");
+
+  // check if the User the role is patient
+  if (Userfind.role !== "patient")
+    return res.status(400).send("User not patient");
+
+  // check if the patient is already in the database
+  const userExist = await Patient.findOne({
+    user: req.body.user,
+  });
+  if (userExist) return res.status(400).send("User already exists");
+  // create  healthID id for user start from 10
+  const healthIDNumber = await Patient.countDocuments() + 10;
+  // create a new patient
+
+  try {
+    const patient = new Patient({
+      user: req.body.user,
+      prescriptions: req.body.prescriptions,
+      healthIDNumber: healthIDNumber,
+      name: req.body.name,
+      mobile: req.body.mobile,
+      email: req.body.email,
+      relation: req.body.relation,
+      address: req.body.address,
+      date: req.body.date,
+      medicationList: req.body.medicationList,
+      diseaseList: req.body.diseaseList,
+      allergyList: req.body.allergyList,
+      bloodGroup: req.body.bloodGroup,
+      contactPerson: req.body.contactPerson,
+      weight: req.body.weight,
+      height: req.body.height,
+    });
+
+    const newPatient = await patient.save();
+    res.status(201).json({
+      success: true,
+      message: "Patient created successfully",
+      newPatient,
+    });
+  } catch (err) {
+    res.status(400).json({message: err.message});
+  }
+});
 
 export default router;

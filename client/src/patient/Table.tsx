@@ -1,7 +1,8 @@
-import {useLogIN} from "../../hooks/ContextLog";
+import { useLogIN } from "../../ContextLog";
+
 
 const Table = () => {
-  const {log, setLog, Profile, setProfile, loading, setLoading, dark} =
+  const { Profile, setProfile,  setLoading, dark} =
     useLogIN();
   const convertDate = (date: any) => {
     const newDate = new Date(date);
