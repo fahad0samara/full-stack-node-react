@@ -6,7 +6,7 @@ dotenv.config();
 
 import cors from 'cors';
 import patientRouter from './router/registerPatient';
-import prescriptionRouter from './router/prescription';
+
 import doctorRouter from './router/doctor';
 import adminRouter from "./router/admin";
 import user from "./router/user";
@@ -26,7 +26,6 @@ app.use('/appo', Appointment);
 
 app.use('/auth', patientRouter);
 
-app.use('/Prescriptions', prescriptionRouter);
 
 // doctor
 app.use('/doctor', doctorRouter);
