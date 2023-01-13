@@ -7,6 +7,7 @@ import Patient from "../model/patient";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../model/User";
+import Prescription from "../model/prescription";
 
 const {
   doctorValidation,
@@ -106,9 +107,24 @@ router.delete("/patient/:id", checkAdmin, (req, res) => {
 // Get a patient by id
 router.get("/patient/:id", checkAdmin, async (req, res) => {
   try {
-    const patient = await Patient.findById(req.params.id).populate("user");
+    const patient = await Patient.findById(req.params.id)
+      .populate("user")
+  
     if (!patient) return res.status(404).send("Patient not found");
     res.json(patient);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+router.get("/patient/:id/prescriptions", checkAdmin, async (req, res) => {
+  try {
+    const prescriptions = await Prescription.find({patient: req.params.id})
+      .populate("patient")
+      .populate("doctor");
+    if (!prescriptions)
+      return res.status(404).send("Prescriptions not found for this patient.");
+    res.json(prescriptions);
   } catch (error) {
     res.status(500).send(error.message);
   }

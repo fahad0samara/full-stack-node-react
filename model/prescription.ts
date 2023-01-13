@@ -83,46 +83,51 @@
 
 const prescriptionSchema = new mongoose.Schema(
   {
-    patient: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Patient",
-      required: true,
+      doctor: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Doctor',
+        required: true
     },
-    doctor: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Doctor",
-      required: true,
+    patient: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Patient',
+        required: true
     },
     medication: {
-      name: {
-        type: String,
-        required: true,
-      },
-      dosage: {
-        type: String,
-        required: true,
-      },
-      frequency: {
-        type: String,
-        required: true,
-      },
-      duration: {
-        type: String,
-        required: true,
-      },
+      type: String,
+      required: true,
+    },
+    dosage: {
+      type: String,
+      required: true,
+    },
+    frequency: {
+      type: String,
+      required: true,
+    },
+    duration: {
+      type: Number,
+      required: true,
+    },
+    date: {
+      type: Date,
+      required: true,
     },
     notes: {
       type: String,
     },
-    date: {
-      type: Date,
-      default: Date.now(),
+    refills: {
+      type: Number,
+      required: true,
     },
   },
-  {
-    timestamps: true,
-  }
+  {timestamps: true}
 );
+
+
+
+
+
 
 const Prescription = mongoose.model("Prescription", prescriptionSchema);
 

@@ -10,6 +10,7 @@ import Patient from "../model/patient";
 import Prescription from "../model/prescription";
 
 
+
 const {
   doctorValidation,
   loginDoctorValidation,
@@ -17,37 +18,101 @@ const {
 } = require("../middleware/validtion");
 
 
-router.post("/newPrescription", (req, res) => {
-  // Find the patient and doctor associated with the prescription
-  Patient.findById(req.body.patient)
-    .then(patient => {
-      if (!patient) {
-        return res.status(404).json({message: "Patient not found"});
-      }
-      Doctor.findById(req.body.doctor)
-        .then(doctor => {
-          if (!doctor) {
-            return res.status(404).json({message: "Doctor not found"});
-          }
-          // Create a new prescription
-          const newPrescription = new Prescription({
+router.post("/Prescription", async (req, res) => {
+  // validate the data before we make a doctor
+  // const {error} = addPrescriptionsValidation(req.body);
+  // if (error) return res.status(400).send(error.details[0].message);
+    const patient = await Patient.findById(req.body.patient);
+        if(!patient) return res.status(404).send("Patient not found");
+
+        const doctor = await Doctor.findById(req.body.doctor);
+        if(!doctor) return res.status(404).send("Doctor not found");
+try{
+        const prescription = new Prescription({
             patient: req.body.patient,
             doctor: req.body.doctor,
             medication: req.body.medication,
             dosage: req.body.dosage,
-            duration: req.body.duration,
             frequency: req.body.frequency,
-          });
-          // Save the prescription to the database
-          newPrescription
-            .save()
-            .then(prescription => res.json(prescription))
-            .catch(err => res.json(err));
-        })
-        .catch(err => res.json(err));
-    })
-    .catch(err => res.json(err));
+            duration: req.body.duration,
+            date: req.body.date,
+            notes: req.body.notes,
+            refills: req.body.refills
+        });
+
+        const result = await prescription.save();
+        res.status(201).send(result);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
 });
+
+router.get("/prescription", async (req, res) => {
+  try {
+    // Find all prescriptions and populate the doctor and patient fields
+    const prescriptions = await Prescription.find()
+      .populate("patient")
+      .populate("doctor")
+      .exec();
+
+    // Map over the prescriptions and return a new array with the desired properties
+      res.json(
+        prescriptions.map(prescription => {
+          return {
+            _id: prescription._id,
+            //@ts-ignore
+            doctor: `${prescription.doctor.name.firstName} ${prescription.doctor.name.lastName}`,
+            //@ts-ignore
+            patient: ` ${prescription.patient.name.firstName} ${prescription.patient.name.lastName}`,
+            medication: prescription.medication,
+            notes: prescription.notes,
+            date: prescription.date,
+          
+          };
+        })
+      );
+  } catch (error) {
+    // If there is an error, send a response with a status of 500 and the error message
+    res.status(500).json({message: error.message});
+  }
+});
+
+// get the id 
+router.get("/prescription/:id", async (req, res) => {
+  try {
+    // Find the prescription by id and populate the doctor and patient fields
+    const prescription = await Prescription.findById(req.params.id)
+      .populate("patient")
+
+      .populate("doctor")
+      .exec();
+
+    // If the prescription is not found, send a response with a status of 404 and a message
+    if (!prescription) {
+      return res.status(404).json({ message: "Prescription not found" });
+    }
+
+    // If the prescription is found, send a response with a status of 200 and the prescription
+    res.status(200).json({
+      message: "Prescription retrieved successfully",
+      data: prescription,
+    });
+
+  } catch (error) {
+    // If there is an error, send a response with a status of 500 and the error message
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+
+
+
+
+
+
+
+
 
 router.get("/prescription/:id", (req, res) => {
   Prescription.findById(req.params.id)
@@ -82,25 +147,25 @@ router.get("/prescription/:id", (req, res) => {
 );
   
 
-router.get("/", async (req, res) => {
-  try {
-    const prescriptions = await Prescription.find().populate("doctor");
-    res.json(
-      prescriptions.map(prescription => {
-        return {
-          _id: prescription._id,
-          patient: prescription.patient,
-          medication: prescription.medication,
-          notes: prescription.notes,
-          date: prescription.date,
-          doctor: `${prescription.doctor.name.firstName} ${prescription.doctor.name.lastName}`,
-        };
-      })
-    );
-  } catch (error) {
-    res.status(500).json({message: error.message});
-  }
-});
+// router.get("/", async (req, res) => {
+//   try {
+//     const prescriptions = await Prescription.find().populate("doctor");
+//     res.json(
+//       prescriptions.map(prescription => {
+//         return {
+//           _id: prescription._id,
+//           patient: prescription.patient,
+//           medication: prescription.medication,
+//           notes: prescription.notes,
+//           date: prescription.date,
+//           doctor: `${prescription.doctor.name.firstName} ${prescription.doctor.name.lastName}`,
+//         };
+//       })
+//     );
+//   } catch (error) {
+//     res.status(500).json({message: error.message});
+//   }
+// });
 
 
 
