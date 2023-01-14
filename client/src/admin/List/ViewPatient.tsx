@@ -1,14 +1,14 @@
 import axios from "axios";
 import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
-
+import {useTable, usePagination} from "react-table";
 
 import {useLocation} from "react-router-dom";
 import {patient} from "../../types";
 import Loder from "../../tools/Loder";
-import { useLogIN } from "../../../ContextLog";
-import PatientPrescriptions from "./PatientPrescriptions";
-const ViewPatient = () => {
+import {useLogIN} from "../../../ContextLog";
+
+const ViewPatient = ({patientId}) => {
   const {
     logPatient,
 
@@ -17,9 +17,9 @@ const ViewPatient = () => {
 
     dark,
     setdark,
-  } = useLogIN()
+  } = useLogIN();
   const {id} = useParams();
-  const [data, setData] = React.useState<patient>({
+  const [patient, setpatient] = React.useState<patient>({
     _id: "",
     healthIDNumber: "",
     name: {
@@ -45,14 +45,18 @@ const ViewPatient = () => {
     bloodGroup: "",
     weight: 0,
     height: 0,
-    diseaseList: [{
-      disease: "",
-      YearRound: 0,
-    }],
-    allergyList: [{
-      allergy: "",
-      yearRound: 0,
-    }],
+    diseaseList: [
+      {
+        disease: "",
+        YearRound: 0,
+      },
+    ],
+    allergyList: [
+      {
+        allergy: "",
+        yearRound: 0,
+      },
+    ],
     medicationList: [
       {
         medication: "",
@@ -82,6 +86,7 @@ const ViewPatient = () => {
 
   const [error, setError] = React.useState<boolean>(false);
   const [Loading, setLoading] = React.useState<boolean>(true);
+  const [prescriptions, setPrescriptions] = React.useState<any>([]);
 
   useEffect(() => {
     setLoading(true);
@@ -94,8 +99,26 @@ const ViewPatient = () => {
       })
       .then(res => {
         console.log(res.data);
-        setData(res.data);
+        setpatient(res.data);
         setLoading(false);
+
+        // make the second API call to retrieve the prescriptions
+        axios
+          .get(`http://localhost:3000/admin/patient/${id}/prescriptions`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          })
+          .then(res => {
+            console.log(res.data);
+            setPrescriptions(res.data);
+            setLoading(false);
+          })
+          .catch(err => {
+            setError(true);
+            setLoading(false);
+          });
       })
       .catch(err => {
         console.log(err);
@@ -103,25 +126,156 @@ const ViewPatient = () => {
         setLoading(false);
       });
   }, [id]);
-  const [prescriptions, setPrescriptions] = React.useState([]);
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:3000/admin/patient/${id}/prescriptions`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+
+
+const downloadPrescription = async (id: string) => {
+  try {
+    const response = await fetch(
+      `http://localhost:3000/download-prescription/${id}`
+    );
+    const pdfData = await response.arrayBuffer();
+    const pdfBlob = new Blob([pdfData], {type: "application/pdf"});
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+    // Open the PDF in a new tab
+    window.open(pdfUrl);
+  } catch (error) {
+    console.log(error);
+  }
+  };
+  
+  const handleDownload = (id: string) => {
+    downloadPrescription(id);
+  };
+
+  
+
+ 
+
+
+
+
+  
+  
+  
+  
+
+
+
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   axios
+  //     .get(`http://localhost:3000/admin/patient/${id}`, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //       },
+  //     })
+  //     .then(res => {
+  //       console.log(res.data);
+  //       setpatient(res.data);
+  //       setLoading(false);
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //       setError(true);
+  //       setLoading(false);
+  //     });
+  // }, [id]);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:3000/admin/patient/${id}/prescriptions`, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //       },
+  //     })
+  //     .then(res => {
+  //       console.log(res.data);
+  //       setPrescriptions(res.data);
+  //       setLoading(false);
+  //     })
+  //     .catch(err => {
+  //       setError(true);
+  //       setLoading(false);
+  //     });
+  // }, [id]);
+
+  //   .toString() .substring(0, 10)
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  const columns = React.useMemo(
+    () => [
+      {
+        Header: "Doctor Name",
+        accessor: "doctor",
+      },
+      {
+        Header: "Date",
+
+        accessor: "date",
+        Cell: ({value}) => {
+          const date = new Date(value);
+          return date.toLocaleDateString("en-US", {
+            month: "2-digit",
+            day: "2-digit",
+            year: "numeric",
+          });
         },
-      })
-      .then(res => {
-        setPrescriptions(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }, [id]);
+      },
+      {
+        Header: "Dosage",
+        accessor: "dosage",
+      },
+      {
+        Header: "Duration",
+        accessor: "duration",
+      },
+      {
+        Header: "Instruction",
+        accessor: "frequency",
+      },
+      {
+        Header: "Medication",
+        accessor: "medication",
+      },
+      {
+        Header: "Notes",
+        accessor: "notes",
+      },
+      {
+        Header: "Refills",
+        accessor: "refills",
+      },
+      {
+        Header: "Download",
+        accessor: "download",
+      }
+
+    
+
+    ],
+    []
+  );
 
 
+
+    const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} =
+      useTable({columns, data: prescriptions}, usePagination);
 
   return (
     <>
@@ -141,6 +295,8 @@ const ViewPatient = () => {
           <div className="p-16 ">
             <div
               style={{
+                backgroundColor: dark ? "#000" : "white",
+                color: dark ? "white" : "black",
                 boxShadow: dark
                   ? "0px 0px 10px 0px rgb(103 232 249)"
                   : "0px 0px 10px 0px rgb(103 232 249)",
@@ -217,7 +373,7 @@ const ViewPatient = () => {
                  p-4"
                 >
                   <h1 className="font-bold text-xl leading-8 my-1 text-cyan-400">
-                    {data.name.firstName} {data.name.middleName}{" "}
+                    {patient.name.firstName} {patient.name.middleName}{" "}
                   </h1>
 
                   <p className="text-sm  hover: leading-6">
@@ -238,7 +394,7 @@ const ViewPatient = () => {
                     <li className="flex items-center py-3">
                       <span>Member since</span>
                       <span className="ml-auto">
-                        {data.user.createdAt
+                        {patient.user.createdAt
                           .split("T")[0]
                           .split("-")
                           .reverse()
@@ -263,17 +419,21 @@ const ViewPatient = () => {
                     <div className="grid md:grid-cols-2 text-sm">
                       <div className="grid grid-cols-2">
                         <div className="px-4 py-2 font-bold">First Name</div>
-                        <div className="px-4 py-2">{data.name.firstName}</div>
+                        <div className="px-4 py-2">
+                          {patient.name.firstName}
+                        </div>
                       </div>
                       <div className="grid grid-cols-2">
                         <div className="px-4 py-2 font-bold">Last Name</div>
-                        <div className="px-4 py-2">{data.name.LastName}</div>
+                        <div className="px-4 py-2">{patient.name.LastName}</div>
                       </div>
                       <div className="grid grid-cols-2 ">
                         <div className="px-4 py-2 font-bold">
                           Health ID Number:
                         </div>
-                        <div className="px-4 py-2">{data.healthIDNumber}</div>
+                        <div className="px-4 py-2">
+                          {patient.healthIDNumber}
+                        </div>
                       </div>
                       <div className="grid grid-cols-2">
                         <div className="px-4 py-2 font-bold">Gender</div>
@@ -281,28 +441,28 @@ const ViewPatient = () => {
                       </div>
                       <div className="grid grid-cols-2">
                         <div className="px-4 py-2 font-bold">Contact No.</div>
-                        <div className="px-4 py-2">{data.mobile}</div>
+                        <div className="px-4 py-2">{patient.mobile}</div>
                       </div>
                       <div className="grid grid-cols-2">
                         <div className="px-4 py-2 font-bold">
                           Current Address
                         </div>
-                        <div className="px-4 py-2">{data.address.city}</div>
+                        <div className="px-4 py-2">{patient.address.city}</div>
                       </div>
                       <div className="grid grid-cols-2">
                         <div className="px-4 py-2 font-bold">
-                          {data.address.district}
+                          {patient.address.district}
                         </div>
-                        <div className="px-4 py-2">{data.address.state}</div>
+                        <div className="px-4 py-2">{patient.address.state}</div>
                       </div>
                       <div className="grid grid-cols-2">
                         <div className="px-4 py-2 font-bold">Email.</div>
-                        <div className="mr-8 py-2">{data.user.email}</div>
+                        <div className="mr-8 py-2">{patient.user.email}</div>
                       </div>
                       <div className="grid grid-cols-2">
                         <div className="px-4 py-2 font-bold">Birthday</div>
                         <div className="px-4 py-2">
-                          {data.date
+                          {patient.date
                             .split("T")[0]
                             .split("-")
                             .reverse()
@@ -316,7 +476,6 @@ const ViewPatient = () => {
                   </button>
                 </div>
               </div>
-
               <div className="  grid grid-cols-3 mt-2 ">
                 <div
                   style={{
@@ -335,25 +494,29 @@ const ViewPatient = () => {
                   <div className=" grid grid-cols-2 ">
                     <div className="px-4 py-2 font-bold">Name</div>
                     <div className="px-4 py-2">
-                      {data.contactPerson.name.firstName}
+                      {patient.contactPerson.name.firstName}
                       <span className="font-semibold ml-1">
-                        {data.contactPerson.name.LastName}
+                        {patient.contactPerson.name.LastName}
                       </span>
                     </div>
 
                     <div className="px-4 py-2 font-bold">Contact No.</div>
-                    <div className="px-4 py-2">{data.contactPerson.mobile}</div>
+                    <div className="px-4 py-2">
+                      {patient.contactPerson.mobile}
+                    </div>
                     <div className="px-4 py-2 font-bold">Email</div>
-                    <div className="px-4 py-2">{data.contactPerson.email}</div>
+                    <div className="px-4 py-2">
+                      {patient.contactPerson.email}
+                    </div>
 
                     <div className="px-4 py-2 font-bold">relation</div>
                     <div className="px-4 py-2">
-                      {data.contactPerson.relation}
+                      {patient.contactPerson.relation}
                     </div>
 
                     <div className="px-4 py-2 font-bold">age</div>
                     <div className="px-4 py-2">
-                      {data.contactPerson.age
+                      {patient.contactPerson.age
                         .split("T")[0]
                         .split("-")
                         .reverse()
@@ -362,7 +525,7 @@ const ViewPatient = () => {
 
                     <div className="px-2 py-2 font-bold">Address</div>
                     <div className=" py-2 font-semibold ">
-                      {data.contactPerson.address.city}
+                      {patient.contactPerson.address.city}
                     </div>
                   </div>
                 </div>
@@ -384,15 +547,15 @@ const ViewPatient = () => {
                     <div className="col-span-3 ">
                       <div className="grid grid-cols-2">
                         <div className="px-4 py-2 font-bold">Blood Group</div>
-                        <div className="px-4 py-2">{data.bloodGroup}</div>
+                        <div className="px-4 py-2">{patient.bloodGroup}</div>
                         <div className="px-4 py-2 font-bold">Height</div>
                         <div className="px-4 py-2">
-                          {data.height}
+                          {patient.height}
                           <span className="font-semibold">cm</span>
                         </div>
                         <div className="px-4 py-2 font-bold">Weight</div>
                         <div className="px-4 py-2">
-                          {data.weight}
+                          {patient.weight}
                           <span className="font-semibold">kg</span>
                         </div>
                       </div>
@@ -401,9 +564,9 @@ const ViewPatient = () => {
                       <div className="grid grid-cols-2">
                         <div className="px-6 py-2 font-bold">Allergies:</div>
 
-                        {data.allergyList.length > 0 ? (
+                        {patient.allergyList.length > 0 ? (
                           <div className="mx-auto py-2">
-                            {data.allergyList.map(allergy => (
+                            {patient.allergyList.map(allergy => (
                               <>
                                 <div
                                   key={allergy.allergy}
@@ -419,9 +582,9 @@ const ViewPatient = () => {
                         )}
 
                         <div className="px-4 py-2 font-bold">Medications:</div>
-                        {data.medicationList.length > 0 ? (
+                        {patient.medicationList.length > 0 ? (
                           <div className="mx-auto py-2">
-                            {data.medicationList.map(medication => (
+                            {patient.medicationList.map(medication => (
                               <>
                                 <div className="px-2 py-1 m-1 text-center text-xs font-semibold text-white uppercase transition-all duration-150 ease-linear bg-red-500 rounded-full shadow outline-none focus:outline-none">
                                   {medication.medication}
@@ -434,9 +597,9 @@ const ViewPatient = () => {
                         )}
 
                         <div className="px-4 py-2 font-bold">Diseases:</div>
-                        {data.diseaseList.length > 0 ? (
+                        {patient.diseaseList.length > 0 ? (
                           <div className="mx-auto py-2">
-                            {data.diseaseList.map(disease => (
+                            {patient.diseaseList.map(disease => (
                               <>
                                 <div className="px-2 py-1 m-1 text-center text-xs font-semibold text-white uppercase transition-all duration-150 ease-linear bg-red-500 rounded-full shadow outline-none focus:outline-none">
                                   {disease.disease}
@@ -452,27 +615,66 @@ const ViewPatient = () => {
                   </div>
                 </div>
               </div>
-
-              <div>
-                {prescriptions.map(prescription => (
-                  <div key={prescription._id}>
-                    <p>Medication: {prescription.medication}</p>
-                    <p>Dosage: {prescription.dosage}</p>
-                    <p>Frequency: {prescription.frequency}</p>
-                    <p>Duration: {prescription.duration}</p>
-                    <p>Date: {
-                      prescription.date
-                    }</p>
-                  </div>
-                ))}
-                </div>
-                <PatientPrescriptions
-                  prescriptions={prescriptions}
-                  patientId={data._id}
-
-                  
-                />
-       
+              <div className="overflow-x-auto">
+                <h1 className="text-lg">Prescriptions</h1>
+                <table className="w-full text-left table-collapse">
+                  <thead>
+                    {headerGroups.map(headerGroup => (
+                      <tr {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map(column => (
+                          <th
+                            style={{
+                              backgroundColor: dark ? "#fff" : "#000",
+                              color: dark ? "#000" : "#fff",
+                            }}
+                            className="px-4 py-2 font-medium  "
+                            {...column.getHeaderProps()}
+                          >
+                            {column.render("Header")}
+                          </th>
+                        ))}
+                      </tr>
+                    ))}
+                  </thead>
+                  <tbody {...getTableBodyProps()}>
+                    {rows.map((row, index) => {
+                      prepareRow(row);
+                      return (
+                        <tr
+                          {...row.getRowProps()}
+                          style={{
+                            backgroundColor:
+                              index % 3 === 0
+                                ? "#67e8"
+                                : index % 3 === 1
+                                ? "#67e8f9"
+                                : "purple",
+                          }}
+                        >
+                          {row.cells.map(cell => {
+                            return (
+                              <td
+                                className="px-4 py-2 text-gray-800"
+                                {...cell.getCellProps()}
+                              >
+                                {cell.render("Cell")}
+                              </td>
+                            );
+                          })}
+                          <td>
+                            <button onClick={() => handleDownload(id)}>
+                              Download Prescription
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <button onClick={() => handleDownload(id)}>
+                Download Prescription
+              </button>
             </div>
           </div>
         </div>
@@ -482,3 +684,5 @@ const ViewPatient = () => {
 };
 
 export default ViewPatient;
+
+

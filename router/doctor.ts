@@ -67,6 +67,11 @@ router.get("/prescription", async (req, res) => {
             medication: prescription.medication,
             notes: prescription.notes,
             date: prescription.date,
+            dosage: prescription.dosage,
+            frequency: prescription.frequency,
+            duration: prescription.duration,
+            refills: prescription.refills
+            
           
           };
         })
