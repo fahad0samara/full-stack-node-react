@@ -33,6 +33,7 @@ export interface Doctor {
 }
 
 export interface patient {
+ 
   _id: string;
   healthIDNumber: string;
   name: {

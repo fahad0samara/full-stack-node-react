@@ -1,14 +1,17 @@
 import axios from "axios";
 import React, {useEffect} from "react";
-import {useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useTable, usePagination} from "react-table";
-
-import {useLocation} from "react-router-dom";
+import saveAs from "file-saver";
+import {useLocation, useNavigate} from "react-router-dom";
 import {patient} from "../../types";
 import Loder from "../../tools/Loder";
 import {useLogIN} from "../../../ContextLog";
+import FileSaver from "file-saver";
+const ViewPatient = () => {
+  //useNavigate
+  const navigate = useNavigate();
 
-const ViewPatient = ({patientId}) => {
   const {
     logPatient,
 
@@ -18,7 +21,10 @@ const ViewPatient = ({patientId}) => {
     dark,
     setdark,
   } = useLogIN();
-  const {id} = useParams();
+ let {id} = useParams();
+
+
+
   const [patient, setpatient] = React.useState<patient>({
     _id: "",
     healthIDNumber: "",
@@ -88,6 +94,27 @@ const ViewPatient = ({patientId}) => {
   const [Loading, setLoading] = React.useState<boolean>(true);
   const [prescriptions, setPrescriptions] = React.useState<any>([]);
 
+
+  
+
+
+
+
+
+
+
+
+
+
+ 
+    
+
+    
+
+  
+ 
+
+
   useEffect(() => {
     setLoading(true);
     axios
@@ -127,95 +154,36 @@ const ViewPatient = ({patientId}) => {
       });
   }, [id]);
 
-
-
-const downloadPrescription = async (id: string) => {
+const downloadPrescription = async prescriptionId => {
+  setLoading(true);
+  console.log(prescriptionId);
   try {
-    const response = await fetch(
-      `http://localhost:3000/download-prescription/${id}`
+    const res = await axios.get(
+      `http://localhost:3000/admin/patient/${id}/prescriptions/${prescriptionId}/download`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        responseType: "arraybuffer",
+      }
     );
-    const pdfData = await response.arrayBuffer();
-    const pdfBlob = new Blob([pdfData], {type: "application/pdf"});
-    const pdfUrl = URL.createObjectURL(pdfBlob);
-    // Open the PDF in a new tab
-    window.open(pdfUrl);
+    FileSaver.saveAs(
+      new Blob([res.data], {type: "application/pdf"}),
+      `Prescription ${prescriptionId}.pdf`
+    );
+    setLoading(false);
+    console.log("done");
   } catch (error) {
     console.log(error);
   }
-  };
+};
   
-  const handleDownload = (id: string) => {
-    downloadPrescription(id);
-  };
-
-  
-
  
 
 
-
-
+    
   
-  
-  
-  
-
-
-
-
-  // useEffect(() => {
-  //   setLoading(true);
-  //   axios
-  //     .get(`http://localhost:3000/admin/patient/${id}`, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       },
-  //     })
-  //     .then(res => {
-  //       console.log(res.data);
-  //       setpatient(res.data);
-  //       setLoading(false);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //       setError(true);
-  //       setLoading(false);
-  //     });
-  // }, [id]);
-
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:3000/admin/patient/${id}/prescriptions`, {
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       },
-  //     })
-  //     .then(res => {
-  //       console.log(res.data);
-  //       setPrescriptions(res.data);
-  //       setLoading(false);
-  //     })
-  //     .catch(err => {
-  //       setError(true);
-  //       setLoading(false);
-  //     });
-  // }, [id]);
-
-  //   .toString() .substring(0, 10)
-
-
-
-  
-  
-
-
-
-
-
-
-
+;
 
 
   const columns = React.useMemo(
@@ -262,20 +230,26 @@ const downloadPrescription = async (id: string) => {
         accessor: "refills",
       },
       {
-        Header: "Download",
-        accessor: "download",
-      }
-
+        Header: "View",
+        accessor: row => (
+          <button
+            onClick={() => {
     
+              
+              downloadPrescription(row._id);
+            }}
 
+          >
+            View
+          </button>
+        ),
+      },
     ],
     []
   );
 
-
-
-    const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} =
-      useTable({columns, data: prescriptions}, usePagination);
+  const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} =
+    useTable({columns, data: prescriptions}, usePagination);
 
   return (
     <>
@@ -615,9 +589,32 @@ const downloadPrescription = async (id: string) => {
                   </div>
                 </div>
               </div>
-              <div className="overflow-x-auto">
-                <h1 className="text-lg">Prescriptions</h1>
-                <table className="w-full text-left table-collapse">
+              <div
+                style={{
+                  boxShadow: dark
+                    ? "0px 0px 01px 0px #cccc "
+                    : "0px 0px 10px 0px  #ccc",
+                }}
+                className="overflow-x-auto
+                  p-8 my-3 col-span-2 rounded-2xl 
+                  shadow-lg
+                "
+              >
+                {
+                  //prescription
+                }
+                <div className="flex items-center space-x-2 font-bold  leading-8">
+                  <span className=" text-2xl mb-5 text-cyan-400 ">
+                    Prescription
+                  </span>
+                </div>
+
+                <table
+                  className="w-full text-center table-collapse
+                  border border-cyan-300-200 rounded-lg shadow-lg
+                 
+                  "
+                >
                   <thead>
                     {headerGroups.map(headerGroup => (
                       <tr {...headerGroup.getHeaderGroupProps()}>
@@ -627,7 +624,7 @@ const downloadPrescription = async (id: string) => {
                               backgroundColor: dark ? "#fff" : "#000",
                               color: dark ? "#000" : "#fff",
                             }}
-                            className="px-4 py-2 font-medium  "
+                            className="px-1 py-1 font-medium  "
                             {...column.getHeaderProps()}
                           >
                             {column.render("Header")}
@@ -645,7 +642,7 @@ const downloadPrescription = async (id: string) => {
                           style={{
                             backgroundColor:
                               index % 3 === 0
-                                ? "#67e8"
+                                ? ""
                                 : index % 3 === 1
                                 ? "#67e8f9"
                                 : "purple",
@@ -654,27 +651,20 @@ const downloadPrescription = async (id: string) => {
                           {row.cells.map(cell => {
                             return (
                               <td
-                                className="px-4 py-2 text-gray-800"
+                                className="px-4 py-2"
                                 {...cell.getCellProps()}
                               >
                                 {cell.render("Cell")}
                               </td>
                             );
                           })}
-                          <td>
-                            <button onClick={() => handleDownload(id)}>
-                              Download Prescription
-                            </button>
-                          </td>
                         </tr>
                       );
                     })}
                   </tbody>
                 </table>
               </div>
-              <button onClick={() => handleDownload(id)}>
-                Download Prescription
-              </button>
+              
             </div>
           </div>
         </div>

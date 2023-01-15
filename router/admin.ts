@@ -8,21 +8,11 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../model/User";
 import Prescription from "../model/prescription";
-const pdfLib = require("pdf-lib");
-;
+import pdfMake from 'pdfmake/build/pdfmake.js';
+import pdfFonts from 'pdfmake/build/vfs_fonts.js';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 
-
-const {
-  doctorValidation,
-  adminValidation,
-  loginAdminValidation,
-  registerUserValidation,
-   registerValidation,
-  loginValidation,
-
-  addPrescriptionsValidation,
-} = require("../middleware/validtion");
 
 // registerAdmin
 
@@ -49,6 +39,215 @@ const checkAdmin = async (req: any, res: any, next: any) => {
     res.status(400).send("Invalid Token");
   }
 };
+
+router.get(
+  "/patient/:id/prescriptions/:prescriptionId/download",
+  checkAdmin,
+  async (req, res) => {
+    try {
+      // Find the prescription by ID
+      const prescription = await Prescription.findById(
+        req.params.prescriptionId
+      )
+        .populate("patient")
+        .populate("doctor");
+      if (!prescription) return res.status(404).send("Prescription not found.");
+
+      // Create a new PDF document
+      const getHeader = (currPage: any, totalPage: any) => [
+        {
+          text: "Prescription",
+          style: "header",
+          alignment: "center",
+          margin: [0, 0, 0, 10],
+        },
+        {
+          text: `Page ${currPage} of ${totalPage}`,
+          alignment: "right",
+          margin: [0, 0, 0, 10],
+        },
+
+        {
+          text: `Date: ${new Date().toLocaleDateString()}`,
+          alignment: "right",
+          margin: [0, 0, 0, 10],
+        },
+      ];
+
+      const getFooter = (currPage: any, totalPage: any) => [
+        {
+          text: "Prescription",
+          style: "header",
+          alignment: "center",
+          margin: [10, 0, 0, 10],
+          color: currPage % 2 === 0 ? "black" : "red",
+        },
+        {
+          text: `Page ${currPage} of ${totalPage}`,
+          alignment: "right",
+          margin: [0, 0, 0, 10],
+          color: "red",
+        },
+      ];
+
+      const docDefinition = {
+        pageSize: "LETTER",
+        pageMargins: [20, 60, 40, 40],
+        header: getHeader,
+        footer: getFooter,
+        content: [
+          {
+            text: `Date: ${new Date().toLocaleDateString()}`,
+            alignment: "right",
+            margin: [0, 0, 0, 10],
+          },
+          {
+            //@ts-ignore
+            text: `Patient: ${prescription.patient.name.firstName} ${prescription.patient.name.lastName}`,
+            alignment: "left",
+            margin: [0, 0, 0, 10],
+          },
+          {
+            //@ts-ignore
+            text: `Doctor: ${prescription.doctor.name.firstName} ${prescription.doctor.name.lastName}`,
+            alignment: "left",
+            margin: [0, 0, 0, 10],
+          },
+          {
+            text: `Medication: ${prescription.medication}`,
+            alignment: "left",
+            margin: [0, 0, 0, 10],
+          },
+          {
+            text: `Dosage: ${prescription.dosage}`,
+            alignment: "left",
+            margin: [0, 0, 0, 10],
+          },
+          {
+            //@ts-ignore
+            text: `Quantity: ${prescription.quantity}`,
+            alignment: "left",
+            margin: [0, 0, 0, 10],
+          },
+          {
+            text: `Refills: ${prescription.refills}`,
+            alignment: "left",
+            margin: [0, 0, 0, 10],
+          },
+          {
+            text: `Notes: ${prescription.notes}`,
+            alignment: "left",
+            margin: [0, 0, 0, 10],
+          },
+        ],
+        styles: {
+          header: {
+            fontSize: 18,
+            bold: true,
+            margin: [0, 0, 0, 10],
+          },
+        },
+      };
+
+      // Create a PDF from the document definition
+      //@ts-ignore
+      const pdfDoc = pdfMake.createPdf(docDefinition);
+
+
+
+
+      
+
+
+
+      // Send the PDF as a response
+      pdfDoc.getBase64(data => {
+        res.writeHead(200, {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": 'attachment;filename="prescription.pdf"',
+        });
+        const download = Buffer.from(
+          //@ts-ignore
+          data.toString("utf-8"),
+          "base64"
+        );
+        res.end(download);
+      });
+    } catch (error) {}
+  }
+);
+
+// router.get("/patient/:id/prescriptions/:prescriptionId/download", checkAdmin, async (req, res) => {
+//     try {
+//         // Find the prescription by ID
+//         const prescription = await Prescription.findById(req.params.prescriptionId)
+//             .populate("patient")
+//             .populate("doctor");
+//         if (!prescription) return res.status(404).send("Prescription not found.");
+
+//         // Create a new PDF document
+//         var docDefinition = {
+//             content: [
+//                 { text: 'Prescription ID: ' + prescription._id, style: 'header' },
+//                 { text: 'Patient: ' + prescription.patient, style: 'subheader' },
+//                 { text: 'Doctor: ' + prescription.doctor, style: 'subheader' },
+//                 { text: 'Medication: ' + prescription.medication, style: 'subheader' },
+//                 { text: 'Dosage: ' + prescription.dosage, style: 'subheader' },
+//                 { text: 'Frequency: ' + prescription.frequency, style: 'subheader' },
+//                 { text: 'Duration: ' + prescription.duration, style: 'subheader' },
+//                 { text: 'Date: ' + prescription.date, style: 'subheader' },
+//                 { text: 'Notes: ' + prescription.notes, style: 'subheader' },
+//                 { text: 'Refills: ' + prescription.refills, style: 'subheader' }
+//             ],
+//             styles: {
+//                 header: {
+//                     fontSize: 18,
+//                     bold: true
+//                 },
+//                 subheader: {
+//                   fontSize: 18,
+//                   bold: false
+//               }
+//           }
+//       };
+
+//       // Create a PDF from the document definition
+//       const pdfDoc = pdfMake.createPdf(docDefinition);
+
+//       // Send the PDF as a response
+//       pdfDoc.getBase64((data) => {
+//         res.writeHead(200,
+//           {
+//             'Content-Type': 'application/pdf',
+//             'Content-Disposition': 'attachment;filename="prescription.pdf"'
+//           });
+//         const download = Buffer.from(
+//           //@ts-ignore
+//           data.toString('utf-8'), 'base64');
+//         res.end(download);
+
+
+    
+  
+
+
+    
+        
+        
+      
+     
+//       });
+//     } catch (error) {
+
+
+//   }
+// });
+
+  
+    
+
+
+
 
 // Get a list of all admin
 router.get("/admins", checkAdmin, (req, res) => {
@@ -131,16 +330,21 @@ router.get("/patient/:id/prescriptions", checkAdmin, async (req, res) => {
     // Map over the prescriptions and return a new array with the desired properties
     const prescriptionsArray = prescriptions.map(prescription => {
       return {
-   
-            //@ts-ignore
-            doctor: `${prescription.doctor.name.firstName} ${prescription.doctor.name.lastName}`,
-            medication: prescription.medication,
-            notes: prescription.notes,
-            date: prescription.date,
-            dosage: prescription.dosage,
-            frequency: prescription.frequency,
-            duration: prescription.duration,
-            refills: prescription.refills
+        _id: prescription._id,
+
+        //@ts-ignore
+        patient: `${prescription.patient.name.firstName} ${prescription.patient.name.lastName}`,
+
+        //@ts-ignore
+
+        doctor: `${prescription.doctor.name.firstName} ${prescription.doctor.name.lastName}`,
+        medication: prescription.medication,
+        notes: prescription.notes,
+        date: prescription.date,
+        dosage: prescription.dosage,
+        frequency: prescription.frequency,
+        duration: prescription.duration,
+        refills: prescription.refills,
       };
     });
     res.json(prescriptionsArray);
@@ -150,132 +354,182 @@ router.get("/patient/:id/prescriptions", checkAdmin, async (req, res) => {
   }
 });
 
-/* The above code is creating a pdf file and downloading it. */
-router.get("/download-prescription/:id", async (req, res) => {
-  try {
-    // Find the prescription by id
-    const prescription = await Prescription.findById(req.params.id).populate("patient")
-    if (!prescription) return res.status(404).send("Prescription not found");
-
-    // Create a new PDF document
-    const pdfDoc = await pdfLib.PDFDocument.create();
 
 
+// router.get(
+//    "/patient/:id/prescriptions/:prescriptionId/download",
+//    checkAdmin,
+//    async (req, res) => {
+//      try {
+//        // Find the prescription by ID
+//        const prescription = await Prescription.findById(
+//          req.params.prescriptionId
+//        )
+//          .populate("patient")
+//          .populate("doctor");
+//        if (!prescription)
+//          return res.status(404).send("Prescription not found.");
+
+//        // Create a new PDF document
+//    const doc = new pdfkit();
+//    doc.pipe(res);
+
+//    const table = {
+//      headers: [
+//        "Prescription ID",
+//        "Patient",
+//        "Doctor",
+//        "Medication",
+//        "Dosage",
+//        "Frequency",
+//      ],
+//      rows: [
+//        [
+//          prescription._id,
+//          prescription.patient,
+//          prescription.doctor,
+//          prescription.medication,
+//          prescription.dosage,
+//          prescription.frequency,
+//        ],
+//      ],
+//    };
+
+//    doc
+//      .fontSize(18)
+//      .text("Prescription", {align: "center"})
+//      .moveDown()
+//      .fontSize(12)
+
+//      .text(
+//        //@ts-ignore
+//        `Patient: ${prescription.patient.name.firstName} ${prescription.patient.name.lastName}`,
+//        {align: "left"}
+//      )
+//      .moveDown()
+//      .text(
+//        //@ts-ignore
+//        `Doctor: ${prescription.doctor.name.firstName} ${prescription.doctor.name.lastName}`,
+//        {align: "left"}
+//      )
+//      .moveDown()
+//      .text(`Medication: ${prescription.medication}`, {align: "left"})
+//      .moveDown()
+//      .text(`Dosage: ${prescription.dosage}`, {align: "left"})
+//      .moveDown()
+//      .text(`Frequency: ${prescription.frequency}`, {align: "left"})
+//      .moveDown()
+//      .text(`Duration: ${prescription.duration}`, {align: "left"})
+//      .moveDown()
+//      .text(`Refills: ${prescription.refills}`, {align: "left"})
+//      .moveDown()
+//      .text(`Notes: ${prescription.notes}`, {
+//        align: "left",
+//      })
+//      .moveDown();
+
+//    res.setHeader("Content-type", "application/pdf");
+//    res.setHeader(
+//      "Content-disposition",
+//      "attachment; filename=Prescription.pdf"
+//    );
+//    doc.end()
+//      } catch (error) {
+//        res.status(500).send({
+//          message: "Error downloading prescription",
+//          error: error.message,
+//        });
+//      }
+
+//   }
+// );
 
 
-    // Embed the prescription information
-    const prescriptionInfo = {
-      //@ts-ignore
-      patient: `${prescription.patient.name.firstName} ${prescription.patient.name.lastName}`,
-      medication: prescription.medication,
-      dosage: prescription.dosage,
-      frequency: prescription.frequency,
-      duration: prescription.duration,
-      refills: prescription.refills,
-      notes: prescription.notes,
-      date: prescription.date,
-    };
+  // router.get(
+  //   "/patient/:id/prescriptions/:prescriptionId/download",
+  //   async (req, res) => {
+  //     console.log(
+  //       "req.params.id",
+  //       req.params.id,
+  //       "req.params.prescriptionId",
+  //       req.params.prescriptionId
 
-    // Add a blank page to the document
-    const page = pdfDoc.addPage();
+  //     );
+      
 
-    // Embed the Helvetica font
-    const font = await pdfDoc.embedFont(pdfLib.StandardFonts.Helvetica);
-
-    // Add the prescription information to the page
-    page.drawText(`Patient: ${prescriptionInfo.patient}`, {
-      x: 50,
-      y: 750,
-      size: 20,
-      font,
-      color: pdfLib.rgb(0.95, 0.1, 0.1),
-    });
-    page.drawText(`Medication: ${prescriptionInfo.medication}`, {
-      x: 50,
-      y: 700,
-      size: 20,
-      font,
-      color: pdfLib.rgb(0.95, 0.1, 0.1),
-    });
-    page.drawText(`Dosage: ${prescriptionInfo.dosage}`, {
-      x: 50,
-      y: 650,
-      size: 20,
-      font,
-      color: pdfLib.rgb(0.95, 0.1, 0.1),
-    });
-    page.drawText(`Frequency: ${prescriptionInfo.frequency}`, {
-      x: 50,
-      y: 600,
-      size: 20,
-      font,
-      color: pdfLib.rgb(0.95, 0.1, 0.1),
-    });
-    page.drawText(`Duration: ${prescriptionInfo.duration}`, {
-      x: 50,
-      y: 550,
-      size: 20,
-      font,
-      color: pdfLib.rgb(0.95, 0.1, 0.1),
-    });
-    page.drawText(`Refills: ${prescriptionInfo.refills}`, {
-      x: 50,
-      y: 500,
-      size: 20,
-      font,
-      color: pdfLib.rgb(0.95, 0.1, 0.1),
-    });
-    page.drawText(`Notes: ${prescriptionInfo.notes}`, {
-      x: 50,
-      y: 450,
-      size: 20,
-      font,
-      color: pdfLib.rgb(0.95, 0.1, 0.1),
-    });
-    page.drawText(`Date: ${prescriptionInfo.date}`, {
-      x: 50,
-      y: 400,
-      size: 20,
-      font,
-      color: pdfLib.rgb(0.95, 0.1, 0.1),
-    });
-
-    // Serialize the PDFDocument to bytes (a Uint8Array)
-    const pdfBytes = await pdfDoc.save();
-
-    // Set the response content type to application/pdf
-    res.set("Content-Type", "application/pdf");
-    res.set(
-      "Content-Disposition",
-      `attachment; filename=${prescriptionInfo.patient}-prescription.pdf`
-    );
-
-    // Send the response  
-    res.json({
-      pdfBytes,
-      successfully:"Prescription successfully downloaded. Please check your downloads folder.",
      
+  //        try {
+  //          const prescription = await Prescription.findById(req.params.prescriptionId)
+  //            .populate("patient")
+  //            .populate("doctor");
+  //          if (!prescription)
+  //            return res.status(404).send("Prescription not found.");
+           
 
-    })
+  //       // Create a new PDF document
+  //       const pdfDoc = await pdfLib.PDFDocument.create();
+
+  //       // Add a page to the document
+  //       const page = pdfDoc.addPage();
+
+  //       // Draw prescription details on the page
+  //       page.drawText(`Prescription ID: ${prescription._id}`, { x: 50, y: 750 });
+  //       page.drawText(`Patient: ${prescription.patient}`, { x: 50, y: 700 });
+  //       page.drawText(`Doctor: ${prescription.doctor}`, { x: 50, y: 650 });
+  //       page.drawText(`Medication: ${prescription.medication}`, { x: 50, y: 600 });
+  //       page.drawText(`Dosage: ${prescription.dosage}`, { x: 50, y: 550 });
+  //       page.drawText(`Frequency: ${prescription.frequency}`, { x: 50, y: 500 });
+  //       page.drawText(`Duration: ${prescription.duration}`, { x: 50, y: 450 });
+  //       page.drawText(`Date: ${prescription.date}`, { x: 50, y: 400 });
+  //       page.drawText(`Notes: ${prescription.notes}`, { x: 50, y: 350 });
+  //          page.drawText(`Refills: ${prescription.refills}`, { x: 50, y: 300 });
+           
+  //           // Serialize the PDFDocument to bytes (a Uint8Array)
+  //          const pdfBytes = await pdfDoc.save();
+           
+  //           // Send the response
+  //          res.set("Content-Type", "application/pdf");
+  //          res.set("Content-Disposition", "attachment; filename=Prescription.pdf");
+           
+
+
+
+       
+       
+           
+           
+           
+  
 
 
 
 
+    
+           
+           
+  //          res.send(pdfBytes);
+           
+  //          console.log("pdfBytes", pdfBytes);
+           
+  
+       
+  //     } catch (error)
+ 
+    
+  //     {
+  //       console.log("error", error);
+  //       console.log("error.message", error.message);
+        
+  //       res.status(500).send({
+  //         message: "Error downloading prescription",
+  //         error: error.message  
+          
+  //       });
+  //     }
+  //   }
+  // );
 
 
-
-
-
-
-
-
-
-
-
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
 
 module.exports = router;
 
@@ -301,64 +555,6 @@ module.exports = router;
 
 
 
-// router.get(
-//   "/patient/:id/prescription/:prescriptionId/download",
-//   async (req, res) => {
-//     try {
-//       // check if patient exists
-//       const patient = await Patient.findById(req.params.id);
-//       if (!patient) return res.status(404).send("Patient not found");
-
-//       // check if prescription exists
-//       const prescription = await Prescription.findById(
-//         req.params.prescriptionId
-//       ).populate("patient");
-//       if (!prescription) return res.status(404).send("Prescription not found");
-
-//       // check if prescription belongs to patient
-//       if (prescription.patient.toString() !== patient._id.toString())
-//         return res.status(404).send("Prescription not found");
-
-//       // create a new pdf document
-//       //@ts-ignore
-//       const doc = new PDFDocument();
-//       // pipe the pdf document to the response
-//       doc.pipe(res);
-//       // add the prescription information to the pdf document
-//       doc
-//         .fontSize(20)
-//         .text(
-//           //@ts-ignore
-//           `Prescription for ${prescription.patient.name.firstName} ${prescription.patient.name.lastName}`,
-//           50,
-//           50
-//         )
-//         .fontSize(14)
-//         .text(`Medication: ${prescription.medication}`, 50, 100)
-//         .text(`Notes: ${prescription.notes}`, 50, 150)
-//         .text(`Date: ${prescription.date}`, 50, 200)
-//         .text(`Dosage: ${prescription.dosage}`, 50, 250)
-//         .text(`Frequency: ${prescription.frequency}`, 50, 300)
-//         .text(`Duration: ${prescription.duration}`, 50, 350)
-//         .text(`Refills: ${prescription.refills}`, 50, 400);
-//       // end the pdf document
-//       doc.end();
-
-//       // set the response headers
-//       res.setHeader("Content-Type", "application/pdf");
-//       res.setHeader(
-//         "Content-Disposition",
-//         //@ts-ignore
-//         `attachment; filename=${prescription.patient.name.firstName}-${prescription.patient.name.lastName}-prescription.pdf`
-//       );
-
-//       // send the response
-//       res.send(doc);
-//     } catch (error) {
-//       res.status(500).send(error.message);
-//     }
-//   }
-// );
 
 
 
@@ -453,8 +649,8 @@ router.post("/register-user", async (req: any, res: any) => {
 // Router for an administrator to register a new doctor:
 router.post("/register-dr", async (req, res) => {
   // validate the data before we make a doctor
-  const {error} = doctorValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  // const {error} = doctorValidation(req.body);
+  // if (error) return res.status(400).send(error.details[0].message);
 
   // check if the User is already in the database
   const Userfind = await User.findById(req.body.user);
@@ -492,8 +688,8 @@ router.post("/register-dr", async (req, res) => {
 // Router for an administrator to register a new patient:
 router.post("/register-patient", async (req, res) => {
   // validate the data before we make a patient
-  const { error } = registerValidation(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  // const { error } = registerValidation(req.body);
+  // if (error) return res.status(400).send(error.details[0].message);
 
   // check if the User is already in the database
   const Userfind = await User.findById
