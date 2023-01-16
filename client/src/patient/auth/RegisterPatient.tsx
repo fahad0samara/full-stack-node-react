@@ -8,7 +8,6 @@ export default function RegisterPatient(props: any) {
   const {setlogPatient, dark, setProfile} = useLogIN();
   const navigate = useNavigate();
   const [Loading, setLoading] = useState(false);
-  const [Toggle, setToggle] = useState("Patient");
 
   const [name, setName] = useState({
     firstName: "",
@@ -16,9 +15,12 @@ export default function RegisterPatient(props: any) {
     LastName: "",
   });
   const [date, setdate] = useState("");
+
   const [mobile, setmobile] = useState("");
 
-  const [NumberCard, setNumberCard] = useState("");
+  const [height, setheight] = useState("");
+  const [weight, setweight] = useState("");
+
   const [bloodGroup, setbloodGroup] = useState("");
   const [address, setaddress] = useState({
     building: "",
@@ -99,7 +101,6 @@ export default function RegisterPatient(props: any) {
       date,
       mobile,
 
-      NumberCard,
       bloodGroup,
       address,
 
@@ -113,35 +114,29 @@ export default function RegisterPatient(props: any) {
     console.log(user);
 
     try {
-      const {data} = await axios.post("http://localhost:3000/user/patient", {
-        name,
-        date,
-        mobile,
-        user,
+      const {data} = await axios.post(
+        "http://localhost:3000/user/register-patient",
+        {
+          name,
+          date,
+          mobile,
+          user,
 
-        bloodGroup,
-        address,
+          bloodGroup,
+          address,
 
-        diseaseList,
-        allergyList,
-        medicationList,
+          diseaseList,
+          allergyList,
+          medicationList,
 
-        contactPerson,
-      });
+          contactPerson,
+          weight,
+          height,
+        }
+      );
       console.log(data);
 
-      localStorage.setItem("tokenPatient",
-      data.token
-      );
-
-
-
-
-
-   
-
-      
-
+      localStorage.setItem("tokenPatient", data.token);
 
       setlogPatient(true);
 
@@ -156,7 +151,7 @@ export default function RegisterPatient(props: any) {
       console.log("====================================");
       console.log(
         // @ts-ignore
-        error.response.data
+        error.response
       );
 
       console.log("====================================");
@@ -253,8 +248,6 @@ export default function RegisterPatient(props: any) {
                           md:mx-1
                       
                           text-black
-
-                
                   w-64
                   h-10
                   rounded-lg
@@ -427,26 +420,81 @@ export default function RegisterPatient(props: any) {
                   ></input>
                 </div>
               </div>
-
               <div
-                className="            flex
+                className="
+                grid grid-cols-1
+                gap-4
+                md:gap-8
+                md:grid-cols-3
+
+
+                "
+              >
+                <div
+                  className="            flex
               md:flex-row
               md:items-center
               flex-col
               items-center"
-              >
-                <label className="  lg:text-xl font-bold px-4">
-                  Blood Group
-                </label>
-                <div
-                  className="
+                >
+                  <label className="  lg:text-xl font-bold px-4">
+                    Blood Group
+                  </label>
+                  <div
+                    className="
                   col-span-3
                   my-2
                   mx-2
  text-black
                   "
+                  >
+                    <select
+                      className=" 
+                   text-black
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
+                      id="blood-group"
+                      required
+                      value={bloodGroup}
+                      onChange={e => setbloodGroup(e.target.value)}
+                    >
+                      <option id="select">select</option>
+                      <option id="A+">A+</option>
+                      <option id="A-">A-</option>
+                      <option id="B+">B+</option>
+                      <option id="B-">B-</option>
+                      <option id="AB+">AB+</option>
+                      <option id="AB-">AB-</option>
+                      <option id="O+">O+</option>
+                      <option id="O-">O-</option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="
+                  flex
+              md:flex-row
+              md:items-center
+              flex-col
+              items-center
+                "
                 >
-                  <select
+                  <label className="font-bold lg:text-xl px-4 ">Height</label>
+
+                  <input
+                    required
                     className=" 
                    text-black
                   my-2
@@ -463,21 +511,57 @@ export default function RegisterPatient(props: any) {
 
                   border-gray-300 
 "
-                    id="blood-group"
+                    placeholder="Height"
+                    type="number"
+                    value={height}
+                    onChange={e => {
+                      //show the user cm after he fish
+
+                      setheight(e.target.value);
+                    }}
+                  ></input>
+                  <h1>{height === "" ? "" : "cm"}</h1>
+                </div>
+                <div
+                  className="
+                  flex
+              md:flex-row
+              md:items-center
+              flex-col
+              items-center
+                "
+                >
+                  <label className="font-bold lg:text-xl px-4 ">Weight</label>
+
+                  <input
                     required
-                    value={bloodGroup}
-                    onChange={e => setbloodGroup(e.target.value)}
-                  >
-                    <option id="select">select</option>
-                    <option id="A+">A+</option>
-                    <option id="A-">A-</option>
-                    <option id="B+">B+</option>
-                    <option id="B-">B-</option>
-                    <option id="AB+">AB+</option>
-                    <option id="AB-">AB-</option>
-                    <option id="O+">O+</option>
-                    <option id="O-">O-</option>
-                  </select>
+                    className=" 
+                   text-black
+                  my-2
+                  mx-2
+                     w-64
+                  h-10
+                  rounded-lg
+                  px-4
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-purple-600
+                  focus:border-transparent
+                  border-2
+
+                  border-gray-300 
+"
+                    placeholder="Weight"
+                    type="number"
+                    value={weight}
+                    onChange={e => {
+                      //show the user kg after he fish
+
+                      setweight(e.target.value);
+                    }}
+                  ></input>
+
+                  <h1>{weight === "" ? "" : "Kg"}</h1>
                 </div>
               </div>
 
@@ -992,7 +1076,7 @@ export default function RegisterPatient(props: any) {
               //addDisease
             }
 
-            <div className={Toggle === "Patient" ? "" : "hidden"}>
+            <div>
               <div className="flex justify-center">
                 <h1 className=" p-4 rounded font-bold lg:text-3xl text-xl mt-2">
                   Emergency Contact Details

@@ -14,6 +14,14 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 
 
+
+
+
+
+
+
+
+
 // registerAdmin
 
 interface JwtPayload {
@@ -44,6 +52,7 @@ router.get(
   "/patient/:id/prescriptions/:prescriptionId/download",
   checkAdmin,
   async (req, res) => {
+       
     try {
       // Find the prescription by ID
       const prescription = await Prescription.findById(
@@ -52,19 +61,16 @@ router.get(
         .populate("patient")
         .populate("doctor");
       if (!prescription) return res.status(404).send("Prescription not found.");
-
+  
       // Create a new PDF document
       const getHeader = (currPage: any, totalPage: any) => [
         {
-          text: "Prescription",
+          //@ts-ignore
+          text: `This is a prescription for ${prescription.patient.name.firstName} ${prescription.patient.name.LastName}`,
           style: "header",
           alignment: "center",
-          margin: [0, 0, 0, 10],
-        },
-        {
-          text: `Page ${currPage} of ${totalPage}`,
-          alignment: "right",
-          margin: [0, 0, 0, 10],
+          margin: [20, 10, 20, 10],
+          color: "red",
         },
 
         {
@@ -76,43 +82,27 @@ router.get(
 
       const getFooter = (currPage: any, totalPage: any) => [
         {
-          text: "Prescription",
-          style: "header",
-          alignment: "center",
-          margin: [10, 0, 0, 10],
-          color: currPage % 2 === 0 ? "black" : "red",
+          //@ts-ignore
+          text: `Doctor: ${prescription.doctor.name.firstName} ${prescription.doctor.name.lastName}`,
+          alignment: "left",
+          margin: [10, 10, 10, 10],
         },
-        {
-          text: `Page ${currPage} of ${totalPage}`,
-          alignment: "right",
-          margin: [0, 0, 0, 10],
-          color: "red",
-        },
+     
+       
       ];
 
       const docDefinition = {
-        pageSize: "LETTER",
+        pageSize: {
+          width: 550.28,
+          height: 400.89,
+        },
+
         pageMargins: [20, 60, 40, 40],
         header: getHeader,
         footer: getFooter,
         content: [
-          {
-            text: `Date: ${new Date().toLocaleDateString()}`,
-            alignment: "right",
-            margin: [0, 0, 0, 10],
-          },
-          {
-            //@ts-ignore
-            text: `Patient: ${prescription.patient.name.firstName} ${prescription.patient.name.lastName}`,
-            alignment: "left",
-            margin: [0, 0, 0, 10],
-          },
-          {
-            //@ts-ignore
-            text: `Doctor: ${prescription.doctor.name.firstName} ${prescription.doctor.name.lastName}`,
-            alignment: "left",
-            margin: [0, 0, 0, 10],
-          },
+       
+
           {
             text: `Medication: ${prescription.medication}`,
             alignment: "left",
@@ -152,14 +142,6 @@ router.get(
       // Create a PDF from the document definition
       //@ts-ignore
       const pdfDoc = pdfMake.createPdf(docDefinition);
-
-
-
-
-      
-
-
-
       // Send the PDF as a response
       pdfDoc.getBase64(data => {
         res.writeHead(200, {
@@ -336,7 +318,6 @@ router.get("/patient/:id/prescriptions", checkAdmin, async (req, res) => {
         patient: `${prescription.patient.name.firstName} ${prescription.patient.name.lastName}`,
 
         //@ts-ignore
-
         doctor: `${prescription.doctor.name.firstName} ${prescription.doctor.name.lastName}`,
         medication: prescription.medication,
         notes: prescription.notes,
@@ -345,6 +326,8 @@ router.get("/patient/:id/prescriptions", checkAdmin, async (req, res) => {
         frequency: prescription.frequency,
         duration: prescription.duration,
         refills: prescription.refills,
+      
+
       };
     });
     res.json(prescriptionsArray);

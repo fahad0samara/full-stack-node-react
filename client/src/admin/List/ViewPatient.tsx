@@ -9,9 +9,6 @@ import Loder from "../../tools/Loder";
 import {useLogIN} from "../../../ContextLog";
 import FileSaver from "file-saver";
 const ViewPatient = () => {
-  //useNavigate
-  const navigate = useNavigate();
-
   const {
     logPatient,
 
@@ -21,9 +18,7 @@ const ViewPatient = () => {
     dark,
     setdark,
   } = useLogIN();
- let {id} = useParams();
-
-
+  let {id} = useParams();
 
   const [patient, setpatient] = React.useState<patient>({
     _id: "",
@@ -89,31 +84,10 @@ const ViewPatient = () => {
       },
     },
   });
-
+  console.log(patient.medicationList, "fffffff");
   const [error, setError] = React.useState<boolean>(false);
   const [Loading, setLoading] = React.useState<boolean>(true);
   const [prescriptions, setPrescriptions] = React.useState<any>([]);
-
-
-  
-
-
-
-
-
-
-
-
-
-
- 
-    
-
-    
-
-  
- 
-
 
   useEffect(() => {
     setLoading(true);
@@ -154,37 +128,29 @@ const ViewPatient = () => {
       });
   }, [id]);
 
-const downloadPrescription = async prescriptionId => {
-  setLoading(true);
-  console.log(prescriptionId);
-  try {
-    const res = await axios.get(
-      `http://localhost:3000/admin/patient/${id}/prescriptions/${prescriptionId}/download`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        responseType: "arraybuffer",
-      }
-    );
-    FileSaver.saveAs(
-      new Blob([res.data], {type: "application/pdf"}),
-      `Prescription ${prescriptionId}.pdf`
-    );
-    setLoading(false);
-    console.log("done");
-  } catch (error) {
-    console.log(error);
-  }
-};
-  
- 
-
-
-    
-  
-;
-
+  const downloadPrescription = async prescriptionId => {
+    setLoading(true);
+    console.log(prescriptionId);
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/admin/patient/${id}/prescriptions/${prescriptionId}/download`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          responseType: "arraybuffer",
+        }
+      );
+      FileSaver.saveAs(
+        new Blob([res.data], {type: "application/pdf"}),
+        `Prescription ${prescriptionId}.pdf`
+      );
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
 
   const columns = React.useMemo(
     () => [
@@ -230,17 +196,14 @@ const downloadPrescription = async prescriptionId => {
         accessor: "refills",
       },
       {
-        Header: "View",
+        Header: "Download",
         accessor: row => (
           <button
             onClick={() => {
-    
-              
               downloadPrescription(row._id);
             }}
-
           >
-            View
+            Download
           </button>
         ),
       },
@@ -249,7 +212,14 @@ const downloadPrescription = async prescriptionId => {
   );
 
   const {getTableProps, getTableBodyProps, headerGroups, rows, prepareRow} =
-    useTable({columns, data: prescriptions}, usePagination);
+    useTable(
+      {
+        //@ts-ignore
+        columns,
+        data: prescriptions,
+      },
+      usePagination
+    );
 
   return (
     <>
@@ -266,7 +236,7 @@ const downloadPrescription = async prescriptionId => {
               : "0px 0px 10px 0px #ccc",
           }}
         >
-          <div className="p-16 ">
+          <div className="md:p-16 p-9 md:mx-6 ml-12 ">
             <div
               style={{
                 backgroundColor: dark ? "#000" : "white",
@@ -275,7 +245,7 @@ const downloadPrescription = async prescriptionId => {
                   ? "0px 0px 10px 0px rgb(103 232 249)"
                   : "0px 0px 10px 0px rgb(103 232 249)",
               }}
-              className="p-8 shadow mt-14 "
+              className="md:p-8 shadow mt-14 p-2 "
             >
               <div className={"grid grid-cols-1 md:grid-cols-3 "}>
                 {" "}
@@ -336,7 +306,11 @@ const downloadPrescription = async prescriptionId => {
                   </button>{" "}
                 </div>{" "}
               </div>
-              <div className=" border-t-4 border-cyan-400  grid grid-cols-3 mt-7 ">
+              <div
+                className=" border-t-4 border-cyan-400   grid  grid-cols-1
+                 
+              xl:grid-cols-3 mt-7 "
+              >
                 <div
                   style={{
                     boxShadow: dark
@@ -429,9 +403,16 @@ const downloadPrescription = async prescriptionId => {
                         </div>
                         <div className="px-4 py-2">{patient.address.state}</div>
                       </div>
-                      <div className="grid grid-cols-2">
+                      <div className="flex items-center justify-between">
                         <div className="px-4 py-2 font-bold">Email.</div>
-                        <div className="mr-8 py-2">{patient.user.email}</div>
+                        <div
+                          className="py-2 px-4 md:mr-11
+                          mr-2
+                      
+                        "
+                        >
+                          {patient.user.email}
+                        </div>
                       </div>
                       <div className="grid grid-cols-2">
                         <div className="px-4 py-2 font-bold">Birthday</div>
@@ -450,20 +431,32 @@ const downloadPrescription = async prescriptionId => {
                   </button>
                 </div>
               </div>
-              <div className="  grid grid-cols-3 mt-2 ">
+              <div
+                className="  grid
+                  grid-cols-1
+                  md:gap-5
+               xl:grid-cols-3 mt-2 "
+              >
                 <div
                   style={{
                     boxShadow: dark
                       ? "0px 0px 01px 0px #cccc "
                       : "0px 0px 10px 0px  #ccc",
                   }}
-                  className=" mx-4  my-3  rounded-2xl  
-                 p-4"
+                  className=" 
+                  shadow-lg 
+                  mx-2
+                  md:mx-0
+                    my-3  rounded-2xl  
+                  "
                 >
-                  <h1>
-                    <span className="text-2xl font-bold text-cyan-400 my-6">
-                      Emergency Contact
-                    </span>
+                  <h1
+                    className="text-2xl
+                      text-center 
+
+                    font-bold text-cyan-400 my-6"
+                  >
+                    Emergency Contact
                   </h1>
                   <div className=" grid grid-cols-2 ">
                     <div className="px-4 py-2 font-bold">Name</div>
@@ -479,9 +472,9 @@ const downloadPrescription = async prescriptionId => {
                       {patient.contactPerson.mobile}
                     </div>
                     <div className="px-4 py-2 font-bold">Email</div>
-                    <div className="px-4 py-2">
+                    <h4 className=" py-2  xl:text-base text-sm">
                       {patient.contactPerson.email}
-                    </div>
+                    </h4>
 
                     <div className="px-4 py-2 font-bold">relation</div>
                     <div className="px-4 py-2">
@@ -509,15 +502,22 @@ const downloadPrescription = async prescriptionId => {
                       ? "0px 0px 01px 0px #cccc "
                       : "0px 0px 10px 0px  #ccc",
                   }}
-                  className=" p-8 my-3 col-span-2 rounded-2xl  
+                  className=" md:p-8 my-3 col-span-2 rounded-2xl
+                  mx-2
                   shadow-lg  "
                 >
-                  <div className="flex items-center space-x-2 font-bold  leading-8">
-                    <span className=" text-2xl mb-5 text-cyan-400 ">
-                      Medical History
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-5 gap-1">
+                  <h1
+                    className=" text-2xl mb-5
+                      text-center
+                      md:text-left
+
+                      font-bold
+                  md:my-6
+                     text-cyan-400 "
+                  >
+                    Medical History
+                  </h1>
+                  <div className="grid grid-rows-2">
                     <div className="col-span-3 ">
                       <div className="grid grid-cols-2">
                         <div className="px-4 py-2 font-bold">Blood Group</div>
@@ -534,56 +534,137 @@ const downloadPrescription = async prescriptionId => {
                         </div>
                       </div>
                     </div>
-                    <div className="col-span-2 ">
-                      <div className="grid grid-cols-2">
-                        <div className="px-6 py-2 font-bold">Allergies:</div>
-
-                        {patient.allergyList.length > 0 ? (
-                          <div className="mx-auto py-2">
-                            {patient.allergyList.map(allergy => (
-                              <>
-                                <div
-                                  key={allergy.allergy}
-                                  className="px-2 py-1 m-1 text-center text-xs font-semibold text-white uppercase transition-all duration-150 ease-linear bg-red-500 rounded-full shadow outline-none focus:outline-none"
-                                >
-                                  {allergy.allergy}
-                                </div>
-                              </>
-                            ))}
-                          </div>
-                        ) : (
-                          <p>No Allergies Recorded</p>
-                        )}
-
-                        <div className="px-4 py-2 font-bold">Medications:</div>
-                        {patient.medicationList.length > 0 ? (
-                          <div className="mx-auto py-2">
-                            {patient.medicationList.map(medication => (
-                              <>
-                                <div className="px-2 py-1 m-1 text-center text-xs font-semibold text-white uppercase transition-all duration-150 ease-linear bg-red-500 rounded-full shadow outline-none focus:outline-none">
-                                  {medication.medication}
-                                </div>
-                              </>
-                            ))}
-                          </div>
-                        ) : (
-                          <p>No Allergies medication</p>
-                        )}
-
-                        <div className="px-4 py-2 font-bold">Diseases:</div>
-                        {patient.diseaseList.length > 0 ? (
-                          <div className="mx-auto py-2">
-                            {patient.diseaseList.map(disease => (
-                              <>
-                                <div className="px-2 py-1 m-1 text-center text-xs font-semibold text-white uppercase transition-all duration-150 ease-linear bg-red-500 rounded-full shadow outline-none focus:outline-none">
-                                  {disease.disease}
-                                </div>
-                              </>
-                            ))}
-                          </div>
-                        ) : (
-                          <p>No Allergies Recorded</p>
-                        )}
+                    <div className="col-span-3 ">
+                      <div
+                        className=" grid 
+                          lg:grid-cols-3
+                        grid-cols-2
+                      shadow-md
+                        rounded-lg
+                        md:my-2
+                        md:gap-11
+                        gap-0
+                        
+                      "
+                      >
+                        <div>
+                          <h1 className="text-center text-xl text-cyan-400 font-bold">
+                            Allergies:
+                          </h1>
+                          {patient.allergyList.length > 0 ? (
+                            <div className="mx-auto p-4  ">
+                              {patient.allergyList.filter(
+                                allergy =>
+                                  allergy.allergy !== "" &&
+                                  allergy.allergy !== null
+                              ).length > 0 ? (
+                                patient.allergyList
+                                  .filter(
+                                    allergy =>
+                                      allergy.allergy !== "" &&
+                                      allergy.allergy !== null
+                                  )
+                                  .map(allergy => {
+                                    return (
+                                      <div
+                                        key={allergy.allergy}
+                                        className="px-4 py-1 m-1 text-center text-xs font-semibold text-white uppercase transition-all duration-150 ease-linear bg-red-500 rounded-full shadow outline-none focus:outline-none"
+                                      >
+                                        {allergy.allergy}
+                                      </div>
+                                    );
+                                  })
+                              ) : (
+                                <p className="text-center font-medium">
+                                  No Allergies Recorded
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <p className="text-center font-medium">
+                              No Allergies Recorded
+                            </p>
+                          )}
+                        </div>
+                        <div>
+                          {" "}
+                          <h1 className="text-center text-xl text-cyan-400 font-bold">
+                            Medications:
+                          </h1>
+                          {patient.medicationList.length > 0 ? (
+                            <div className="mx-auto p-4  ">
+                              {patient.medicationList.filter(
+                                medication =>
+                                  medication.medication !== "" &&
+                                  medication.medication !== null
+                              ).length > 0 ? (
+                                patient.medicationList
+                                  .filter(
+                                    medication =>
+                                      medication.medication !== "" &&
+                                      medication.medication !== null
+                                  )
+                                  .map(medication => {
+                                    return (
+                                      <div
+                                        key={medication.medication}
+                                        className="px-4 py-1 m-1 text-center text-xs font-semibold text-white uppercase transition-all duration-150 ease-linear bg-red-500 rounded-full shadow outline-none focus:outline-none"
+                                      >
+                                        {medication.medication}
+                                      </div>
+                                    );
+                                  })
+                              ) : (
+                                <p className="text-center font-medium">
+                                  No medication Recorded
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <p className="text-center font-medium">
+                              No medication Recorded
+                            </p>
+                          )}
+                        </div>
+                        <div>
+                          <h1 className="text-center text-xl text-cyan-400 font-bold">
+                            Diseases:
+                          </h1>
+                          {patient.diseaseList.length > 0 ? (
+                            <div className="mx-auto p-4  ">
+                              {patient.diseaseList.filter(
+                                disease =>
+                                  disease.disease !== "" &&
+                                  disease.disease !== null
+                              ).length > 0 ? (
+                                patient.diseaseList
+                                  .filter(
+                                    disease =>
+                                      disease.disease !== "" &&
+                                      disease.disease !== null
+                                  )
+                                  .map(disease => {
+                                    return (
+                                      <div
+                                        key={disease.disease}
+                                        className="px-4 py-1 m-1 text-center text-xs font-semibold text-white uppercase transition-all duration-150 ease-linear bg-red-500 rounded-full shadow outline-none focus:outline-none"
+                                      >
+                                        {disease.disease}
+                                      </div>
+                                    );
+                                  })
+                              ) : (
+                                <p className="text-center font-medium">
+                                  No disease Recorded
+                                </p>
+                              )}
+                            </div>
+                          ) : (
+                            <p className="text-center font-medium">
+                              No disease Recorded
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -603,11 +684,16 @@ const downloadPrescription = async prescriptionId => {
                 {
                   //prescription
                 }
-                <div className="flex items-center space-x-2 font-bold  leading-8">
-                  <span className=" text-2xl mb-5 text-cyan-400 ">
-                    Prescription
-                  </span>
-                </div>
+
+                <h1
+                  className="
+                  text-center
+                  md:text-left
+                  font-bold
+                   text-2xl mb-5 text-cyan-400 "
+                >
+                  Prescription History
+                </h1>
 
                 <table
                   className="w-full text-center table-collapse
@@ -664,7 +750,6 @@ const downloadPrescription = async prescriptionId => {
                   </tbody>
                 </table>
               </div>
-              
             </div>
           </div>
         </div>
@@ -674,5 +759,3 @@ const downloadPrescription = async prescriptionId => {
 };
 
 export default ViewPatient;
-
-

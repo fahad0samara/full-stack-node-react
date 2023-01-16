@@ -14,10 +14,9 @@ import { useLogIN } from "../../ContextLog";
 
 const SideNavigate = (_props: any) => {
     const {
-  
       Profile,
       setProfile,
-      loading,
+
       setLoading,
       dark,
       setdark,

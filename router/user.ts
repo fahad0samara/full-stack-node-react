@@ -248,63 +248,63 @@ router.get(
   }
 );
 
-router.post("/patient", async (req, res) => {
-  // validate the data before we make a user
-  const {error} = registerValidation(req.body);
+// router.post("/patient", async (req, res) => {
+//   // validate the data before we make a user
+//   const {error} = registerValidation(req.body);
 
-  if (error) return res.status(400).send(error.details[0].message);
+//   if (error) return res.status(400).send(error.details[0].message);
 
-  try {
-    // check if the user by id is already in the database
-    const user = await User.findById(req.body.user);
-    if (!user) return res.status(400).send("User is not found");
-    // dont allond to user to post 2 time
-    const patient2 = await Patient.findOne({
-      user: req.body.user,
-    });
-    if (patient2) return res.status(400).send("Patient is already exist");
+//   try {
+//     // check if the user by id is already in the database
+//     const user = await User.findById(req.body.user);
+//     if (!user) return res.status(400).send("User is not found");
+//     // dont allond to user to post 2 time
+//     const patient2 = await Patient.findOne({
+//       user: req.body.user,
+//     });
+//     if (patient2) return res.status(400).send("Patient is already exist");
 
-    //  update the user
-    const patient = new Patient({
-      user: req.body.user,
-      mobile: req.body.mobile,
+//     //  update the user
+//     const patient = new Patient({
+//       user: req.body.user,
+//       mobile: req.body.mobile,
 
-      name: req.body.name,
-      relation: req.body.relation,
-      address: req.body.address,
-      date: req.body.date,
-      medicationList: req.body.medicationList,
-      diseaseList: req.body.diseaseList,
-      allergyList: req.body.allergyList,
-      bloodGroup: req.body.bloodGroup,
-      contactPerson: req.body.contactPerson,
-    });
+//       name: req.body.name,
+//       relation: req.body.relation,
+//       address: req.body.address,
+//       date: req.body.date,
+//       medicationList: req.body.medicationList,
+//       diseaseList: req.body.diseaseList,
+//       allergyList: req.body.allergyList,
+//       bloodGroup: req.body.bloodGroup,
+//       contactPerson: req.body.contactPerson,
+//     });
 
-    const savedPatient = await (await patient.save()).populate("user");
-    // Create and assign a token
-    const token = jwt.sign(
-      {_id: patient._id},
-      process.env.JWT_SECRET as string
-    );
-    res.header("auth-token", token);
+//     const savedPatient = await (await patient.save()).populate("user");
+//     // Create and assign a token
+//     const token = jwt.sign(
+//       {_id: patient._id},
+//       process.env.JWT_SECRET as string
+//     );
+//     res.header("auth-token", token);
 
-    console.log(user);
+//     console.log(user);
 
-    res.json({
-      success: true,
-      message: "Patient registered successfully",
-      user: savedPatient,
-      token,
-    });
-  } catch (err) {
-    console.log(err);
+//     res.json({
+//       success: true,
+//       message: "Patient registered successfully",
+//       user: savedPatient,
+//       token,
+//     });
+//   } catch (err) {
+//     console.log(err);
 
-    res.status(400).json({
-      success: false,
-      err,
-    });
-  }
-});
+//     res.status(400).json({
+//       success: false,
+//       err,
+//     });
+//   }
+// });
 
 router.get("/patient", async (req, res) => {
   try {
