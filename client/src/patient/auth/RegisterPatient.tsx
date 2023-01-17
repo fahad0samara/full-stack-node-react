@@ -584,35 +584,14 @@ export default function RegisterPatient(props: any) {
                   Address
                 </label>
                 <div
-                  className="
-                  grid 
-                  lg:grid-cols-3
-                  md:grid-cols-2
-                  grid-cols-1
-                  gap-2
-                  my-2
-                
-
-              
-            
-                 "
+                  className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2my-2"
                 >
                   <input
                     type="text"
-                    className=" 
-                  
-                  my-2
-                  mx-2
-                     w-64
-                  h-10
-                  rounded-lg
-                  px-4
-                  focus:outline-none
-                  focus:ring-2
+                    className="my-2 mx-2 w-64 h-10 rounded-lg px-4 focus:outline-none focus:ring-2
                   focus:ring-purple-600
                   focus:border-transparent
-                  border-2
- text-black
+                  border-2 text-black
                   border-gray-300 
 "
                     required
@@ -777,7 +756,7 @@ export default function RegisterPatient(props: any) {
                     Do you have a permanent illness?
                   </h1>
                 </div>
-                <div className="col-span-4  ">
+                <div className="col-span-4">
                   {diseaseList.map((disease, index) => {
                     return (
                       <div

@@ -254,6 +254,7 @@ router.get("/doctor", checkAdmin, (req, res) => {
 });
 
 // Get a doctor by id
+/* Finding a doctor by id and populating the user field. */
 router.get("/doctor/:id", checkAdmin, (req, res) => {
   Doctor.findById(req.params.id)
     .populate("user")

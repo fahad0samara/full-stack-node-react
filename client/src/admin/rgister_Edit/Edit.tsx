@@ -1,14 +1,14 @@
-import React, {useEffect} from "react";
-import {useParams} from "react-router-dom";
+import React, { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import AgeDisplay from "../../tools/AgeDisplay";
-import {useLogIN} from "../../../ContextLog";
+import { useLogIN } from "../../../ContextLog";
 
-import {useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Loder from "../../tools/Loder";
 import { Data } from "../../types";
 const Edit = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const {
     logPatient,
 
@@ -18,7 +18,6 @@ const Edit = () => {
     dark,
     setdark,
   } = useLogIN();
-
 
   const [data, setData] = React.useState<Data>({
     name: {
@@ -70,8 +69,6 @@ const Edit = () => {
         setLoading(false);
       });
   }, [id]);
-
-
 
   const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -138,7 +135,7 @@ const Edit = () => {
                 onChange={e =>
                   setData({
                     ...data,
-                    name: {...data.name, firstName: e.target.value},
+                    name: { ...data.name, firstName: e.target.value },
                   })
                 }
               />
@@ -151,7 +148,7 @@ const Edit = () => {
                 onChange={e =>
                   setData({
                     ...data,
-                    name: {...data.name, middleName: e.target.value},
+                    name: { ...data.name, middleName: e.target.value },
                   })
                 }
               />
@@ -165,7 +162,7 @@ const Edit = () => {
                 onChange={e =>
                   setData({
                     ...data,
-                    name: {...data.name, lastName: e.target.value},
+                    name: { ...data.name, lastName: e.target.value },
                   })
                 }
               />
@@ -188,7 +185,7 @@ const Edit = () => {
                 onChange={e =>
                   setData({
                     ...data,
-                    user: {...data.user, email: e.target.value},
+                    user: { ...data.user, email: e.target.value },
                   })
                 }
               />
@@ -228,7 +225,7 @@ const Edit = () => {
                 name="phone"
                 id="phone"
                 value={data.phoneNumber}
-                onChange={e => setData({...data, phoneNumber: e.target.value})}
+                onChange={e => setData({ ...data, phoneNumber: e.target.value })}
               />
             </div>
             <div className="grid grid-cols-2 gap-28">
@@ -247,7 +244,7 @@ const Edit = () => {
                   name="bloodGroup"
                   id="bloodGroup"
                   value={data.bloodGroup}
-                  onChange={e => setData({...data, bloodGroup: e.target.value})}
+                  onChange={e => setData({ ...data, bloodGroup: e.target.value })}
                   className="block appearance-none w-full  border-b border-cyan-400 hover:border-cyan-400
             px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                 >
@@ -279,7 +276,7 @@ const Edit = () => {
                     .split("-")
                     .reverse()
                     .join("-")}
-                  onChange={e => setData({...data, date: e.target.value})}
+                  onChange={e => setData({ ...data, date: e.target.value })}
                 />
               </div>
             </div>
@@ -287,12 +284,7 @@ const Edit = () => {
               <div className="mb-4">
                 <label
                   htmlFor="speciality"
-                  className="
-  mt-2
-  text-lg
-  font-bold
-  
-  "
+                  className="mt-2 text-lg font-bold"
                 >
                   Speciality
                 </label>
@@ -304,8 +296,8 @@ const Edit = () => {
                   name="speciality"
                   id="speciality"
                   value={data.specialty}
-                  onChange={e => setData({...data, specialty: e.target.value})}
-                  className="block appearance-none w-full bg-inherit   border-b border-cyan-400 hover:border-cyan-400 
+                  onChange={e => setData({ ...data, specialty: e.target.value })}
+                  className="block appearance-none w-full bg-inherit border-b border-cyan-400 hover:border-cyan-400 
             px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
                 >
                   <option value="">Select Speciality</option>
@@ -339,7 +331,7 @@ const Edit = () => {
                   name="experience"
                   id="experience"
                   value={data.experience}
-                  onChange={e => setData({...data, experience: e.target.value})}
+                  onChange={e => setData({ ...data, experience: e.target.value })}
                 />
               </div>
             </div>
@@ -357,7 +349,7 @@ const Edit = () => {
                   name="address"
                   id="address"
                   value={data.Hospital}
-                  onChange={e => setData({...data, Hospital: e.target.value})}
+                  onChange={e => setData({ ...data, Hospital: e.target.value })}
                 />
               </div>
               <div className="mb-5">
@@ -376,7 +368,7 @@ const Edit = () => {
                   name="degree"
                   id="degree"
                   value={data.degree}
-                  onChange={e => setData({...data, degree: e.target.value})}
+                  onChange={e => setData({ ...data, degree: e.target.value })}
                 >
                   <option value="MBBS">MBBS</option>
                   <option value="MD">MD</option>

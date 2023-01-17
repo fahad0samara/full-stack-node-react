@@ -8,6 +8,7 @@ import RouterAdmin from "./admin/RouterAdmin";
 import Register from "./Home/auth/Register";
 import Login from "./Home/auth/Login";
 import RegisterPatient from "./patient/auth/RegisterPatient";
+import Routerdoctor from "./doctor/Routerdoctor";
 
 const Router = () => {
   const { logPatient, logAdmin,
@@ -18,10 +19,9 @@ const Router = () => {
     <Routes>
       {logPatient && <Route path="/patient/*" element={<RouterPatient />} />}
       {logAdmin && <Route path="/admin/*" element={<RouterAdmin />} />}
-      {logDr && <Route path="/doctor/*" element={<RouterAdmin />} />}
+      {logDr && <Route path="/doctor/*" element={<Routerdoctor />} />}
 
       <Route path="/" element={<Hero />} />
-    
 
       <Route path="/RegisterPatient" element={<RegisterPatient />} />
 

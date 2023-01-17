@@ -1,4 +1,4 @@
-import {Link, Outlet, useNavigate} from "react-router-dom";
+import {Link, Outlet, useNavigate, useParams} from "react-router-dom";
 import {useState} from "react";
 import SideNav, {
   Toggle,
@@ -10,12 +10,14 @@ import SideNav, {
 
 import "@trendmicro/react-sidenav/dist/react-sidenav.css";
 import {RiDashboardFill} from "react-icons/ri";
-import {useLogIN} from "../../hooks/ContextLog";
+import {useLogIN} from "../../ContextLog";
 
 const SideNavigate = (_props: any) => {
-  const {Profile, setProfile, loading, setLoading, dark, setdark} = useLogIN();
+  const {Profile, setProfile, setLoading, dark, setdark} = useLogIN();
   const navigate = useNavigate();
+const {id} = useParams();
 
+  
   return (
     <SideNav
       /*  . */
@@ -27,20 +29,19 @@ const SideNavigate = (_props: any) => {
           : "0px 0px 10px 0px #000",
       }}
       onSelect={(selected: string) => {
-        navigate(
-          //admin
-          selected === "dashboard" ? "/admin/dashboard" : "/admin/about"
-        );
+        if (selected === "dashboard") {
+          navigate("/doctor/dashboard");
+        } else if (selected === "about") {
+          navigate("/doctor/about");
+        } else if (selected === "doctor") {
+          navigate(`/doctor/doctor/${id}`);
+        }
       }}
       className="
   h-full
-
       fixed
-
-    
       top-0
       left-0
-      
   z-50
   "
     >
@@ -109,6 +110,30 @@ const SideNavigate = (_props: any) => {
             }}
           >
             about
+          </NavText>
+        </NavItem>
+        <NavItem eventKey="doctor">
+          <NavIcon>
+            <RiDashboardFill
+              style={{
+                color: dark ? "rgb(103 232 249)" : "black",
+                fontSize: "1.8rem",
+                fontWeight: "bold",
+                marginLeft: "1rem",
+                marginTop: "1rem",
+              }}
+            />
+          </NavIcon>
+          <NavText
+            style={{
+              color: dark ? "rgb(103 232 249)" : "black",
+              fontSize: "0.9rem",
+              fontWeight: "bold",
+              marginLeft: "1rem",
+              marginTop: "1rem",
+            }}
+          >
+            DoctorProfile
           </NavText>
         </NavItem>
       </SideNav.Nav>

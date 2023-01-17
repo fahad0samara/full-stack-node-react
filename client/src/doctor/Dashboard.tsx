@@ -1,33 +1,59 @@
-import React from "react";
-import {useLogIN} from "../../hooks/ContextLog";
+import axios from "axios";
 
-function Dashboard() {
-  const {
-    logPatient,
+import { useEffect, useState } from "react";
+import {useParams} from "react-router-dom";
 
-    Profile,
-    setProfile,
-    loading,
-    setLoading,
-    dark,
-    setdark,
-  } = useLogIN();
+const Dashboard = props => {
+
+  console.log("====================================");
+  console.log("🚀 ~ file: Dashboard.tsx ~ line 1 ~ Dashboard ~ id", props.id);
+  console.log("====================================");
+  const [doctor, setDoctor] = useState({});
+
+  useEffect(() => {
+    if (props.id) {
+      const fetchData = async () => {
+        try {
+          const res = await axios.get(
+            `http://localhost:3000/doctor/doctors/${props.id}`
+          );
+          setDoctor(res.data);
+          console.log("====================================");
+          console.log("🚀 ~ file: Dashboard.tsx ~ line 1 ~ fetchData ~ res", res);
+          console.log("====================================");
+
+  
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchData();
+    }
+  }, [props.id]);
+
+  if (!doctor) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div
-      className="
-      flex flex-col items-center justify-center"
-      style={{
-        backgroundColor: dark ? "#1e1e1e" : "#fff",
-        color: dark ? "#fff" : "#000",
-      }}
-    >
-      <h1>Dashboard</h1>
-      <h1>{Profile?.name}</h1>
-      <h1>{Profile?.email}</h1>
-      <h1>{Profile?.role}</h1>
+    <div>
+      
     </div>
+    // <div
+    //   className="
+    //   flex
+    //   justify-center
+    //   items-center
+    //   h-90vh
+    //   bg-teal-400
+
+    //   "
+    // >
+    //   {doctor && doctor.name.firstName}
+    //   xzvxvxv
+    //   {doctor && doctor.name.lastName}
+    // </div>
   );
-}
+};
 
 export default Dashboard;

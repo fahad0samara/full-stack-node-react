@@ -31,54 +31,54 @@ const LogCheck = ({children}: any) => {
     localStorage.getItem("dark") === "true" ? true : false
   );
 
-  const checkLog = async () => {
-    setLoading(true);
+  // const checkLog = async () => {
+  //   setLoading(true);
 
-    if (!navigator.onLine) {
-      window.alert("No internet connection");
-      setLoading(false);
-      return;
-    }
-    const tokenPatient = localStorage.getItem("tokenPatient");
-    if (tokenPatient !== null) {
-      try {
-        const response = await axios.get(
-          "http://localhost:3000/user/userpatients",
-          {
-            headers: {
-              Authorization: `JWT ${tokenPatient}`,
-            },
-          }
-        );
-        console.log(response.data.user);
+  //   if (!navigator.onLine) {
+  //     window.alert("No internet connection");
+  //     setLoading(false);
+  //     return;
+  //   }
+  //   const tokenPatient = localStorage.getItem("tokenPatient");
+  //   if (tokenPatient !== null) {
+  //     try {
+  //       const response = await axios.get(
+  //         "http://localhost:3000/user/userpatients",
+  //         {
+  //           headers: {
+  //             Authorization: `JWT ${tokenPatient}`,
+  //           },
+  //         }
+  //       );
+  //       console.log(response.data.user);
 
-        // check for admin
-        if (response.data.success && response.data.user.user.role === "admin") {
-          setLoading(false);
-          setlogAdmin(true);
-          setProfile(response.data.user);
-        } else if (
-          response.data.success &&
-          response.data.user.user.role === "Basic"
-        ) {
-          setLoading(false);
-          setlogPatient(true);
-          setProfile(response.data.user);
-        } else {
-          setProfile(null);
-          setLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    } else {
-      setLoading(false);
-    }
-  };
+  //       // check for admin
+  //       if (response.data.success && response.data.user.user.role === "admin") {
+  //         setLoading(false);
+  //         setlogAdmin(true);
+  //         setProfile(response.data.user);
+  //       } else if (
+  //         response.data.success &&
+  //         response.data.user.user.role === "Basic"
+  //       ) {
+  //         setLoading(false);
+  //         setlogPatient(true);
+  //         setProfile(response.data.user);
+  //       } else {
+  //         setProfile(null);
+  //         setLoading(false);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   } else {
+  //     setLoading(false);
+  //   }
+  // };
 
-  React.useEffect(() => {
-    checkLog();
-  }, []);
+  // React.useEffect(() => {
+  //   checkLog();
+  // }, []);
 
   //   const checkLog = async () => {
   //     setLoading(true);

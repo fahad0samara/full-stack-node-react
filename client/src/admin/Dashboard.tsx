@@ -7,7 +7,7 @@ function Dashboard() {
 
       Profile,
       setProfile,
-      loading,
+
       setLoading,
       dark,
       setdark,

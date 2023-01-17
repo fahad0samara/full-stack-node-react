@@ -8,6 +8,8 @@ const {
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { isAuth } from "../middleware/jwtPatient";
+import Doctor from "../model/doctor";
+import Appointment from "../model/appointment";
 
 router.post("/registerPatient",  async (req, res) => {
   // validate the data before we make a user
@@ -129,6 +131,65 @@ router.get("/getPatient:id", async (req, res) => {
   
 
 });
+
+router.post("/appointments", async (req, res) => {
+  try {
+    // Find the patient and doctor by their respective IDs
+    const patient = await Patient.findById(req.body.patient);
+    const doctor = await Doctor.findById(req.body.doctor);
+
+    // Check if the doctor is available for the appointment date and time
+    if (!doctor || !doctor.workingHours) {
+      return res.status(400).json({
+        error: "Doctor is not available on the selected date",
+      });
+    }
+    const appointmentDate = new Date(req.body.date);
+    const appointmentDay = appointmentDate.toLocaleString("en-us", { weekday: "long" });
+    const workingHours = doctor.workingHours.find((day) => day.day === appointmentDay);
+    if (!workingHours) {
+      return res.status(400).json({
+        error: "Doctor is not available on the selected date",
+      });
+    }
+    const startTime = new Date("1970-01-01T" + workingHours.startTime + "Z");
+    const endTime = new Date("1970-01-01T" + workingHours.endTime + "Z");
+    const appointmentTime = new Date("1970-01-01T" + req.body.time + "Z");
+    if (appointmentTime < startTime || appointmentTime > endTime) {
+      return res.status(400).json({
+        error: "Doctor is not available at the selected time",
+      });
+    }
+
+    // If either the patient or doctor does not exist, return an error
+    if (!patient || !doctor) {
+      return res.status(404).json({
+        error: "Patient or doctor not found",
+      });
+    }
+
+    // Create a new appointment with the provided information
+    const appointment = new Appointment({
+      patient: req.body.patient,
+      doctor: req.body.doctor,
+      date: req.body.date,
+      time: req.body.time,
+      status: "pending",
+    });
+
+    // Save the appointment to the database
+    await appointment.save();
+
+    // Return the created appointment
+    res.json(appointment);
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+});
+
+// get the Patient
 
 
 export default router;

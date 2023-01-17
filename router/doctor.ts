@@ -3,13 +3,10 @@ const router = express.Router();
 
 import jwt from "jsonwebtoken";
 import Doctor from "../model/doctor";
-import User from '../model/User';
-
+import User from "../model/User";
 
 import Patient from "../model/patient";
 import Prescription from "../model/prescription";
-
-
 
 const {
   doctorValidation,
@@ -17,34 +14,169 @@ const {
   addPrescriptionsValidation,
 } = require("../middleware/validtion");
 
+// get route for doctor
+router.get("/doctors", async (req, res) => {
+  try {
+    // Find all doctors and populate the user field
+    const doctors = await Doctor.find().populate("user");
+
+    // Send the doctors to the client
+    res.json(doctors);
+    // Send the doctor's information and email to the client
+  } catch (error) {
+    res.status(500).json({error: error.message});
+  }
+});
+
+// get route for  a doctor id
+router.get("/doctors/:id", async (req, res) => {
+  try {
+    // Find the doctor by their ID and populate the user field
+    const doctor = await Doctor.findById(req.params.id).populate("user");
+
+    // Check if the doctor exists
+    if (!doctor) {
+      return res.status(404).json({
+        error: "Doctor not found",
+      });
+    }
+
+    // Send the doctor's information to the client
+    res.json(doctor);
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
+});
+
+
+
+router.post("/update-availability", async (req, res) => {
+  try {
+    // Find the doctor by their ID
+    const doctor = await Doctor.findById(req.body.doctorId);
+
+    // Check if the doctor exists
+    if (!doctor) {
+      return res.status(404).json({
+        error: "Doctor not found",
+      });
+    }
+    // Update the doctor's working hours and availability
+    doctor.workingHours = req.body.workingHours;
+    doctor.availableDays = req.body.availableDays;
+    doctor.availableTime = req.body.availableTime;
+
+    // Save the updated doctor to the database
+    await doctor.save();
+
+    // Send a success message to the client
+    res.json({message: "Working hours and availability updated successfully"});
+  } catch (error) {
+    res.status(500).json({error: error.message});
+  }
+});
+
+router.patch("/doctors/:id/working-hours", async (req, res) => {
+  try {
+    // Find the doctor by their ID
+    const doctor = await Doctor.findById(req.params.id);
+
+    // Check if the doctor exists
+    if (!doctor) {
+      return res.status(404).json({
+        error: "Doctor not found",
+      });
+    }
+
+    // Update the doctor's working hours
+    doctor.workingHours = req.body.workingHours;
+
+    // Save the updated doctor to the database
+    await doctor.save();
+
+    // Return the updated doctor
+    res.json(doctor);
+  } catch (error) {
+    res.status(500).json({
+      error: "Internal server error",
+    });
+  }
+});
+
+// GET route for getting the doctor's working hours
+router.get("/working-hours/:id", async (req, res) => {
+  try {
+    // Find the doctor by their ID
+    const doctor = await Doctor.findById(req.params.id);
+
+    // Check if the doctor exists
+    if (!doctor) {
+      return res.status(404).json({
+        error: "Doctor not found",
+      });
+    }
+
+    // Send the doctor's working hours to the client
+    res.json(doctor.workingHours);
+
+
+
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
+});
+
+// PUT route for updating the doctor's working hours
+router.put("/working-hours/:id", async (req, res) => {
+  try {
+    // Find the doctor by their ID
+    const doctor = await Doctor.findById(req.params.id);
+
+    // Check if the doctor exists
+    if (!doctor) {
+      return res.status(404).json({
+        error: "Doctor not found",
+      });
+    }
+
+
+    // Update the doctor's working hours
+    doctor.workingHours = req.body;
+    await doctor.save();
+
+    res.json({message: "Working hours updated successfully"});
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
+});
 
 router.post("/Prescription", async (req, res) => {
   // validate the data before we make a doctor
   // const {error} = addPrescriptionsValidation(req.body);
   // if (error) return res.status(400).send(error.details[0].message);
-    const patient = await Patient.findById(req.body.patient);
-        if(!patient) return res.status(404).send("Patient not found");
+  const patient = await Patient.findById(req.body.patient);
+  if (!patient) return res.status(404).send("Patient not found");
 
-        const doctor = await Doctor.findById(req.body.doctor);
-        if(!doctor) return res.status(404).send("Doctor not found");
-try{
-        const prescription = new Prescription({
-            patient: req.body.patient,
-            doctor: req.body.doctor,
-            medication: req.body.medication,
-            dosage: req.body.dosage,
-            frequency: req.body.frequency,
-            duration: req.body.duration,
-            date: req.body.date,
-            notes: req.body.notes,
-            refills: req.body.refills
-        });
+  const doctor = await Doctor.findById(req.body.doctor);
+  if (!doctor) return res.status(404).send("Doctor not found");
+  try {
+    const prescription = new Prescription({
+      patient: req.body.patient,
+      doctor: req.body.doctor,
+      medication: req.body.medication,
+      dosage: req.body.dosage,
+      frequency: req.body.frequency,
+      duration: req.body.duration,
+      date: req.body.date,
+      notes: req.body.notes,
+      refills: req.body.refills,
+    });
 
-        const result = await prescription.save();
-        res.status(201).send(result);
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
+    const result = await prescription.save();
+    res.status(201).send(result);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 });
 
 router.get("/prescription", async (req, res) => {
@@ -56,33 +188,31 @@ router.get("/prescription", async (req, res) => {
       .exec();
 
     // Map over the prescriptions and return a new array with the desired properties
-      res.json(
-        prescriptions.map(prescription => {
-          return {
-            _id: prescription._id,
-            //@ts-ignore
-            doctor: `${prescription.doctor.name.firstName} ${prescription.doctor.name.lastName}`,
-            //@ts-ignore
-            patient: ` ${prescription.patient.name.firstName} ${prescription.patient.name.lastName}`,
-            medication: prescription.medication,
-            notes: prescription.notes,
-            date: prescription.date,
-            dosage: prescription.dosage,
-            frequency: prescription.frequency,
-            duration: prescription.duration,
-            refills: prescription.refills
-            
-          
-          };
-        })
-      );
+    res.json(
+      prescriptions.map(prescription => {
+        return {
+          _id: prescription._id,
+          //@ts-ignore
+          doctor: `${prescription.doctor.name.firstName} ${prescription.doctor.name.lastName}`,
+          //@ts-ignore
+          patient: ` ${prescription.patient.name.firstName} ${prescription.patient.name.lastName}`,
+          medication: prescription.medication,
+          notes: prescription.notes,
+          date: prescription.date,
+          dosage: prescription.dosage,
+          frequency: prescription.frequency,
+          duration: prescription.duration,
+          refills: prescription.refills,
+        };
+      })
+    );
   } catch (error) {
     // If there is an error, send a response with a status of 500 and the error message
     res.status(500).json({message: error.message});
   }
 });
 
-// get the id 
+// get the id
 router.get("/prescription/:id", async (req, res) => {
   try {
     // Find the prescription by id and populate the doctor and patient fields
@@ -94,7 +224,7 @@ router.get("/prescription/:id", async (req, res) => {
 
     // If the prescription is not found, send a response with a status of 404 and a message
     if (!prescription) {
-      return res.status(404).json({ message: "Prescription not found" });
+      return res.status(404).json({message: "Prescription not found"});
     }
 
     // If the prescription is found, send a response with a status of 200 and the prescription
@@ -102,22 +232,11 @@ router.get("/prescription/:id", async (req, res) => {
       message: "Prescription retrieved successfully",
       data: prescription,
     });
-
   } catch (error) {
     // If there is an error, send a response with a status of 500 and the error message
-    res.status(500).json({ message: error.message });
+    res.status(500).json({message: error.message});
   }
 });
-
-
-
-
-
-
-
-
-
-
 
 router.get("/prescription/:id", (req, res) => {
   Prescription.findById(req.params.id)
@@ -127,30 +246,22 @@ router.get("/prescription/:id", (req, res) => {
       populate: {
         path: "user",
       },
-
     })
-  
-    .exec((err, prescription) => {
 
+    .exec((err, prescription) => {
       if (err) {
-        return res.status(500).json({ error: err });
+        return res.status(500).json({error: err});
       }
       if (!prescription) {
-
-
-        return res.status(404).json({ message: "Prescription not found" });
+        return res.status(404).json({message: "Prescription not found"});
       }
       res.json({
         message: "Prescription retrieved successfully",
 
-
         data: prescription,
       });
-
     });
-}
-);
-  
+});
 
 // router.get("/", async (req, res) => {
 //   try {
@@ -172,30 +283,7 @@ router.get("/prescription/:id", (req, res) => {
 //   }
 // });
 
-
-
-  
-
 module.exports = router;
-
-
-
-
-  
-   
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // router.get("/prescription/:id", (req, res) => {
 //   Prescription.findById(req.params.id)
@@ -221,7 +309,6 @@ module.exports = router;
 //     });
 // });
 
-
 router.get("/prescription/:id", async (req, res) => {
   try {
     const prescription = await Prescription.findById(req.params.id)
@@ -229,47 +316,20 @@ router.get("/prescription/:id", async (req, res) => {
       .populate({
         path: "doctor",
         populate: {
-
           path: "User",
         },
       });
     if (!prescription) {
       return res.status(404).json({message: "Prescription not found"});
     }
-    res
-      .status(200)
-      .json({
-        message: "Prescription retrieved successfully",
-        data: prescription,
-      });
+    res.status(200).json({
+      message: "Prescription retrieved successfully",
+      data: prescription,
+    });
   } catch (err) {
     res.status(500).json({message: "Internal Server Error", error: err});
   }
 });
-
-
-  
-  
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // create a new doctor
 // router.post("/register", async (req, res) => {
@@ -321,9 +381,6 @@ router.get("/prescription/:id", async (req, res) => {
 
 // });
 
-
-
-
 // // loginDoctor
 // // router.post("/loginDoctor", async (req, res) => {
 // //   // validate the data before we make a doctor
@@ -352,11 +409,6 @@ router.get("/prescription/:id", async (req, res) => {
 // //     });
 // //   }
 // // });
-
-
-
-
-
 
 // router.post("/addPrescriptions/:id", async (req, res) => {
 //   // validate the data before we make a user
@@ -406,8 +458,6 @@ router.get("/prescription/:id", async (req, res) => {
 //     .then(updatedPatient => res.send(updatedPatient))
 //     .catch(err => res.status(400).send(err));
 // });
-
-
 
 // router.get("/getPrescriptions/:id", async (req, res) => {
 //   try {
@@ -477,10 +527,8 @@ router.get("/prescription/:id", async (req, res) => {
 //   }
 // });
 
-
 // // Create a new prescription
 // router.post('/pre', (req, res) => {
- 
 
 //   Patient.findById(req.body.patient, (err: any, patient: any) => {
 //     if (err || !patient) {
@@ -522,11 +570,5 @@ router.get("/prescription/:id", async (req, res) => {
 //     res.json(prescription);
 //   });
 // });
-
-
-
-
-
-
 
 export default router;
