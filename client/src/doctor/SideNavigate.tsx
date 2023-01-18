@@ -34,7 +34,7 @@ const {id} = useParams();
         } else if (selected === "about") {
           navigate("/doctor/about");
         } else if (selected === "doctor") {
-          navigate(`/doctor/doctor/${id}`);
+         navigate(`/doctor/doctor/${id}`);
         }
       }}
       className="
@@ -142,3 +142,50 @@ const {id} = useParams();
 };
 
 export default SideNavigate;
+
+// import {NavLink, useNavigate, useParams} from "react-router-dom";
+
+// const SideNav = () => {
+//   const navigate = useNavigate();
+//   const {id} = useParams();
+
+//   return (
+//     <div>
+//       <nav>
+//         <ul>
+//           <li>
+//             <NavLink
+//               to="/doctor/dashboard"
+//               onClick={() => navigate("/doctor/dashboard")}
+//             >
+//               Dashboard
+//             </NavLink>
+//           </li>
+//           <li>
+//             <NavLink
+//               to={`/doctor/about/${id}`}
+//               onClick={() => navigate(`/doctor/about/${id}`
+//               )}
+//             >
+//               About
+//             </NavLink>
+//           </li>
+//           <li>
+//             {
+//               // pass the actual id value here
+//               //http://localhost:3000/doctor/doctors/63af46e39b3184d62a652f4e
+//             }
+//             <NavLink
+//               to={`/doctor/doctor/${id}`}
+//               onClick={() => navigate(`/doctor/doctor/${id}`)}
+//             >
+//               DoctorProfile
+//             </NavLink>
+//           </li>
+//         </ul>
+//       </nav>
+//     </div>
+//   );
+// };
+
+// export default SideNav;

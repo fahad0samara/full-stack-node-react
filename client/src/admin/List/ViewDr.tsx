@@ -157,9 +157,9 @@ const ViewDr = () => {
                   <span className="font-light ml-3  ">
                     {data.name.firstName}
                   </span>
-                  <span className="font-light ml-3  ">
+                  {/* <span className="font-light ml-3  ">
                     {data.name.lastName}
-                  </span>
+                  </span> */}
                 </h1>
 
                 <p className="font-light  mt-3">{data.Hospital}</p>

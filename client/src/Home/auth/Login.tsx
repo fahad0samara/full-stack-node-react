@@ -2,6 +2,7 @@ import axios from "axios";
 import React, {useState, useEffect} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {useLogIN} from "../../../ContextLog";
+import jwtDecode from 'jwt-decode'
 
 const Login = () => {
   const {
@@ -21,7 +22,7 @@ const Login = () => {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
 
-  const HandelLogin = async (e: {preventDefault: () => void}) => {
+  const HandelLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setLoading(true);
 
@@ -34,9 +35,24 @@ const Login = () => {
         }
       );
 
+      console.log("response", response.data.user);
       localStorage.setItem("token", response.data.token);
+      console.log("token", response.data.token);
+      const decoded = jwtDecode(response.data.token);
+      console.log("decoded", decoded);
+      
 
-      console.log(response.data.user.role);
+
+      
+      
+
+
+
+      
+      
+      
+
+    
 
       if (response.data.user.role === "admin") {
         setlogAdmin(true);
@@ -46,11 +62,12 @@ const Login = () => {
         navigate("/admin/dashboard");
       } else if (response.data.user.role === "patient") {
         setlogPatient(true);
+        setlogDr(false);
         setlogAdmin(false);
         setLoading(false);
         setProfile(response.data.user);
-        //"about/:id"
         navigate("/patient/dashboard");
+
       } else if (response.data.user.role === "doctor") {
         setlogDr(true);
         setlogPatient(false);
@@ -58,6 +75,11 @@ const Login = () => {
         setLoading(false);
         setProfile(response.data.user);
         navigate("/doctor/dashboard");
+
+
+      
+
+
       }
     } catch (error) {
       /* Checking if the error is an axios error. If it is, it is getting the response from the error
@@ -76,7 +98,16 @@ const Login = () => {
         );
       }
     }
-  };
+
+  }
+
+  
+  
+
+
+
+  
+
 
   return (
     <div className="relative">

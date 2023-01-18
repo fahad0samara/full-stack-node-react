@@ -17,7 +17,13 @@ import {
   isAuth,
 } from "../middleware/jwtPatient";
 import Patient from "../model/patient";
+import Doctor from "../model/doctor";
 
+interface JwtPayload {
+  _id: string;
+  role: string;
+  doctorId?: string; // add this line
+}
 
 // loginUser
 router.post(
@@ -39,25 +45,79 @@ router.post(
       const validPass = await bcrypt.compare(req.body.password, user.password);
       if (!validPass) return res.status(400).send("Invalid password");
 
-      // Create and assign a token and roles
-      const token = jwt.sign(
-        {
-          _id: user._id,
-          role: user.role,
-        },
-
-        // @ts-ignore
-
-        process.env.JWT_SECRET as string
-      );
-      res
-        .header("auth-token", token)
-
-        .json({
-          token,
-          user,
+      // Check if the user is a doctor
+      if (user.role === "doctor") {
+        // Find the corresponding doctor in the Doctor collection
+        const doctor = await Doctor.findOne({
+          user: user._id,
         });
+        if (!doctor) return res.status(400).send("Doctor not found");
+
+        // Create and assign a token and roles
+        const token = jwt.sign(
+          {
+            _id: user._id,
+            role: user.role,
+            doctorId: doctor._id,
+          },
+          process.env.JWT_SECRET as string
+        );
+        res
+          .header("auth-token", token)
+
+          .json({
+            token,
+            user,
+            doctor,
+          });
+      } else if (user.role === "patient") {
+        // Find the corresponding patient in the Patient collection
+        const patient = await Patient.findOne({
+          user: user._id,
+        });
+
+        if (!patient) return res.status(400).send("Patient not found");
+
+        // Create and assign a token and roles
+        const token = jwt.sign(
+          {
+            _id: user._id,
+            role: user.role,
+            patientId: patient._id,
+          },
+          process.env.JWT_SECRET as string
+        );
+
+        res
+
+          .header("auth-token", token)
+
+          .json({
+            token,
+            user,
+            patient,
+          });
+      } else if (user.role === "admin") {
+        // Create and assign a token and roles
+        const token = jwt.sign(
+          {
+            _id: user._id,
+            role: user.role,
+          },
+          process.env.JWT_SECRET as string
+        );
+        res
+          .header("auth-token", token)
+
+          .json({
+            token,
+            user,
+          });
+      }
     } catch (error) {
+      console.log(error);
+      
+      
       res.status(400).json({
         message: (error as Error).message,
         error,
@@ -65,8 +125,6 @@ router.post(
     }
   }
 );
-
-
 
 // get the user
 
@@ -97,8 +155,6 @@ router.get(
     });
   }
 );
-
-
 
 router.get("/patient", async (req, res) => {
   try {
@@ -190,7 +246,7 @@ router.post("/register-patient", async (req, res) => {
   });
   if (userExist) return res.status(400).send("User already exists");
   // create  healthID id for user start from 10
-  const healthIDNumber = await Patient.countDocuments() + 10;
+  const healthIDNumber = (await Patient.countDocuments()) + 10;
   // create a new patient
 
   try {

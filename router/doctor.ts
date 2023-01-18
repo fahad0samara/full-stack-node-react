@@ -12,24 +12,56 @@ const {
   doctorValidation,
   loginDoctorValidation,
   addPrescriptionsValidation,
+
 } = require("../middleware/validtion");
 
-// get route for doctor
-router.get("/doctors", async (req, res) => {
-  try {
-    // Find all doctors and populate the user field
-    const doctors = await Doctor.find().populate("user");
 
-    // Send the doctors to the client
-    res.json(doctors);
-    // Send the doctor's information and email to the client
-  } catch (error) {
-    res.status(500).json({error: error.message});
+// Middleware to extract and decode the token from the headers
+const extractToken = (req: any, res: any, next: any) => {
+
+
+  // Get the token from the headers
+  const token = req.headers.authorization?.split(" ")[1];
+
+  // Check if the token exists
+  if (!token) {
+    return res.status(401).json({ error: "Unauthorized access1" });
   }
-});
+  
 
-// get route for  a doctor id
-router.get("/doctors/:id", async (req, res) => {
+
+  try {
+    // Decode the token and add it to the request object
+    //
+    req.user = jwt.verify(token, process.env.JWT_SECRET as string);
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: "Unauthorized access2" });
+  }
+};
+
+// Middleware to check if the user is a doctor and has the correct ID
+const checkDoctor = (req: any, res: any, next: any) => {
+  try {
+    // Get the user's role and id from the token
+    const { role, doctorId } = req.user;
+
+    // Check if the user is a doctor and if the id in the token matches the id in the route
+    if (role === "doctor" && doctorId === req.params.id) {
+      next();
+    } else {
+      return res.status(401).json({
+        error: "Unauthorized access3"
+      });
+    }
+  } catch (error) {
+    return res.status(401).json({
+      error: "Unauthorized access4"
+    });
+  }
+};
+
+router.get("/doctors/:id", extractToken, checkDoctor, async (req, res) => {
   try {
     // Find the doctor by their ID and populate the user field
     const doctor = await Doctor.findById(req.params.id).populate("user");
@@ -37,16 +69,107 @@ router.get("/doctors/:id", async (req, res) => {
     // Check if the doctor exists
     if (!doctor) {
       return res.status(404).json({
-        error: "Doctor not found",
+        error: "Doctor not found"
       });
     }
 
     // Send the doctor's information to the client
     res.json(doctor);
   } catch (err) {
-    res.status(500).json({error: err.message});
+    res.status(500).json({ error: err.message });
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // Middleware to check if the user is a doctor and has the correct ID
+// const checkDoctor = (req:any, res:any, next:any) => {
+//   try {
+//     // Get the user's role and id from the token
+//     const { role, doctorId } = req.user;
+
+//     // Check if the user is a doctor and if the id in the token matches the id in the route
+//     if (role === 'doctor' && doctorId === req.params.id) {
+//       next();
+//     } else {
+//       return res.status(401).json({
+//         error: "Unauthorized access"
+//       });
+//     }
+//   } catch (error) {
+//     return res.status(401).json({
+//       error: "Unauthorized access"
+//     });
+//   }
+// }
+
+
+// //
+
+
+// router.get("/doctors/:id", checkDoctor, async (req, res) => {
+//   try {
+//     // Check if the doctorId in the token matches the id in the params
+//     //@ts-ignore
+//     if (req.user.doctorId !== req.params.id) {
+//       return res.status(401).json({
+
+//         error: "Unauthorized access"
+//       });
+//     }
+
+ 
+
+//     // Find the doctor by their ID and populate the user field
+//     const doctor = await Doctor.findById(req.params.id).populate("user");
+
+//     // Check if the doctor exists
+//     if (!doctor) {
+//       return res.status(404).json({
+//         error: "Doctor not found",
+//       });
+//     }
+
+//     // Send the doctor's information to the client
+//     res.json(doctor);
+//   } catch (err) {
+//     res.status(500).json({error: err.message});
+//   }
+// });
+
+
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+
+    
+    
+
+ 
+
+
 
 
 
@@ -571,4 +694,5 @@ router.get("/prescription/:id", async (req, res) => {
 //   });
 // });
 
-export default router;
+export default router
+
