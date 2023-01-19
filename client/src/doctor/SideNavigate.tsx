@@ -31,10 +31,10 @@ const {id} = useParams();
       onSelect={(selected: string) => {
         if (selected === "dashboard") {
           navigate("/doctor/dashboard");
-        } else if (selected === "about") {
-          navigate("/doctor/about");
+        } else if (selected === "MyCalendar") {
+          navigate("/doctor/MyCalendar");
         } else if (selected === "doctor") {
-         navigate(`/doctor/doctor/${id}`);
+          navigate(`/doctor/doctor/${id}`);
         }
       }}
       className="
@@ -88,7 +88,7 @@ const {id} = useParams();
             dashboard
           </NavText>
         </NavItem>
-        <NavItem eventKey="about">
+        <NavItem eventKey="MyCalendar">
           <NavIcon>
             <RiDashboardFill
               style={{

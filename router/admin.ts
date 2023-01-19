@@ -653,6 +653,12 @@ router.post("/register-dr", async (req, res) => {
     user: req.body.user,
     name: req.body.name,
     Hospital: req.body.Hospital,
+    availableDays: req.body.availableDays,
+    availableTime: req.body.availableTime,
+    
+     
+  
+
     HospitalAddress: req.body.HospitalAddress,
     date: req.body.date,
     phoneNumber: req.body.phoneNumber,

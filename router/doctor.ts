@@ -81,73 +81,109 @@ router.get("/doctors/:id", extractToken, checkDoctor, async (req, res) => {
 });
 
 
+router.post(
+  "/doctors/:id/working-hours",
+  extractToken,
+  checkDoctor,
+  async (req, res) => {
+    try {
+      // Find the doctor by their ID
+      const doctor = await Doctor.findById(req.params.id);
+
+      // Check if the doctor exists
+      if (!doctor) {
+        return res.status(404).json({
+          error: "Doctor not found",
+        });
+      }
+
+      // Update the doctor's available days and working hours
+      doctor.availableDays = req.body.availableDays;
+      doctor.availableTime = {
+        start: req.body.startTime,
+        end: req.body.endTime,
+      };
+
+      // Save the updated doctor
+      await doctor.save();
+
+    
+
+      // Send a success message to the client
+      res.json({
+        message: "Working hours and available days added successfully",
+      });
+    } catch (err) {
+      res.status(500).json({error: err.message});
+    }
+  }
+);
+
+router.get("/doctors/:id/working-hours"
+  , extractToken, checkDoctor, async (req, res) => {
+    try {
+      // Find the doctor by their ID
+      const doctor = await Doctor.findById(req.params.id);
+
+      // Check if the doctor exists
+      if (!doctor) {
+        return res.status(404).json({
+          error: "Doctor not found",
+        });
+      }
 
 
 
+      // Send the doctor's available days and working hours to the client
+      res.json({
+        availableDays: doctor.availableDays,
+        workingHours: doctor.availableTime && {
+          start: doctor.availableTime.start,
+          end: doctor.availableTime.end,
+        },
+      });
+    } catch (err) {
+      res.status(500).json({error: err.message});
+    }
+  }
+);
 
-
-
-
-
-
-
-
-
-
-// // Middleware to check if the user is a doctor and has the correct ID
-// const checkDoctor = (req:any, res:any, next:any) => {
+// router.get("/doctors/:id/patients", extractToken, checkDoctor, async (req, res) => {
 //   try {
-//     // Get the user's role and id from the token
-//     const { role, doctorId } = req.user;
-
-//     // Check if the user is a doctor and if the id in the token matches the id in the route
-//     if (role === 'doctor' && doctorId === req.params.id) {
-//       next();
-//     } else {
-//       return res.status(401).json({
-//         error: "Unauthorized access"
-//       });
-//     }
-//   } catch (error) {
-//     return res.status(401).json({
-//       error: "Unauthorized access"
-//     });
-//   }
-// }
-
-
-// //
-
-
-// router.get("/doctors/:id", checkDoctor, async (req, res) => {
-//   try {
-//     // Check if the doctorId in the token matches the id in the params
-//     //@ts-ignore
-//     if (req.user.doctorId !== req.params.id) {
-//       return res.status(401).json({
-
-//         error: "Unauthorized access"
-//       });
-//     }
-
- 
-
-//     // Find the doctor by their ID and populate the user field
-//     const doctor = await Doctor.findById(req.params.id).populate("user");
+//     // Find the doctor by their ID
+//     const doctor = await Doctor.findById(req.params.id);
 
 //     // Check if the doctor exists
 //     if (!doctor) {
 //       return res.status(404).json({
 //         error: "Doctor not found",
 //       });
+
 //     }
 
-//     // Send the doctor's information to the client
-//     res.json(doctor);
+//     // Find all the patients that have been assigned to the doctor
+//     const patients = await Patient.find({ doctor: doctor._id });
+
+//     // Send the patients to the client
+//     res.json(patients);
 //   } catch (err) {
-//     res.status(500).json({error: err.message});
+//     res.status(500).json({ error: err.message });
+
 //   }
 // });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     
@@ -185,7 +221,7 @@ router.post("/update-availability", async (req, res) => {
       });
     }
     // Update the doctor's working hours and availability
-    doctor.workingHours = req.body.workingHours;
+  
     doctor.availableDays = req.body.availableDays;
     doctor.availableTime = req.body.availableTime;
 
@@ -199,79 +235,34 @@ router.post("/update-availability", async (req, res) => {
   }
 });
 
-router.patch("/doctors/:id/working-hours", async (req, res) => {
-  try {
-    // Find the doctor by their ID
-    const doctor = await Doctor.findById(req.params.id);
-
-    // Check if the doctor exists
-    if (!doctor) {
-      return res.status(404).json({
-        error: "Doctor not found",
-      });
-    }
-
-    // Update the doctor's working hours
-    doctor.workingHours = req.body.workingHours;
-
-    // Save the updated doctor to the database
-    await doctor.save();
-
-    // Return the updated doctor
-    res.json(doctor);
-  } catch (error) {
-    res.status(500).json({
-      error: "Internal server error",
-    });
-  }
-});
-
-// GET route for getting the doctor's working hours
-router.get("/working-hours/:id", async (req, res) => {
-  try {
-    // Find the doctor by their ID
-    const doctor = await Doctor.findById(req.params.id);
-
-    // Check if the doctor exists
-    if (!doctor) {
-      return res.status(404).json({
-        error: "Doctor not found",
-      });
-    }
-
-    // Send the doctor's working hours to the client
-    res.json(doctor.workingHours);
 
 
 
-  } catch (err) {
-    res.status(500).json({error: err.message});
-  }
-});
 
 // PUT route for updating the doctor's working hours
-router.put("/working-hours/:id", async (req, res) => {
-  try {
-    // Find the doctor by their ID
-    const doctor = await Doctor.findById(req.params.id);
+// router.put("/working-hours/:id", async (req, res) => {
+//   try {
+//     // Find the doctor by their ID
+//     const doctor = await Doctor.findById(req.params.id);
 
-    // Check if the doctor exists
-    if (!doctor) {
-      return res.status(404).json({
-        error: "Doctor not found",
-      });
-    }
+//     // Check if the doctor exists
+//     if (!doctor) {
+//       return res.status(404).json({
+//         error: "Doctor not found",
+//       });
+//     }
 
 
-    // Update the doctor's working hours
-    doctor.workingHours = req.body;
-    await doctor.save();
+//     // Update the doctor's 
 
-    res.json({message: "Working hours updated successfully"});
-  } catch (err) {
-    res.status(500).json({error: err.message});
-  }
-});
+
+//     await doctor.save();
+
+//     res.json({message: "Working hours updated successfully"});
+//   } catch (err) {
+//     res.status(500).json({error: err.message});
+//   }
+// });
 
 router.post("/Prescription", async (req, res) => {
   // validate the data before we make a doctor
