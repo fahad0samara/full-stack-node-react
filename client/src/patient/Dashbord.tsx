@@ -18,6 +18,7 @@ const Dashboard = (props: any) => {
     
 
     Profile,
+    Patient,
     
 
    
@@ -95,7 +96,7 @@ const Dashboard = (props: any) => {
                 {message}
               </span>
 
-              {Profile ? Profile.name.firstName : ""}
+              {Patient ? Patient.name.firstName : ""}
             </h1>
             <h4 className="text-sm font-bold mt-1 ml-3 text-zinc-400  ">
               You'll be feeling healthy and strong again soon!
@@ -151,7 +152,7 @@ const Dashboard = (props: any) => {
                    font-extrabold  italic  ml-1
                  "
                 >
-                  {Profile ? Profile.name.firstName : ""}
+                  {Patient ? Patient.name.firstName : ""}
                 </h1>
               </div>
               <div className="flex flex-row justify-start mx-1  ">
@@ -163,7 +164,7 @@ const Dashboard = (props: any) => {
                    font-extrabold  italic  ml-1
                  "
                 >
-                  {Profile ? Profile.name.middleName : ""}
+                  {Patient ? Patient.name.middleName : ""}
                 </h1>
               </div>
               <div className="flex flex-row justify-start mx-1 ">
@@ -175,7 +176,7 @@ const Dashboard = (props: any) => {
                    font-extrabold  italic  ml-1
                  "
                 >
-                  {Profile ? Profile.name.LastName : ""}
+                  {Patient ? Patient.name.LastName : ""}
                 </h1>
               </div>
               <div className="flex flex-row justify-start  ">
@@ -187,7 +188,7 @@ const Dashboard = (props: any) => {
                    font-extrabold  italic  ml-1
                  "
                 >
-                  {Profile ? convertDate(Profile.date) : ""}
+                  {Patient ? convertDate(Patient.date) : ""}
                 </h1>
               </div>
               <div className="flex flex-col justify-start mt-4"></div>
@@ -213,7 +214,7 @@ const Dashboard = (props: any) => {
                    font-extrabold text-cyan-400  italic  ml-1
                  "
                 >
-                  {Profile ? Profile.healthIDNumber : ""}
+                  {Patient ? Patient.healthIDNumber : ""}
                 </h1>
               </div>
               <div className="flex flex-row justify-start mx-1 my-1  ">
@@ -225,20 +226,20 @@ const Dashboard = (props: any) => {
                    font-extrabold  italic  ml-1
                  "
                 >
-                  {Profile ? Profile.mobile : ""}
+                  {Patient ? Patient.mobile : ""}
                 </h1>
               </div>
               <div className="flex flex-row justify-start mx-1 ">
                 <h1 className="text-md font-bold text-zinc-400 italic   ">
                   email :
                 </h1>
-                <h1
+                {/* <h1
                   className="
                    font-extrabold  italic  ml-1
                  "
                 >
                   {Profile ? Profile.user.email : ""}
-                </h1>
+                </h1> */}
               </div>
 
               <div className="flex flex-row justify-start my-1  ">
@@ -250,7 +251,7 @@ const Dashboard = (props: any) => {
                    font-extrabold  italic  ml-1
                  "
                 >
-                  {Profile ? Profile.bloodGroup : ""}
+                  {Patient ? Patient.bloodGroup : ""}
                 </h1>
               </div>
               <div className="flex flex-col justify-start mt-4"></div>
@@ -281,13 +282,13 @@ const Dashboard = (props: any) => {
                   className="
                     font-extrabold italic ml-1"
                 >
-                  {Profile ? Profile.contactPerson.name.firstName : ""}
+                  {Patient ? Patient.contactPerson.name.firstName : ""}
                 </h1>
                 <h1
                   className="
                     font-extrabold italic ml-1"
                 >
-                  {Profile ? Profile.contactPerson.name.LastName : ""}
+                  {Patient ? Patient.contactPerson.name.LastName : ""}
                 </h1>
               </div>
 
@@ -300,7 +301,7 @@ const Dashboard = (props: any) => {
                     font-extrabold  italic  ml-1
                   "
                 >
-                  {Profile ? Profile.contactPerson.mobile : ""}
+                  {Patient ? Patient.contactPerson.mobile : ""}
                 </h1>
               </div>
               <div className="flex flex-row justify-start mx-1 ">
@@ -312,7 +313,7 @@ const Dashboard = (props: any) => {
                     font-extrabold  italic  ml-1
                   "
                 >
-                  {Profile ? Profile.contactPerson.email : ""}
+                  {Patient ? Patient.contactPerson.email : ""}
                 </h1>
               </div>
               <div className="flex flex-row justify-start my-1  ">
@@ -324,7 +325,7 @@ const Dashboard = (props: any) => {
                     font-extrabold  italic  ml-1
                   "
                 >
-                  {Profile ? Profile.contactPerson.relation : ""}
+                  {Patient ? Patient.contactPerson.relation : ""}
                 </h1>
               </div>
             </div>
@@ -354,8 +355,8 @@ const Dashboard = (props: any) => {
             }
             <div className="mt-3">
               <p className="text-black text-xl">
-                {Profile ? (
-                  Profile.diseaseList[0].disease
+                {Patient ? (
+                  Patient.diseaseList[0].disease
                 ) : (
                   <div>
                     <h1>There are no diseases</h1>
@@ -363,7 +364,7 @@ const Dashboard = (props: any) => {
                 )}
               </p>
               <p className="capitalize">
-                {Profile ? Profile.diseaseList[0].description : ""}
+                {Patient ? Patient.diseaseList[0].description : ""}
               </p>
             </div>
           </div>
@@ -389,8 +390,8 @@ const Dashboard = (props: any) => {
             }
             <div className="mt-3">
               <p className="text-black text-xl">
-                {Profile ? (
-                  Profile.allergyList[0].allergy
+                {Patient ? (
+                  Patient.allergyList[0].allergy
                 ) : (
                   <div>
                     <h1>There are no allergies</h1>
@@ -398,7 +399,7 @@ const Dashboard = (props: any) => {
                 )}
               </p>
               <p className="capitalize">
-                {Profile ? Profile.diseaseList[0].description : ""}
+                {Patient ? Patient.diseaseList[0].description : ""}
               </p>
             </div>
           </div>
@@ -424,8 +425,8 @@ const Dashboard = (props: any) => {
             }
             <div className="mt-3">
               <p className="text-black text-xl">
-                {Profile ? (
-                  Profile.medicationList[0].medication
+                {Patient ? (
+                  Patient.medicationList[0].medication
                 ) : (
                   <div>
                     <h1>There are no medications</h1>
@@ -433,7 +434,7 @@ const Dashboard = (props: any) => {
                 )}
               </p>
               <p className="capitalize">
-                {Profile ? Profile.diseaseList[0].description : ""}
+                {Patient ? Patient.diseaseList[0].description : ""}
               </p>
             </div>
           </div>

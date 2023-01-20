@@ -13,65 +13,12 @@ const DoctorProfile = () => {
 
     Profile,
     setProfile,
-
+Doctor,
     dark,
     setdark,
   } = useLogIN()
  
-  const [data, setData] = useState<Doctor>({
-    _id: "",
-    name: {
-      firstName: "",
-      middleName: "",
-      lastName: "",
-    },
-    user: {
-      email: "",
-      password: "",
-      createdAt: "",
-    },
-    phoneNumber: "",
-    Hospital: "",
-    HospitalAddress: {
-      city: "",
-      building: "",
-      state: "",
-      ZipCode: "",
-      Country: "",
-    },
-    specialty: "",
-    degree: "",
-    experience: "",
-    date: "",
-    bloodGroup: "",
-  });
-  useEffect(() => {
-    setLoading(true);
-    const token = localStorage.getItem("token");
-    if (!token) {
-      console.log("Token not found in local storage");
-      return;
-    }
-    const decoded = jwtDecode(token);
-    console.log("decoded", decoded);
-    const userId = decoded.doctorId;
-    console.log("userId", userId);
-    const getDoctor = async () => {
 
-      const response = await axios.get(
-        `http://localhost:3000/doctor/doctors/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-     
-      setData(response.data);
-      setLoading(false);
-    };
-    getDoctor();
-  }, []);
 
   return (
     <>
@@ -159,39 +106,39 @@ const DoctorProfile = () => {
                 <h1 className="text-4xl  font-medium mx-3">
                   Dr:
                   <span className="font-light ml-3  ">
-                    {data.name.firstName}
+                    {Doctor.name.firstName}
                   </span>
                   {/* <span className="font-light ml-3  ">
-                    {data.name.lastName}
+                    {Doctor.name.lastName}
                   </span> */}
                 </h1>
 
-                <p className="font-light  mt-3">{data.Hospital}</p>
+                <p className="font-light  mt-3">{Doctor.Hospital}</p>
                 <p className="font-light  mt-3">
-                  {data.HospitalAddress.Country}
+                  {Doctor.HospitalAddress.Country}
                 </p>
                 <div className="w-20 h-1 bg-cyan-400 mt-3 mx-auto"></div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 md:mt-0">
                   <div>
                     <p className="font-medium mt-8">Email:</p>
-                    <p className="mt-2">{data.user.email}</p>
+                    <p className="mt-2">{Doctor.user.email}</p>
                   </div>
                   <div>
                     <p className="font-medium mt-8">Phone:</p>
-                    <p className="mt-2">{data.phoneNumber}</p>
+                    <p className="mt-2">{Doctor.phoneNumber}</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 md:mt-0">
                   <div>
                     <p className="font-medium mt-8">degree:</p>
-                    <p className="mt-2">{data.degree}</p>
+                    <p className="mt-2">{Doctor.degree}</p>
                   </div>
                   <div>
                     <p className="mt-8 ">
                       <span className="font-medium">bloodGroup:</span>{" "}
                     </p>
-                    <p className="mt-2 ">{data.bloodGroup}</p>{" "}
+                    <p className="mt-2 ">{Doctor.bloodGroup}</p>{" "}
                   </div>
                 </div>
               </div>

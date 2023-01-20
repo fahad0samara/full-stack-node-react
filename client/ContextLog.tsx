@@ -18,12 +18,24 @@ const ContextLog = createContext(
     setdark: React.Dispatch<React.SetStateAction<boolean>>;
     logDr: boolean;
     setlogDr: React.Dispatch<React.SetStateAction<boolean>>;
+    Patient: any;
+    setPatient: React.Dispatch<React.SetStateAction<any>>;
+    Doctor: any;
+    setDoctor: React.Dispatch<React.SetStateAction<any>>;
+    
+
+
+
   }
 );
 const LogCheck = ({children}: any) => {
   const [logPatient, setlogPatient] = useState(false);
   const [logAdmin, setlogAdmin] = useState(false);
   const [logDr, setlogDr] = useState(false);
+  const [Patient, setPatient] = useState()
+  const [Doctor, setDoctor]=useState()
+  
+
 
   const [Profile, setProfile] = useState();
   const [Loading, setLoading] = useState(false);
@@ -31,90 +43,9 @@ const LogCheck = ({children}: any) => {
     localStorage.getItem("dark") === "true" ? true : false
   );
 
-  // const checkLog = async () => {
-  //   setLoading(true);
 
-  //   if (!navigator.onLine) {
-  //     window.alert("No internet connection");
-  //     setLoading(false);
-  //     return;
-  //   }
-  //   const tokenPatient = localStorage.getItem("tokenPatient");
-  //   if (tokenPatient !== null) {
-  //     try {
-  //       const response = await axios.get(
-  //         "http://localhost:3000/user/userpatients",
-  //         {
-  //           headers: {
-  //             Authorization: `JWT ${tokenPatient}`,
-  //           },
-  //         }
-  //       );
-  //       console.log(response.data.user);
 
-  //       // check for admin
-  //       if (response.data.success && response.data.user.user.role === "admin") {
-  //         setLoading(false);
-  //         setlogAdmin(true);
-  //         setProfile(response.data.user);
-  //       } else if (
-  //         response.data.success &&
-  //         response.data.user.user.role === "Basic"
-  //       ) {
-  //         setLoading(false);
-  //         setlogPatient(true);
-  //         setProfile(response.data.user);
-  //       } else {
-  //         setProfile(null);
-  //         setLoading(false);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   } else {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // React.useEffect(() => {
-  //   checkLog();
-  // }, []);
-
-  //   const checkLog = async () => {
-  //     setLoading(true);
-  //     const token = await AsyncStorage.getItem("token");
-  //     if (token !== null) {
-  //       try {
-  //         const response = await axios.get(
-  //           "https://firstauth.azurewebsites.net/auth/profile",
-  //           {
-  //             headers: {
-  //               Authorization: `JWT ${token}`,
-  //             },
-  //           }
-  //         );
-  //         if (response.data.success) {
-  //           setLoading(false);
-  //           setLog(true);
-  //           setProfile(response.data.mango);
-  //         } else {
-  //           setProfile({});
-  //           setLoading(false);
-  //         }
-  //       } catch (error) {
-  //         console.log(error);
-  //         console.log(error.response);
-  //         setLog(false);
-  //         setLoading(false);
-  //       }
-  //     } else {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   React.useEffect(() => {
-  //     checkLog();
-  //   }, []);
+ 
 
   return (
     <ContextLog.Provider
@@ -131,6 +62,11 @@ const LogCheck = ({children}: any) => {
         setLoading,
         dark,
         setdark,
+        Patient,
+        setPatient,
+        Doctor,
+        setDoctor
+
       }}
     >
       {Loading ? <Loder /> : children}

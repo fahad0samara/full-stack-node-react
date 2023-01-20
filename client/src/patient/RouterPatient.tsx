@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import SideNavigate from "./SideNavigate";
 import Dashboard from "./Dashbord";
 import About from "./About";
-import Appointment from "./Appointment";
+import Appointment from "./AppointmentForm";
 
 
 

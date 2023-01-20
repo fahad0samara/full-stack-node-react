@@ -18,6 +18,7 @@ import {
 } from "../middleware/jwtPatient";
 import Patient from "../model/patient";
 import Doctor from "../model/doctor";
+import Appointment from "../model/appointment";
 
 interface JwtPayload {
   _id: string;
@@ -116,8 +117,7 @@ router.post(
       }
     } catch (error) {
       console.log(error);
-      
-      
+
       res.status(400).json({
         message: (error as Error).message,
         error,
@@ -126,70 +126,107 @@ router.post(
   }
 );
 
-// get the user
-
-router.get("/getUser/:id", async (req, res) => {
+router.get("/getPatient/:id", async (req, res) => {
   try {
-    const user = await Patient.findById(req.params.id).populate("patientId");
-    res.json(user);
-  } catch (error) {
-    res.json({message: (error as Error).message});
-  }
-});
-
-router.get(
-  "/profile",
-  isAuth,
-
-  async (req: any, res: any) => {
-    if (!req.user) {
-      return res.json({
-        success: false,
-        message: "User not found",
-      });
-    }
-    res.json({
-      success: true,
-      message: "User found",
-      user: req.user,
-    });
-  }
-);
-
-router.get("/patient", async (req, res) => {
-  try {
-    const patient = await Patient.find().populate("user");
-    res.json(patient);
-  } catch (error) {
-    res.json({message: (error as Error).message});
-  }
-});
-
-router.get(
-  "/userpatients",
-  authPatient,
-
-  async (req: any, res: any) => {
-    if (!req.user) {
-      return res.json({
-        success: false,
-        message: "User not found",
-      });
-    }
-    res.json({
-      success: true,
-      message: "User found",
-      user: req.user,
-    });
-  }
-);
-
-router.get("/patient/:id", async (req, res) => {
-  try {
+    // Find the patient by their ID and populate the user field
     const patient = await Patient.findById(req.params.id).populate("user");
+
+    // Check if the patient exists
+    if (!patient) {
+      return res.status(404).json({
+        error: "Patient not found",
+      });
+    }
+
+    // Send the patient's information to the client
     res.json(patient);
-  } catch (error) {
-    res.json({message: (error as Error).message});
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
+});
+
+router.get("/getDoctor/:id", async (req, res) => {
+  try {
+    // Find the doctor by their ID and populate the user field
+    const doctor = await Doctor.findById(req.params.id).populate("user");
+
+    // Check if the doctor exists
+    if (!doctor) {
+      return res.status(404).json({
+        error: "Doctor not found",
+      });
+
+      // Send the doctor's information to the client
+      res.json(doctor);
+    }
+
+    // Send the doctor's information to the client
+    res.json(doctor);
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
+});
+
+router.get("/getAdmin/:id", async (req, res) => {
+  try {
+    // Find the admin by their ID and populate the user field
+    const admin = await User.findById(req.params.id);
+
+    // Check if the admin exists
+    if (!admin) {
+      return res.status(404).json({
+        error: "Admin not found",
+      });
+
+      // Send the admin's information to the client
+      res.json(admin);
+    }
+
+    // Send the admin's information to the client
+    res.json(admin);
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
+});
+
+router.get("/getPatient", async (req, res) => {
+  try {
+    // Find the patient by their ID and populate the user field
+    const patient = await Patient.find().populate("user");
+
+    // Check if the patient exists
+    if (!patient) {
+      return res.status(404).json({
+        error: "Patient not found",
+      });
+
+      // Send the patient's information to the client
+      res.json(patient);
+    }
+
+    // Send the patient's information to the client
+    res.json(patient);
+  } catch (err) {
+    res.status(500).json({error: err.message});
+  }
+});
+
+router.get("/getDoctor", async (req, res) => {
+  try {
+    // Find the doctor by their ID and populate the user field
+    const doctor = await Doctor.find().populate("user");
+
+    // Check if the doctor exists
+    if (!doctor) {
+      return res.status(404).json({
+        error: "Doctor not found",
+      });
+    }
+
+    // Send the doctor's information to the client
+    res.json(doctor);
+  } catch (err) {
+    res.status(500).json({error: err.message});
   }
 });
 
@@ -279,5 +316,69 @@ router.post("/register-patient", async (req, res) => {
     res.status(400).json({message: err.message});
   }
 });
+
+router.post("/appointment", async (req, res) => {
+  try {
+    // Check if the patient exists patient:Patient._id,
+    const patient = await Patient.findById(req.body.patient);
+    if (!patient) {
+      return res.status(404).json({
+        error: "Patient not found",
+      });
+    }
+
+    // Check if the doctor exists
+    const doctor = await Doctor.findById(req.body.doctorId);
+    if (!doctor) {
+      return res.status(404).json({
+        error: "Doctor not found",
+      });
+    }
+
+    // Extract the patient's ID, doctor's ID, appointment date, and appointment time from the request body
+    const patientId = req.body.patient;
+    const doctorId = req.body.doctorId;
+    const appointmentDate = req.body.appointmentDate;
+    const appointmentTime = req.body.appointmentTime;
+
+    // Check if the doctor is available at the desired date and time
+    const existingAppointment = await Appointment.findOne({
+      doctor: doctorId,
+      appointmentDate: appointmentDate,
+      appointmentTime: appointmentTime,
+    });
+
+    if (existingAppointment) {
+      // If the doctor is not available, return an error message
+      return res.status(400).json({
+        error: "This doctor is not available at the desired date and time",
+      });
+    }
+
+    // If the doctor is available, create a new appointment document
+    const appointment = new Appointment({
+      doctor: doctorId,
+      patient: patientId,
+      appointmentDate: appointmentDate,
+      appointmentTime: appointmentTime,
+      symptoms: req.body.symptoms,
+    });
+    await appointment.save();
+
+    // Return success message to the patient
+    res.json({
+      message: "Appointment request sent successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      error: "Server error",
+    });
+  }
+});
+
+
+
+module.exports = router;
 
 export default router;

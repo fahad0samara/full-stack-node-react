@@ -2,7 +2,7 @@ import axios from "axios";
 import React, {useState, useEffect} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {useLogIN} from "../../../ContextLog";
-import jwtDecode from 'jwt-decode'
+import jwtDecode from "jwt-decode";
 
 const Login = () => {
   const {
@@ -13,6 +13,8 @@ const Login = () => {
     setlogPatient,
     dark,
     setdark,
+    setDoctor,
+    setPatient,
   } = useLogIN();
 
   const navigate = useNavigate();
@@ -22,8 +24,10 @@ const Login = () => {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
 
-  const HandelLogin = async (e: { preventDefault: () => void }) => {
+  const HandelLogin = async (e: {preventDefault: () => void}) => {
     e.preventDefault();
+
+
     setLoading(true);
 
     try {
@@ -34,61 +38,81 @@ const Login = () => {
           password,
         }
       );
-
-      console.log("response", response.data.user);
       localStorage.setItem("token", response.data.token);
-      console.log("token", response.data.token);
       const decoded = jwtDecode(response.data.token);
-      console.log("decoded", decoded);
-      
 
-
-      
-      
-
-
-
-      
-      
-      
-
-    
-
+      setLoading(false);
       if (response.data.user.role === "admin") {
+        setLoading(false);
         setlogAdmin(true);
         setlogPatient(false);
         setLoading(false);
         setProfile(response.data.user);
         navigate("/admin/dashboard");
+        setLoading(false);
       } else if (response.data.user.role === "patient") {
-        setlogPatient(true);
-        setlogDr(false);
-        setlogAdmin(false);
-        setLoading(false);
-        setProfile(response.data.user);
-        navigate("/patient/dashboard");
+        try {
 
+          setlogPatient(true);
+          setlogDr(false);
+          setlogAdmin(false);
+          setLoading(false);
+          setProfile(response.data.user);
+          navigate("/patient/dashboard");
+
+          // Use the user ID to query the patient collection
+          const patientResponse = await axios.get(
+            //@ts-ignore
+            `http://localhost:3000/user/getPatient/${decoded.patientId}`
+          );
+
+          console.log("patientResponse", patientResponse.data._id);
+
+          setPatient(patientResponse.data);
+          
+        } catch (error) {
+          console.log("Error while fetching patient: ", error);
+        }
       } else if (response.data.user.role === "doctor") {
-        setlogDr(true);
-        setlogPatient(false);
-        setlogAdmin(false);
-        setLoading(false);
-        setProfile(response.data.user);
-        navigate("/doctor/dashboard");
+        
+        try {
+          setlogDr(true);
+          setlogPatient(false);
+          setlogAdmin(false);
+          setLoading(false);
+          setProfile(response.data.user);
+          navigate("/doctor/dashboard");
 
+          // Use the user ID to query the doctor collection
+          const doctorResponse = await axios.get(
+         
+            //@ts-ignore
+            `http://localhost:3000/doctor/doctors/${decoded.doctorId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${response.data.token}`,
+              },
+            }
+          );
+          console.log("doctorResponse", doctorResponse.data._id);
+          console.log("Authorization", `Bearer ${response.data.token}`);
 
-      
-
-
+          setDoctor(doctorResponse.data);
+          console.log("doctorResponseasfasfadffffffgv", doctorResponse.data);
+        } catch (error) {
+          console.log("Error while fetching doctor: ", error);
+        }
       }
     } catch (error) {
-      /* Checking if the error is an axios error. If it is, it is getting the response from the error
-     and setting the error to the response data message. If it is not an axios error, it is logging
-     the error. */
       if (axios.isAxiosError(error)) {
         const showError = error.response;
         if (showError) {
           setError(showError.data.message);
+          setLoading(false);
+          console.log(
+            "🚀 ~ file: RegisterAdmin.tsx ~ line 64 ~ HandelLogin ~ error",
+            error
+          );
         }
       } else {
         // Handle the unknown
@@ -96,18 +120,10 @@ const Login = () => {
           "🚀 ~ file: RegisterAdmin.tsx ~ line 64 ~ HandelLogin ~ error",
           error
         );
+        setLoading(false);
       }
     }
-
-  }
-
-  
-  
-
-
-
-  
-
+  };
 
   return (
     <div className="relative">

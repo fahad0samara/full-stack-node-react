@@ -1,64 +1,28 @@
-import React, {useState, useEffect} from "react";
-import {Calendar, momentLocalizer} from "react-big-calendar";
+import React, { useState, useEffect, useCallback } from "react";
+import { Calendar, momentLocalizer, Views } from "react-big-calendar";
 
-import moment from "moment";
+
+import moment from "moment-timezone";
 import axios from "axios";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import jwtDecode from "jwt-decode";
 import "./Calendar.css";
+import { useLogIN } from "../../ContextLog";
 
-// const MyCalendar = () => {
-//   const [workingHours, setWorkingHours] = useState([]);
-
-//   useEffect(() => {
-//     const token = localStorage.getItem("token");
-//     if (!token) {
-//       console.log("Token not found in local storage");
-//       return;
-//     }
-//     const decoded = jwtDecode(token);
-//     console.log("decoded", decoded);
-//     const userId = decoded.doctorId;
-//     console.log("userId", userId);
-//     const getWorkingHours = async () => {
-//       const response = await axios.get(
-//         `http://localhost:3000/doctors/${userId}/working-hours`,
-//         {
-//           headers: {
-//             Authorization: `Bearer ${localStorage.getItem("token")}`,
-//           },
-//         }
-//       );
-//       console.log("response", response.data);
-//       setWorkingHours(response.data);
-//     };
-//     getWorkingHours();
-//   }, []);
-
-//   const events = workingHours.map(workingHour => {
-//     return {
-//       start: moment(workingHour.startTime, "HH:mm").toDate(),
-//       end: moment(workingHour.endTime, "HH:mm").toDate(),
-//       title: workingHour.day,
-//     };
-//   });
-
-//   return (
-//     <div>
-//       <Calendar
-//         localizer={momentLocalizer(moment)}
-//         events={events}
-//         startAccessor="start"
-//         endAccessor="end"
-//       />
-//     </div>
-
-//   );
-// };
-
-// export default MyCalendar;
 
 const MyCalendar = () => {
+  const {
+    logPatient,
+
+    Profile,
+    setProfile,
+    Doctor,
+    dark,
+    setdark,
+  } = useLogIN();
+
+
+
   const [availableDays, setAvailableDays] = useState([]);
 
   const [workingHours, setWorkingHours] = useState({
@@ -67,58 +31,43 @@ const MyCalendar = () => {
   });
 
   const [Loading, setLoading] = useState(false);
-const [events, setEvents] = useState<
-  Array<{start: Date; end: Date; title: any}>
->([]);
+  const [events, setEvents] = useState<
+    Array<{ start: Date; end: Date; title: any }>
+    >([]);
+
+        
+
+
+  const localizer = momentLocalizer(moment);
+
+
+  const handleDayChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const day = e.target.value;
+    if (e.target.checked) {
+      setAvailableDays([...availableDays, day]);
+
+
+   
+    } else {
+      setAvailableDays(availableDays.filter(d => d !== day));
+    }
+  };
+
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setWorkingHours({
+      ...workingHours,
+      [e.target.name]: e.target.value,
+    });
+
+    console.log("workingHours", workingHours);
+  };
 
 
 
 
- useEffect(() => {
-   const token = localStorage.getItem("token");
-   if (!token) {
-     console.log("Token not found in local storage");
-     return;
-   }
-   const decoded = jwtDecode(token);
-   console.log("decoded", decoded);
-   const userId = decoded.doctorId;
-   console.log("userId", userId);
 
-   const getWorkingHours = async () => {
-     try {
-       const response = await axios.get(
-         `http://localhost:3000/doctor/doctors/${userId}/working-hours`,
-         {
-           headers: {
-             Authorization: `Bearer ${localStorage.getItem("token")}`,
-           },
-         }
-       );
-       console.log("response", response.data);
-       response.data.availableDays.forEach(day => {
-         events.push({
-           start: moment(
-             `${day} ${response.data.workingHours.start}`,
-             "dddd HH:mm"
-           ).toDate(),
-           end: moment(
-             `${day} ${response.data.workingHours.end}`,
-             "dddd HH:mm"
-           ).toDate(),
-           title: "Working hours",
-         });
-       });
-       setEvents(events);
-       console.log("events", events);
-       
-     } catch (error) {
-       console.log("Error while fetching working hours: ", error);
-     }
-   };
-   getWorkingHours();
- }, []);
-  
+
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
@@ -126,15 +75,12 @@ const [events, setEvents] = useState<
       console.log("Token not found in local storage");
       return;
     }
-    const decoded = jwtDecode(token);
-    console.log("decoded", decoded);
-    const userId = decoded.doctorId;
-    console.log("userId", userId);
+
 
     try {
       setLoading(true);
       const response = await axios.post(
-        `http://localhost:3000/doctor/doctors/${userId}/working-hours`,
+        `http://localhost:3000/doctor/doctors/${Doctor._id}/working-hours`,
         {
           availableDays,
           startTime: workingHours.start,
@@ -147,31 +93,159 @@ const [events, setEvents] = useState<
           },
         }
       );
-      console.log(
-        "response",
-        response.data,
-        availableDays,
-        workingHours
 
 
-
-
-      );
-      
-    
       setLoading(false);
     } catch (error) {
       console.log("error", error);
       setLoading(false);
     }
 
+  };
+  useEffect(() => {
+    // Fetch working hours
+    const getWorkingHours = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/doctor/doctors/${Doctor._id}/working-hours`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+        console.log("response", response.data);
+    
+        const workingHoursEvents = availableDays.map(day => {
+          return {
+            start: moment(`${day} ${response.data.workingHours
+.start}`, "dddd HH:mm").toDate(),
+            end: moment(`${day} ${response.data.workingHours.end}`, "dddd HH:mm").toDate(),
+            day: availableDays.indexOf(day) + 1,
+
+           
+            
+            title: "Working hours",
+          };
+        });
+
+        setEvents([...events, workingHoursEvents]);
+         
 
 
+        
+   
+
+
+        console.log("events", events);
+      } catch (error) {
+        console.log("Error while fetching working hours: ", error);
+      }
+    };
+
+    getWorkingHours();
+
+
+    // Fetch appointments
+    const getAppointments = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/doctor/appointments/${Doctor._id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        const appointments = response.data.appointments;
+        const events = appointments.map(appointment => {
+          return {
+            start: moment(`${appointment.appointmentDate} ${appointment.appointmentTime}`, "YYYY-MM-DD HH:mm").toDate(),
+            end: moment(`${appointment.appointmentDate} ${appointment.appointmentTime}`, "YYYY-MM-DD HH:mm").add(1, "hours").toDate(),
+            title: `Appointment with ${appointment.patient.name.firstName} ${appointment.patient.name.LastName}`,
+          };
+        });
+
+
+
+        setEvents([...events, appointments]);
+      } catch (error) {
+        console.log("Error while fetching appointments: ", error);
+      }
+    };
+
+    getAppointments();
+
+
+
+
+
+
+
+
+
+   }, []);
+
+ 
+
+  const handleSelect = ({ start, end }: { start: Date; end: Date }) => {
+    const title = window.prompt("New Event name");
+    if (title)
+      setEvents([
+        ...events,
+        {
+          start,
+          end,
+          title,
+        },
+      ]);
+  };
+
+  const handleSelectEvent = (event: any) => {
+    alert(event.title);
+  };
+
+  const handleDoubleClickEvent = (event: any) => {
+    alert(event.title);
+  };
+
+
+
+  const handleDragStart = (event: any) => {
+    alert(event.title);
+  };
+
+  const handleDragEnd = (event: any) => {
+    alert(event.title);
   };
 
 
 
 
+
+
+
+
+
+
+  const customSlotPropGetter = (date) => {
+    if (date.getDate() === 7 || date.getDate() === 15)
+      return {
+        className: "bg-red-500",
+
+      }
+    else return {}
+  }
+  const handleSelectSlot = useCallback(
+    ({ start, end }) => {
+      const title = window.prompt('New Event name')
+      if (title) {
+        setEvents((prev) => [...prev, { start, end, title }])
+      }
+    },
+    [setEvents]
+  )
 
   return (
     <div
@@ -187,50 +261,84 @@ const [events, setEvents] = useState<
       "
     >
       <form onSubmit={handleSubmit}>
-        <label htmlFor="availableDays">Available Days</label>
-        <select
-          name="availableDays"
-          id="availableDays"
-          value={availableDays}
-          onChange={e => {
-            setAvailableDays(
-              Array.from(e.target.selectedOptions, option => option.value)
-            );
-          }}
-        >
-          <option value="Monday">Monday</option>
-          <option value="Tuesday">Tuesday</option>
-        </select>
-
-        <label htmlFor="workingHoursStart">Working Hours Start</label>
-        <input
-          type="time"
-          name="workingHoursStart"
-          id="workingHoursStart"
-          value={workingHours.start}
-          onChange={e => {
-            setWorkingHours({
-              ...workingHours,
-              start: e.target.value,
-            });
-          }}
-        />
-
-        <label htmlFor="workingHoursEnd">Working Hours End</label>
-        <input
-          type="time"
-          name="workingHoursEnd"
-          id="workingHoursEnd"
-          value={workingHours.end}
-          onChange={e => {
-            setWorkingHours({
-              ...workingHours,
-              end: e.target.value,
-            });
-          }}
-        />
-
-        <button type="submit">Submit</button>
+        <div className="form-group">
+          <label>Available Days:</label>
+          <div>
+            <input
+              type="checkbox"
+              value="Monday"
+              onChange={handleDayChange}
+            />
+            Monday
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              value="Tuesday"
+              onChange={handleDayChange}
+            />
+            Tuesday
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              value="Wednesday"
+              onChange={handleDayChange}
+            />
+            Wednesday
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              value="Thursday"
+              onChange={handleDayChange}
+            />
+            Thursday
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              value="Friday"
+              onChange={handleDayChange}
+            />
+            Friday
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              value="Saturday"
+              onChange={handleDayChange}
+            />
+            Saturday
+          </div>
+          <div>
+            <input
+              type="checkbox"
+              value="Sunday"
+              onChange={handleDayChange}
+            />
+            Sunday
+          </div>
+        </div>
+        <div className="form-group">
+          <label>Start Time:</label>
+          <input
+            type="time"
+            name="start"
+            onChange={handleTimeChange}
+            value={workingHours.start}
+          />
+        </div>
+        <div className="form-group">
+          <label>End Time:</label>
+          <input
+            type="time"
+            name="end"
+            onChange={handleTimeChange}
+            value={workingHours.end}
+          />
+        </div>
+        <button type="submit">Save</button>
       </form>
 
       <div
@@ -239,27 +347,32 @@ const [events, setEvents] = useState<
       "
       >
         <Calendar
-          className="calendar"
-          localizer={momentLocalizer(moment)}
-          events={events}
+          localizer={localizer}
+          events={[
+            
+            
+
+            ...events,
+
+            
+          
+        
+          ]}
           startAccessor="start"
           endAccessor="end"
-          style={{fontSize: "12px", border: "1px solid #ccc"}}
-          eventPropGetter={myEventsList => {
-            let newStyle = {
-              backgroundColor: "#007bff",
-              color: "white",
-              borderRadius: "4px",
-              padding: "4px 8px",
-            };
-            return {
-              className: "rbc-event",
-              style: newStyle,
-              
-            };
+          style={{ height: 500 }}
+          popup
+        
+          slotPropGetter={customSlotPropGetter}
+          onSelectEvent={handleSelectEvent}
+          onSelectSlot={handleSelectSlot}
+          onDoubleClickEvent={handleDoubleClickEvent}
+       
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          defaultView={Views.WEEK}
 
           
-          }}
         />
       </div>
     </div>

@@ -7,6 +7,7 @@ import User from "../model/User";
 
 import Patient from "../model/patient";
 import Prescription from "../model/prescription";
+import Appointment from "../model/appointment";
 
 const {
   doctorValidation,
@@ -147,6 +148,44 @@ router.get("/doctors/:id/working-hours"
     }
   }
 );
+
+router.get("/appointments/:id",extractToken, checkDoctor, async (req, res) => {
+
+  try {
+    const doctorId = req.params.id;
+    const skip = parseInt(req.query.skip as string);
+    const limit = parseInt(req.query.limit as string);
+
+    const appointments = await Appointment.find({ doctor: doctorId })
+      .populate("patient")
+    
+      .populate("doctor")
+      .skip(skip)
+      .limit(limit);
+    
+
+
+
+    if (!appointments || appointments.length === 0) {
+      res.status(404).json({message: "No appointments found for this doctor"});
+    } else {
+      const count = await Appointment.countDocuments({doctor: doctorId});
+      res.json({
+        appointments: appointments,
+        total: count,
+      });
+    }
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({error: error.message});
+      
+  }
+});
+
+
+
+
+
 
 // router.get("/doctors/:id/patients", extractToken, checkDoctor, async (req, res) => {
 //   try {

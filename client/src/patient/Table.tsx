@@ -2,7 +2,9 @@ import { useLogIN } from "../../ContextLog";
 
 
 const Table = () => {
-  const { Profile, setProfile,  setLoading, dark} =
+  const { Profile, setProfile,
+    Patient,
+    setLoading, dark } =
     useLogIN();
   const convertDate = (date: any) => {
     const newDate = new Date(date);
@@ -35,9 +37,9 @@ const Table = () => {
           <th>Prescription</th>
         </tr>
       </thead>
-      <tbody>
-        {Profile
-          ? Profile.prescriptions.map((mappedData: any) => {
+      {/* <tbody>
+        {Patient
+          ? Patient.prescriptions.map((mappedData: any) => {
               return (
                 <tr>
                   <th>{mappedData ? mappedData._id : null}</th>
@@ -47,9 +49,9 @@ const Table = () => {
                     return (
                       <td>
                         {medicine.name}
-                    
+
                         {medicine.type}
-                       
+
                         {medicine.frequency}
                       </td>
                     );
@@ -66,7 +68,7 @@ const Table = () => {
               );
             })
           : null}
-      </tbody>
+      </tbody> */}
     </table>
   );
 };
