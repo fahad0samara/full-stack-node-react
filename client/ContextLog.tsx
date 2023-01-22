@@ -22,7 +22,6 @@ const ContextLog = createContext(
     setPatient: React.Dispatch<React.SetStateAction<any>>;
     Doctor: any;
     setDoctor: React.Dispatch<React.SetStateAction<any>>;
-    
 
 
 

@@ -1,14 +1,77 @@
-.calendar-page {
+.rbc-toolbar {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    background-color: #03d4ec;
+    color: white;
+    padding: 0.5rem;
 }
 
-.calendar-container {
-    width: 80%;
-    height: 80vh;
-    background-color: #f5f5f5;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    overflow: hidden;
+.rbc-toolbar-label {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.rbc-btn-group {
+    display: flex;
+    align-items: center;
+}
+
+
+
+
+
+
+
+
+
+.rbc-toolbar button {
+    background-color: transparent;
+    color: white;
+    border-radius: 4px;
+    padding: 4px 12px;
+    margin-right: 4px;
+    border: none;
+    cursor: pointer;
+  
+
+}
+
+
+.rbc-toolbar button:hover {
+    background-color: #0b0b0b;
+    color:aliceblue
+}
+
+
+.rbc-time-content>*+*>* {
+ border-left: none
+}
+
+.rbc-timeslot-group {
+    border-bottom: none
+   
+}
+
+.rbc-time-view .rbc-row {
+    box-sizing: border-box;
+     min-height: 10
+     
+}
+
+.rbc-time-content>*+*>* {
+    border-top: none;
+}
+
+.rbc-timeslot-group {
+    border-bottom: none
+    
+
+}
+.rbc-day-slot .rbc-time-slot {
+    border-top: none;
+}
+
+.rbc-day-bg+.rbc-day-bg {
+    border-left: 1px solid #ddd;
 }
