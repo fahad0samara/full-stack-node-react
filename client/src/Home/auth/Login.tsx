@@ -94,11 +94,10 @@ const Login = () => {
               },
             }
           );
-          console.log("doctorResponse", doctorResponse.data._id);
-          console.log("Authorization", `Bearer ${response.data.token}`);
+      
 
           setDoctor(doctorResponse.data);
-          console.log("doctorResponseasfasfadffffffgv", doctorResponse.data);
+     
         } catch (error) {
           console.log("Error while fetching doctor: ", error);
         }

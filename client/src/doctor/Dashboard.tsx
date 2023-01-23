@@ -12,7 +12,10 @@ const Dashboard = () => {
 
     dark,
     setdark,
+
   } = useLogIN();
+
+
 
 
 
@@ -49,9 +52,14 @@ const Dashboard = () => {
   ];
   let phraseIndex = 0;
   const [phrase, setPhrase] = useState(phrases0[0]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(
+    false
+
+
+  );
 
   useEffect(() => {
+
     const interval = setInterval(() => {
       setPhrase(phrases0[phraseIndex]);
       phraseIndex++;
@@ -75,65 +83,42 @@ const Dashboard = () => {
       setMessage("Good Evening");
     }
   }, []);
-  const [nextAppointment, setNextAppointment] = useState({});
+  const [nextAppointment, setNextAppointment] = useState();
+
+
+  const [date, setDate] = useState(
+    moment().toDate()
+
+  );
+  const dateString = moment(date).format("YYYY-MM-DD");
+
+
 
   const getNextAppointment = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/doctor/appointments/${Doctor._id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-      const appointments = response.data.appointments;
+        `http://localhost:3000/doctor/appointments/${Doctor._id}/${dateString}`
 
-   
-      
-      // Sort appointments by date and time
-      appointments.sort((a, b) => {
-        const dateA = new Date(a.date);
-        const dateB = new Date(b.date);
-        if (dateA < dateB) return -1;
-        if (dateA > dateB) return 1;
-        return 0;
-      });
-      console.log('====================================');
+      );
+
       console.log(
-        "appointments.sort((a, b) => {",
-        appointments
-        
-      );
-      console.log('====================================');
+        "🚀 ~ file: Dashboard.tsx ~ line 6 ~ Dashboard ~ response",
+        response.data.nextDayAppointments[0].patient
+      
+  
+);
 
-
-      // Get next appointment
-      const nextAppointment = appointments.find((appointment) => {
-        const date = new Date(appointment.date);
-        const now = new Date();
-        return date > now;
-      });
-      // Set next appointment
-      setNextAppointment(nextAppointment);
-
-
-
+      
+      setNextAppointment(response.data.nextDayAppointments);
     
-      
-
-
-      
-      
-     
 
       // Display next appointment to the doctor
-      console.log("Next appointment: ",
-        nextAppointment
-
-      );
+    
     } catch (error) {
-      console.log("Error while fetching next appointment: ", error);
+      console.log(
+        "🚀 ~ file: Dashboard.tsx ~ line 6 ~ Dashboard ~ error",
+        error
+      );
     }
   };
 
@@ -193,7 +178,11 @@ const Dashboard = () => {
     ml-1
     "
             >
-              {Doctor && Doctor.appointments && Doctor.appointments.length}
+              {Doctor && 
+                Doctor.appointmentCount
+
+
+              }
             </span>
             appointments today
           </h1>
@@ -210,29 +199,32 @@ const Dashboard = () => {
             <div className="flex flex-col">
               <h1 className="text-2xl font-bold">Appointments</h1>
             </div>
-            {
-              //nextAppointment
-            }
+          
             <div>
-              <p>Next Appointment:</p>
-              <ul>
-                <li>
-                  <p>
-                    {
-                      // Display next appointment to the doctor
-                    }
-                    {nextAppointment && nextAppointment.patient && (
-                      <span>
-                        {nextAppointment.patient.name.firstName}{" "}
-                        {nextAppointment.patient.name.lastName}
-                      </span>
-                    )}
+              <div className="flex flex-col">
+                <h1 className="text-xl font-bold">Next Appointment</h1>
 
-                  </p>
-                </li>
+                <div className="flex flex-col">
+                  <div className="flex flex-row">
+                    <h1 className="text-lg font-bold">Patient Name:</h1>
+                    <h1 className="text-lg ml-2">
+              
+                    </h1>
 
+                  </div>
+
+                  </div>
+</div>
+
+
+
+
+
+            
+
+                
                
-              </ul>
+            
             </div>
   
 

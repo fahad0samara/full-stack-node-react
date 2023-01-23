@@ -182,6 +182,78 @@ router.get("/appointments/:id",extractToken, checkDoctor, async (req, res) => {
   }
 });
 
+router.get("/appointments/:id/:date", async (req, res) => {
+  try {
+    const doctorId = req.params.id;
+    const appointmentDate = req.params.date;
+
+    // Get the appointments for the current day
+    const appointments = await Appointment.find({
+      doctor: doctorId,
+      appointmentDate: appointmentDate,
+    }).populate("patient");
+    console.log(
+      "appointments",
+      appointments
+
+    );
+    
+
+
+
+
+
+    // Get the appointment count for the current day
+    const appointmentCount = await Appointment.countDocuments({
+      doctor: doctorId,
+      appointmentDate: appointmentDate,
+    });
+
+    // Update the doctor's appointmentCount field with the new count
+    await Doctor.findByIdAndUpdate(doctorId, {
+      appointmentCount: appointmentCount,
+    });
+
+   
+
+    // Get the next day's appointments
+    const nextDayAppointments = await Appointment.find({
+      doctor: doctorId,
+
+      appointmentDate: {
+        $gte: new Date(
+          new Date(appointmentDate).setDate(
+            new Date(appointmentDate).getDate() + 1
+          )
+        ),
+      },
+
+    }).populate("patient");
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    // Return the appointments for the current day and the next day
+    res.json({
+      appointments: appointments,
+      appointmentCount: appointmentCount,
+      nextDayAppointments: nextDayAppointments,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({error: error.message});
+  }
+});
+
 
 
 

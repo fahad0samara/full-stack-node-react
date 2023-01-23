@@ -22,7 +22,9 @@
     "pdf-lib": "^1.17.1",
     "pdfkit": "^0.13.0",
     "pdfkit-table": "^0.1.99",
-    "pdfmake": "^0.2.7"
+    "pdfmake": "^0.2.7",
+    "socket.io": "^4.5.4",
+    "web-push": "^3.5.0"
   },
   "devDependencies": {
     "@tsconfig/node16": "^1.0.3",
